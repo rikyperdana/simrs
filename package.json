@@ -1,0 +1,14 @@
+{
+  "name": "hello-world",
+  "version": "0.1.0",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "body-parser": "^1.15.2",
+    "lodash": "^4.17.15",
+    "mongodb": "^3.3.2"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
