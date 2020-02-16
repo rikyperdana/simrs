@@ -12,7 +12,7 @@ selects = name => _.reduce(
     pekerjaan: ['pns', 'swasta', 'wiraswasta', 'tni', 'polri', 'pensiunan', 'lainnya'],
     cara_bayar: ['umum', 'bpjs', 'asuransi'],
     klinik:       ['penyakit_dalam', 'anak', 'obgyn', 'bedah', 'gigi', 'umum'],
-    tarif_klinik: [ 95,               95,     95,      95,      95,     0],
+    tarif_klinik: [ 95,               95,     95,      95,      95,     45],
     rujukan: ['datang_sendiri', 'rs_lain', 'puskesmas', 'faskes_lainnya'],
     keluar: ['pulang', 'rujuk', 'inap'],
     jenis_barang: ['Obat', 'BHP', 'Logistik'],

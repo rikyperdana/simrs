@@ -126,6 +126,9 @@ var schemas = {
       type: Number, optional: true,
       autoform: {help: 'kode unik puyer'}
     },
+    'obat.$.aturan': {type: Object, optional: true},
+    'obat.$.aturan.kali': {type: Number},
+    'obat.$.aturan.dosis': {type: String},
     planning: {
       type: String, optional: true,
       autoform: {type: 'textarea'}

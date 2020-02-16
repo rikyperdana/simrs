@@ -1,4 +1,4 @@
-/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis*/
+/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds*/
 
 _.assign(comp, {
   emergency: () => !_.includes([2, 3, 4], state.login.peranan) ?
@@ -69,7 +69,7 @@ _.assign(comp, {
   emergencyHistory: () => m('.content',
     m('table.table',
       m('thead', m('tr',
-        ['Tanggal berobat', 'Cara bayar', 'Dokter']
+        ['Tanggal berobat', 'Cara bayar', 'Perawat', 'Dokter']
         .map(i => m('th', i))
       )),
       m('tbody',
@@ -81,7 +81,8 @@ _.assign(comp, {
               m('table.table',
                 m('tr', m('th', 'Tanggal berobat'), m('td', hari(i.tanggal))),
                 m('tr', m('th', 'Cara bayar'), m('td', look('cara_bayar', i.cara_bayar))),
-                m('tr', m('th', 'Dokter'), m('td', '-')),
+                m('tr', m('th', 'Perawat'), m('td', lookUser(_.get(i, 'soapPerawat.perawat')))),
+                m('tr', m('th', 'Dokter'), m('td', lookUser(_.get(i, 'soapDokter.dokter')))),
                 i.soapPerawat && [
                   m('tr', m('th', 'Anamnesa Perawat'), m('td', i.soapPerawat.anamnesa)),
                   i.soapPerawat.tekanan_darah &&
@@ -120,12 +121,12 @@ _.assign(comp, {
               )
             )
           },
-          m('td', hari(i.tanggal)),
-          m('td', look('cara_bayar', i.cara_bayar)),
-          m('td', lookUser(ors([
-            _.get(i, 'soapDokter.dokter'),
-            _.get(i, 'soapPerawat.perawat')
-          ])))
+          tds([
+            hari(i.tanggal),
+            look('cara_bayar', i.cara_bayar),
+            lookUser(_.get(i, 'soapPerawat.perawat')),
+            lookUser(_.get(i, 'soapDokter.dokter'))
+          ]),
         ))
       )
     ),

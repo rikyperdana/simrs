@@ -75,8 +75,9 @@ tarifInap = (masuk, keluar, kelas) =>
   1000 * +selects('tarif_bed')()
   .find(j => j.value === +kelas).label,
 
-dbCall = (body, action) =>
-  m.request({url: '/dbCall', method: 'PUT', body: body}).then(action),
+dbCall = (body, action) => m.request({
+  url: '/dbCall', method: 'PUT', body: body
+}).then(action),
     
 collNames = ['patients', 'goods', 'references', 'users'],
 

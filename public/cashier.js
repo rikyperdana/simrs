@@ -71,8 +71,8 @@ _.assign(comp, {
                   rawat.kode_bed && rawat.keluar
                 ]) && ors([
                   rawat.klinik && m('tr',
-                    m('th', 'Konsultasi Poli '+look('klinik', rawat.klinik)),
-                    m('td', rupiah(1e3*+look('tarif_klinik', rawat.klinik)))
+                    m('th', 'Adm + Konsultasi Poli '+look('klinik', rawat.klinik)),
+                    m('td', rupiah(1000*+look('tarif_klinik', rawat.klinik)))
                   ),
                   rawat.kode_bed && m('tr',
                     m('th', 'Biaya kamar'),
@@ -122,7 +122,7 @@ _.assign(comp, {
                     ([]).concat(
                       pasien.rawatJalan || [], pasien.emergency || []
                     ).length === 1 ? 8000 : 0,
-                    rawat.klinik ? 1e3*+look('tarif_klinik', rawat.klinik) : 80000,
+                    rawat.klinik ? 1000*+look('tarif_klinik', rawat.klinik) : 45000,
                   ]),
                   rawat.kode_bed ? tarifInap(
                     rawat.tanggal_masuk, rawat.keluar, rawat.kelas_bed

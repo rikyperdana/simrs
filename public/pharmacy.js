@@ -93,11 +93,10 @@ _.assign(comp, {
                         ands([a.jumlah, d.stok.apotik]) &&
                         ands([
                           _.forEach(_.range(minim), () => a.jumlah--),
-                          serahList.push({
+                          serahList.push(_.merge({}, a, {
                             nama_barang: b.nama, no_batch: d.no_batch,
                             serahkan: minim, jual: minim * d.harga.jual,
-                            idbarang: b._id
-                          }),
+                          })),
                           c.concat([_.assign(d, {stok: _.assign(d.stok, {
                             apotik: d.stok.apotik - minim
                           })})])
@@ -154,12 +153,16 @@ _.assign(comp, {
                 m('h4', 'Penyerahan obat'),
                 m('table.table',
                   m('thead', m('tr',
-                    ['Nama obat', 'No. Batch', 'Ambil']
+                    ['Nama obat', 'No. Batch', 'Ambil', 'Kali', 'Dosis', 'Puyer']
                     .map(j => m('th', j))
                   )),
                   m('tbody', serahList.map(j => m('tr',
-                    [j.nama_barang, j.no_batch, j.serahkan]
-                    .map(k => m('td', k))
+                    [
+                      j.nama_barang, j.no_batch, j.serahkan,
+                      j.aturan && j.aturan.kali || '-',
+                      j.aturan && j.aturan.dosis || '-',
+                      j.puyer || '-'
+                    ].map(k => m('td', k))
                   )))
                 ),
                 m('p.buttons',

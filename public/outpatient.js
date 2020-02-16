@@ -83,7 +83,7 @@ _.assign(comp, {
         }}).then(res => db.patients.put(res))
       },
       m('thead', m('tr',
-        ['Tanggal berobat', 'Poliklinik', 'Cara bayar', 'Dokter']
+        ['Tanggal berobat', 'Poliklinik', 'Cara bayar', 'Perawat', 'Dokter']
         .map(i => m('th', i)),
         state.login.peranan === 4 && m('th', 'Hapus')
       )),
@@ -139,7 +139,8 @@ _.assign(comp, {
             hari(i.tanggal),
             look('klinik', i.klinik),
             look('cara_bayar', i.cara_bayar),
-            lookUser(_.get(i, 'soapDokter.dokter')),
+            lookUser(_.get(i, 'soapPerawat.perawat')),
+            lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
           state.login.peranan === 4 && m('td', m('.button.is-danger', {
             ondblclick: (e) => [

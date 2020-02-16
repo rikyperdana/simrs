@@ -82,16 +82,17 @@ window.addEventListener('load', () =>
   gapi.load('auth2', () => withThis(
     gapi.auth2.init({
       client_id: '706941787203-1121t4j0h6gjdd6lje0biaub35cjjn21.apps.googleusercontent.com',
-      scope: 'profile'
+      scope: 'profile' // change client_id value to your own
     }),
     auth2 => auth2.signIn().then(() => [
-      state.gmail = auth2.currentUser.get().getBasicProfile().U3,
+      state.gmail = Object.values(auth2.currentUser.get().getBasicProfile())
+        .find(i => _.includes(i, "@gmail.com")), // Google may change this without prior notice
       m.render(document.body, 'memverifikasi hak akses...'),
       m.request({url: '/isMember', method: 'PUT', body: {gmail: state.gmail}})
       .then(res =>
         m.mount(document.body, {view: () => m('div',
           comp.navbar(), m('.container', m('br'), comp[state.route]())
-        )})  
+        )})
       )
     ])
   ))

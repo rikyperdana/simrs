@@ -6,7 +6,7 @@ _.assign(comp, {
     m('h3', 'Pencarian Pasien'),
     m('.control.is-expanded', m('input.input.is-fullwidth', {
       type: 'text', placeholder: 'Cari dengan nama lengkap atau No. MR',
-      onkeypress: e => e.target.value.length > 2 &&
+      onkeypress: e =>
         db.patients.filter(i => _.includes(
           _.lowerCase(i.identitas.nama_lengkap)+i.identitas.no_mr,
           e.target.value
