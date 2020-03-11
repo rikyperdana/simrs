@@ -1,4 +1,4 @@
-/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis*/
+/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis insertBoth2 ands startOfTheDay*/
 
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
@@ -44,7 +44,7 @@ _.assign(comp, {
       id: 'newPatient', schema: schemas.identitas,
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
-          insertBoth('patients', obj),
+          insertBoth2('patients', obj),
           _.assign(state, {route: 'onePatient', onePatient: obj})
         ]
       ),
@@ -72,7 +72,14 @@ _.assign(comp, {
       schema: schemas.rawatJalan,
       action: doc => [
         updateBoth('patients', state.onePatient._id, _.assign(state.onePatient, {
-          rawatJalan: (state.onePatient.rawatJalan || []).concat([doc])
+          rawatJalan: (state.onePatient.rawatJalan || []).concat([
+            _.merge(doc, {antrian: 
+              db.patients.filter(i => i.rawatJalan.filter(j => ands([
+                j.klinik === doc.klinik,
+                j.tanggal > startOfTheDay(Date.now())
+              ])).length).length+1
+            })
+          ])
         })), state.route = 'onePatient'
       ]
     })))

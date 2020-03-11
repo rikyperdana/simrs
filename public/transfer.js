@@ -60,7 +60,9 @@ _.assign(comp, {
                           )
                         }) : a
                       )
-                    })), state.modalResponAmprah = null, m.redraw()
+                    })),
+                    state.modalResponAmprah = null, 
+                    m.redraw()
                   ])            
               }))
             )

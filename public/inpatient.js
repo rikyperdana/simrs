@@ -154,6 +154,7 @@ _.assign(comp, {
           {ondblclick: () =>
             state.modalObservasi = _.includes([2, 3], state.login.peranan) && m('.box',
               m('h3', 'Riwayat Observasi'),
+              m('p.is-italic.has-text-danger', 'klik-ganda pada salah satu observasi untuk melihat rincian'),
               m('table.table',
                 m('thead', m('tr',
                   ['Waktu', 'Anamnesa', 'Petugas']
@@ -232,7 +233,7 @@ _.assign(comp, {
             )
           },
           makeModal('modalSoap'),
-          tds([hari(i.tanggal_masuk, i.kode_bed)])
+          tds([hari(i.tanggal_masuk), i.kode_bed])
         ))
       )
     ),

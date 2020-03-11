@@ -89,7 +89,7 @@ _.assign(comp, {
             (collName, docs) => [
               dbCall({
                 method: 'insertMany', collection: collName, documents: docs
-              }, console.log),
+              }, () => ''),
               db[collName].bulkPut(docs).then(last =>
                 last && alert('Berhasil import, silahkan refresh')
               )

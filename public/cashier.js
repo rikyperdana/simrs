@@ -1,8 +1,27 @@
-/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis*/
+/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser*/
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
   m('p', 'Hanya untuk user bidang kasir') : m('.content',
+    state.login.peranan === 4 &&
+    makeReport('Kunjungan Poliklinik', e => withThis(
+      ({
+        start: (new Date(e.target[0].value)).getTime(),
+        end: (new Date(e.target[1].value)).getTime(),
+      }),
+      date => [
+        e.preventDefault(),
+        db.patients.toArray(array => makePdf.report(
+          'Laporan Penerimaan Kasir',
+          [['Tanggal & Jam', 'Layanan', 'No. MR', 'Nama Pasien', 'Petugas', 'Jumlah']]
+          .concat(_.compact(
+            array.flatMap(pasien =>
+              ['19 Februari 2020', 'Penyakit Dalam', '123456', 'Riky Perdana', 'Syamsudin', '124.500']
+            ).sort((a, b) => a.tanggal - b.tanggal)
+          ))
+        ))
+      ]
+    )),
     m('h3', 'Loket Pembayaran'),
     m('table.table',
       m('thead', m('tr',
@@ -82,7 +101,7 @@ _.assign(comp, {
                   ),
                   m('tr',
                     m('th', 'Rawat IGD'),
-                    m('td', rupiah(80000))
+                    m('td', rupiah(45000))
                   )
                 ]),
                 ands([

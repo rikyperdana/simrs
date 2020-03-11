@@ -1,4 +1,4 @@
-/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds*/
+/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall*/
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3, 4], state.login.peranan) ?
@@ -76,12 +76,10 @@ _.assign(comp, {
 
   outPatientHistory: () => m('.content',
     m('table.table',
-      {onupdate: () =>
-        m.request({url: '/dbCall', params: {
-          method: 'find', collection: 'patients',
-          _id: state.onePatient._id
-        }}).then(res => db.patients.put(res))
-      },
+      {onupdate: () => dbCall({
+        method: 'find', collection: 'patients',
+        _id: state.onePatient._id
+      }, (res) => db.patients.put(res))},
       m('thead', m('tr',
         ['Tanggal berobat', 'Poliklinik', 'Cara bayar', 'Perawat', 'Dokter']
         .map(i => m('th', i)),

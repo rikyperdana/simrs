@@ -1,4 +1,4 @@
-/*global moment numeral _ m Dexie selects*/
+/*global moment numeral _ m Dexie selects io*/
 
 var
 withThis = (obj, cb) => cb(obj),
@@ -20,6 +20,14 @@ daysDifference = (start, end) =>
   Math.round((end - start) / (1000 * 60 * 60 * 24)),
   // miliseconds, seconds, minutes, hours
 
+startOfTheDay = (timestamp) => (new Date(withThis(
+  new Date(timestamp), date => [
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  ].join('-')
+))).getTime(),
+
 rupiah = (num) =>
   'Rp '+numeral(num || 0).format('0,0'),
 
@@ -35,7 +43,7 @@ insertBoth = (collName, doc) => withThis(
   _.merge(doc, {_id: randomId(), updated: _.now()}),
   obj => db[collName].put(obj) && dbCall({
     method: 'insertOne', collection: collName, document: obj
-  })
+  }, () => '')
 ),
 
 updateBoth = (collName, _id, doc) => withThis(
@@ -43,7 +51,7 @@ updateBoth = (collName, _id, doc) => withThis(
   obj => db[collName].put(obj) && dbCall({
     method: 'updateOne', collection: collName,
     document: obj, _id: _id
-  })
+  }, () => '')
 ),
 
 makeModal = name => m('.modal',
@@ -75,9 +83,8 @@ tarifInap = (masuk, keluar, kelas) =>
   1000 * +selects('tarif_bed')()
   .find(j => j.value === +kelas).label,
 
-dbCall = (body, action) => m.request({
-  url: '/dbCall', method: 'PUT', body: body
-}).then(action),
+dbCall = (body, action) =>
+  io().emit('dbCall', body, action),
     
 collNames = ['patients', 'goods', 'references', 'users'],
 
@@ -103,7 +110,8 @@ menus = {
       users: {full: 'Pengguna'},
       references: {full: 'Referensi'}
     }
-  }
+  },
+  queue: {full: 'Antrian', icon: 'users'}
 },
 
 db = new Dexie('medicare')

@@ -1,4 +1,4 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis*/
+/*global _ comp m state menus look collNames db gapi dbCall withThis io*/
 
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
@@ -88,11 +88,12 @@ window.addEventListener('load', () =>
       state.gmail = Object.values(auth2.currentUser.get().getBasicProfile())
         .find(i => _.includes(i, "@gmail.com")), // Google may change this without prior notice
       m.render(document.body, 'memverifikasi hak akses...'),
-      m.request({url: '/isMember', method: 'PUT', body: {gmail: state.gmail}})
-      .then(res =>
-        m.mount(document.body, {view: () => m('div',
-          comp.navbar(), m('.container', m('br'), comp[state.route]())
-        )})
+      io().on('connect', () =>
+        io().emit('isMember', state.gmail, res =>
+          m.mount(document.body, {view: () => m('div',
+            comp.navbar(), m('.container', m('br'), comp[state.route]())
+          )})
+        )
       )
     ])
   ))

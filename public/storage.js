@@ -3,7 +3,7 @@
 _.assign(comp, {
   storage: () => !ors([
   _.includes([3, 4], state.login.bidang),
-  _.includes([2, 3], state.login.peranan)
+  _.includes([3], state.login.peranan)
   ]) ? m('p', 'Hanya untuk user farmasi & apotik')
   : m('.content',
     {onupdate: () =>

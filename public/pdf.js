@@ -229,5 +229,11 @@ makePdf = {
         widths: _.range(rows[0].length).map(i => '*'),
         body: rows
       }}
-    ]}).download('laporan_'+title)
+    ]}).download('laporan_'+title),
+
+  regQueue: (last) =>
+    pdfMake.createPdf({
+      content: [{text: last+1}],
+      pageSize: 'B8'
+    }).download('antrian_pendaftaran'+(last+1))
 }
