@@ -235,5 +235,5 @@ makePdf = {
     pdfMake.createPdf({
       content: [{text: last+1}],
       pageSize: 'B8'
-    }).download('antrian_pendaftaran'+(last+1))
+    }).download('antrian_pendaftaran_'+(last+1))
 }

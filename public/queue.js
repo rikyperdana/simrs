@@ -2,7 +2,7 @@
 
 _.assign(comp, {
   queue: () => m('.content',
-    m('table.is-fullwidth.is-striped', m('tr',
+    m('table.is-fullwidth', m('tr',
       m('th', m('h1', 'Antrian Pendaftaran')),
       m('th', m('h1', 'R'+(localStorage.regQueue || 0)))
     )),
@@ -19,7 +19,7 @@ _.assign(comp, {
     ),
     Array(3).map(i => m('br')),
     m('h1', 'Antrian Poliklinik'),
-    m('table.is-fullwidth',
+    m('table.is-fullwidth.is-striped',
       selects('klinik')().map(i => m('tr',
         m('td', m('h2', i.label))
       ))
