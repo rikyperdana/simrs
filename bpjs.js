@@ -16,7 +16,7 @@ var bpjs = (req, res) => res.send({
     req.headers.jenisrequest, // 2, {1: pendaftaran, 2: poli}
     req.headers.polieksekutif // 0, {1: eksekutif, 2: reguler}
   ].every(i => i) && {
-    noantran: 'A10', kodebooking: 'QWERTYUIO123',
+    noantrean: 'A10', kodebooking: 'QWERTYUIO123',
     estimasidilayani: 1583381957229,
     namapoli: 'Poli Jantung',
     jenisantrean: 1, // {1: pendaftaran, 2: poli}
@@ -25,12 +25,12 @@ var bpjs = (req, res) => res.send({
 
   getRekapAntrean: () => [
     req.headers.token,
-    req.headers.tanggalperiksa,
-    req.headers.kodepoli,
-    req.headers.polieksekutif
+    req.headers.tanggalperiksa, // "2019-12-31"
+    req.headers.kodepoli, // "001", panduan ada di gSheets
+    req.headers.polieksekutif // 0, {1: eksekutif, 2: reguler}
   ].every(i => i) && {
-    namapoli: 'satu', totalantrean: 'dua',
-    jumlahterlayani: 'tiga', lastupdate: 'empat'
+    namapoli: 'Poli Jantung', totalantrean: 100,
+    jumlahterlayani: 46, lastupdate: 1583381957229
   },
 
   getKodeBookingOperasi: () => [
@@ -40,16 +40,16 @@ var bpjs = (req, res) => res.send({
     kodebooking: '123456ZXC',
     tanggaloperasi: '2019-12-11',
     jenistindakan: 'operasi gigi',
-    kodepoli: '001',
+    kodepoli: '001', // dari sheet referensi
     namapoli: 'Poli Bedah Mulut',
     terlaksana: 0 // hanya yg belum terlaksana
   }]},
 
   getJadwalOperasi: () => true && {list: [{
-    kodebooking: 'satu', tanggaloperasi: 'dua',
-    jenistindakan: 'tiga', kodepoli: 'empat',
-    namapoli: 'lima', terlaksana: 'enam',
-    nopeserta: 'tujuh', lastupdate: 'delapan'
+    kodebooking: '123456ZXC', tanggaloperasi: '2019-12-31',
+    jenistindakan: 'operasi gigi', kodepoli: '001',
+    namapoli: 'Poli Bedah Mulut', terlaksana: 1,
+    nopeserta: '000000000000123', lastupdate: 1583381957229
   }]}
 }[req.headers.api]())
 

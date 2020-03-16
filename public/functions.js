@@ -8,7 +8,7 @@ ands = array =>
   && array[array.length-1],
 
 randomId = () =>
-  _.range(2).map(() =>
+  [1, 1].map(() =>
     Math.random().toString(36).slice(2)
   ).join(''),
 
@@ -23,7 +23,7 @@ daysDifference = (start, end) =>
 startOfTheDay = (timestamp) => (new Date(withThis(
   new Date(timestamp), date => [
     date.getFullYear(),
-    date.getMonth(),
+    date.getMonth()+1,
     date.getDate()
   ].join('-')
 ))).getTime(),
@@ -95,11 +95,17 @@ menus = {
   registration: {
     full: 'Pendaftaran', icon: 'address-book',
     children: {
-      icd: {full: 'Kodifikasi'}
+      icd: {full: 'Kodifikasi'},
+      queue: {full: 'Antrian'}
     }
   },
   outpatient: {full: 'Rawat Jalan', icon: 'male'},
-  inpatient: {full: 'Rawat Inap', icon: 'bed'},
+  inpatient: {
+    full: 'Rawat Inap', icon: 'bed',
+    children: {
+      surgery: {full: 'Antrian Bedah'}
+    }
+  },
   cashier: {full: 'Kasir', icon: 'cash-register'},
   storage: {full: 'Gudang', icon: 'cubes'},
   transfer: {full: 'Amprah', icon: 'random'},
@@ -110,8 +116,7 @@ menus = {
       users: {full: 'Pengguna'},
       references: {full: 'Referensi'}
     }
-  },
-  queue: {full: 'Antrian', icon: 'users'}
+  }
 },
 
 db = new Dexie('medicare')

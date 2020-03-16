@@ -109,8 +109,13 @@ var schemas = {
         _.sortBy(state.references.map(i =>
           ({value: i._id, label: i.nama})
         ), ['label'])
-      
     }},
+    'tindakan.$.jadwal': {
+      type: Date, optional: true, autoform: {
+        type: 'datetime-local',
+        help: 'Hanya untuk penjadwalan kedepan'
+      }
+    },
     obat: {type: Array, optional: true},
     'obat.$': {type: Object},
     'obat.$.idbarang': {
@@ -226,7 +231,10 @@ var schemas = {
     },
     ruangan: {
       type: Number, autoform: {type: 'hidden'},
-      autoValue: () => _.get(state.login, 'bidang')
+      autoValue: () => ors([
+        _.get(state.login, 'bidang'),
+        _.get(state.login, 'poliklinik')
+      ])
     },
     peminta: {
       type: String, autoform: {type: 'hidden'},

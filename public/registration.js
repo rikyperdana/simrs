@@ -1,4 +1,4 @@
-/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis insertBoth2 ands startOfTheDay*/
+/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay*/
 
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
@@ -44,7 +44,7 @@ _.assign(comp, {
       id: 'newPatient', schema: schemas.identitas,
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
-          insertBoth2('patients', obj),
+          insertBoth('patients', obj),
           _.assign(state, {route: 'onePatient', onePatient: obj})
         ]
       ),
@@ -70,18 +70,19 @@ _.assign(comp, {
     m('.box', m(autoForm({
       id: 'poliVisit', autoReset: true,
       schema: schemas.rawatJalan,
-      action: doc => [
-        updateBoth('patients', state.onePatient._id, _.assign(state.onePatient, {
-          rawatJalan: (state.onePatient.rawatJalan || []).concat([
-            _.merge(doc, {antrian: 
-              db.patients.filter(i => i.rawatJalan.filter(j => ands([
-                j.klinik === doc.klinik,
-                j.tanggal > startOfTheDay(Date.now())
-              ])).length).length+1
-            })
-          ])
-        })), state.route = 'onePatient'
-      ]
+      action: doc =>
+        db.patients.filter(i =>
+          i.rawatJalan && i.rawatJalan.filter(j => ands([
+            j.klinik === 1,
+            j.tanggal > startOfTheDay(Date.now())
+          ])).length
+        ).toArray(array => [
+          updateBoth('patients', state.onePatient._id, _.assign(state.onePatient, {
+            rawatJalan: (state.onePatient.rawatJalan || []).concat([
+              _.merge(doc, {antrian: array.length+1})
+            ])
+          })), state.route = 'onePatient'
+        ])
     })))
   )
 })

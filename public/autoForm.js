@@ -1,4 +1,4 @@
-var m, _, afState = {arrLen: {}, form: {}};
+var m, _, afState = {arrLen: {}, form: {}}
 
 function autoForm(opts){return {view: function(){
   function normal(name){return name.replace(/\d/g, '$')}
@@ -8,7 +8,7 @@ function autoForm(opts){return {view: function(){
     return [date.getFullYear(), date.getMonth(), date.getDate()].join('-')
   }
 
-  function untangle(obj){
+  function linearize(obj){
     function recurse(doc){
       var value = doc[_.keys(doc)[0]] 
       return typeof(value) === 'object' ?
@@ -27,7 +27,7 @@ function autoForm(opts){return {view: function(){
   }
 
   afState.form[opts.id] = opts.doc ?
-    untangle(opts.doc) : afState.form[opts.id]
+    linearize(opts.doc) : afState.form[opts.id]
 
   var attr = {
     form: {
@@ -96,6 +96,15 @@ function autoForm(opts){return {view: function(){
         readonly: true, name: !schema.exclude ? name : '',
         value: schema.autoValue(name, afState.form[opts.id], opts)
       })
+    )},
+    "datetime-local": function(){return m('.field',
+      attr.label(name, schema),
+      m('.control', m('input.input', {
+        type: 'datetime-local',
+        name: !schema.exclude ? name: '',
+        required: !schema.optional
+      })),
+      m('p.help', _.get(schema, 'autoform.help'))
     )},
     textarea: function(){return m('.field',
       attr.label(name, schema),

@@ -11,7 +11,7 @@ makePdf = {
       pageSize: 'B8',
       pageMargins: [110, 50, 0, 0],
       pageOrientation: 'landscape'
-    }).download('kartu_peserta '+identitas.no_mr)
+    }).download('kartu_peserta_'+identitas.no_mr)
   ,
 
   consent: identitas =>
@@ -126,7 +126,7 @@ makePdf = {
           ])
         ])),
         {text: '\nP. Kuras, '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
-      ]}).download('bayar_konsultasi '+identitas.no_mr)
+      ]}).download('bayar_konsultasi_'+identitas.no_mr)
   ),
 
   soap: (identitas, rawat) =>
@@ -192,7 +192,7 @@ makePdf = {
           )}}
         ]
       ]
-    ]}).download('soap')
+    ]}).download('soap_'+identitas.no_mr)
   ,
 
   resep: (identitas, drugs) =>
@@ -218,7 +218,7 @@ makePdf = {
           [i.nama_barang, i.no_batch, i.serahkan]
         )
       )}}
-    ]}).download('salinan resep '+identitas.no_mr)
+    ]}).download('salinan_resep_'+identitas.no_mr)
   ,
 
   report: (title, rows) =>

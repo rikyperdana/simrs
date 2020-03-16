@@ -1,7 +1,10 @@
-/*global _ m comp db state autoForm schemas updateBoth lookUser hari makeModal tds*/
+/*global _ m comp db state autoForm schemas updateBoth lookUser hari makeModal tds ands ors*/
 
 _.assign(comp, {
-  transfer: () => !_.includes([3, 4], state.login.bidang) ?
+  transfer: () => !ors([
+    _.includes([3, 4], state.login.bidang),
+    _.includes([2, 3], state.login.peranan)
+  ]) ?
   m('p', 'Hanya untuk user farmasi dan apotik') : m('.content',
     m('h3', 'Daftar antrian amprah'),
     m('table.table',
@@ -30,6 +33,7 @@ _.assign(comp, {
       m('tbody', state.transferList &&
         state.transferList.map(i => m('tr',
         {ondblclick: () => [
+          state.login.bidang === 3 &&
           _.assign(state, {
             oneAmprah: i, modalResponAmprah: m('.box',
               m('h4', 'Respon permintaan barang'),
@@ -52,7 +56,10 @@ _.assign(comp, {
                         _.assign(a, {
                           stok: {
                             gudang: a.stok.gudang - doc.diserah,
-                            apotik: (a.stok.apotik || 0) + doc.diserah
+                            apotik:
+                              state.oneAmprah.ruangan === 4 ?
+                              (a.stok.apotik || 0) + doc.diserah
+                              : a.stok.apotik
                           },
                           amprah: a.amprah.map(b =>
                             b.idamprah === i.idamprah ?
@@ -71,8 +78,8 @@ _.assign(comp, {
         ]},
         !i.penyerah && tds([
           i.nama_barang, i.no_batch,
-          lookUser(i.peminta), i.diminta, hari(i.tanggal_minta),
-          lookUser(i.penyerah), i.diserah, hari(i.tanggal_serah)
+          lookUser(i.peminta), i.diminta, hari(i.tanggal_minta, true),
+          lookUser(i.penyerah), i.diserah, hari(i.tanggal_serah, true)
         ])
       ))),
       makeModal('modalResponAmprah')
@@ -88,8 +95,8 @@ _.assign(comp, {
         state.transferList.map(i => m('tr',
           i.penyerah && tds([
             i.nama_barang, i.no_batch,
-            lookUser(i.peminta), i.diminta, hari(i.tanggal_minta),
-            lookUser(i.penyerah), i.diserah, hari(i.tanggal_serah)
+            lookUser(i.peminta), i.diminta, hari(i.tanggal_minta, true),
+            lookUser(i.penyerah), i.diserah, hari(i.tanggal_serah, true)
           ])
         ))
       )

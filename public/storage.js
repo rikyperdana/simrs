@@ -3,7 +3,7 @@
 _.assign(comp, {
   storage: () => !ors([
   _.includes([3, 4], state.login.bidang),
-  _.includes([3], state.login.peranan)
+  _.includes([2, 3], state.login.peranan)
   ]) ? m('p', 'Hanya untuk user farmasi & apotik')
   : m('.content',
     {onupdate: () =>
@@ -172,16 +172,19 @@ _.assign(comp, {
               m('h4', 'Riwayat Amprah'),
               m('table.table',
                 m('thead', m('tr',
-                  ['Peminta', 'Diminta', 'Diserah', 'Penyerah']
+                  ['Peminta', 'Asal', 'Diminta', 'Diserah', 'Penyerah']
                   .map(j => m('th', j))
                 )),
                 m('tbody', i.amprah.map(j => m('tr', tds([
-                  lookUser(j.peminta), j.diminta,
+                  lookUser(j.peminta), look('bidang', j.ruangan), j.diminta,
                   j.diserah, lookUser(j.penyerah),
                 ]))))
               ),
             ), m('br'),
-            _.includes([4], state.login.bidang) && [
+            ors([
+              _.includes([4], state.login.bidang),
+              _.includes([2, 3], state.login.peranan)
+            ]) && [
               m('h4', 'Form amprah batch'),
               m(autoForm({
                 id: 'formAmprah', schema: schemas.amprah,
