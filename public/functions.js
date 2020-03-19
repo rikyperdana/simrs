@@ -78,10 +78,10 @@ makeReport = (name, action) => m('.box',
   )
 ),
 
-tarifInap = (masuk, keluar, kelas) =>
-  daysDifference(keluar - masuk) || 1 *
-  1000 * +selects('tarif_bed')()
-  .find(j => j.value === +kelas).label,
+tarifInap = (masuk, keluar, tarif) =>
+  (daysDifference(keluar - masuk) || 1) * 1000 * +tarif,
+  // 1000 * +selects('tarif_bed')()
+  // .find(j => j.value === +kelas).label,
 
 dbCall = (body, action) =>
   io().emit('dbCall', body, action),
@@ -103,12 +103,17 @@ menus = {
   inpatient: {
     full: 'Rawat Inap', icon: 'bed',
     children: {
+      beds: {full: 'Daftar Kamar'},
       surgery: {full: 'Antrian Bedah'}
     }
   },
   cashier: {full: 'Kasir', icon: 'cash-register'},
-  storage: {full: 'Gudang', icon: 'cubes'},
-  transfer: {full: 'Amprah', icon: 'random'},
+  storage: {
+    full: 'Gudang', icon: 'cubes',
+    children: {
+      transfer: {full: 'Amprah'}
+    }
+  },
   pharmacy: {full: 'Apotik', icon: 'flask'},
   management: {
     full: 'Manajemen', icon: 'users',

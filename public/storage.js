@@ -4,7 +4,7 @@ _.assign(comp, {
   storage: () => !ors([
   _.includes([3, 4], state.login.bidang),
   _.includes([2, 3], state.login.peranan)
-  ]) ? m('p', 'Hanya untuk user farmasi & apotik')
+  ]) ? m('p', 'Hanya untuk user farmasi, apotik dan petugas medis')
   : m('.content',
     {onupdate: () =>
       db.goods.toArray(array => [
@@ -63,6 +63,7 @@ _.assign(comp, {
     m('h3', 'Form input jenis barang baru'),
     m(autoForm({
       id: 'formGood', schema: schemas.barang,
+      confirmMessage: 'Yakin untuk menambahkan JENIS barang baru?',
       action: doc => withThis(
         _.merge(doc, {_id: randomId()}),
         obj => [

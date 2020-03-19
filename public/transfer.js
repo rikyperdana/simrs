@@ -1,11 +1,12 @@
-/*global _ m comp db state autoForm schemas updateBoth lookUser hari makeModal tds ands ors*/
+/*global _ m comp db state autoForm schemas updateBoth lookUser hari makeModal tds ands ors look*/
 
 _.assign(comp, {
   transfer: () => !ors([
     _.includes([3, 4], state.login.bidang),
     _.includes([2, 3], state.login.peranan)
-  ]) ?
-  m('p', 'Hanya untuk user farmasi dan apotik') : m('.content',
+  ])
+  ? m('p', 'Hanya untuk user farmasi, apotik dan petugas medis')
+  : m('.content',
     m('h3', 'Daftar antrian amprah'),
     m('table.table',
       {onupdate: () => [
@@ -27,7 +28,7 @@ _.assign(comp, {
         ])
       ]},
       m('thead', m('tr',
-        ['Nama barang', 'No. Batch', 'Peminta', 'Jumlah minta', 'Tanggal diminta', 'Penyerah', 'Jumlah serah', 'Tanggal serah']
+        ['Nama barang', 'No. Batch', 'Peminta', 'Asal Ruangan', 'Jumlah minta', 'Tanggal diminta']
         .map((i => m('th', i)))
       )),
       m('tbody', state.transferList &&
@@ -57,13 +58,13 @@ _.assign(comp, {
                           stok: {
                             gudang: a.stok.gudang - doc.diserah,
                             apotik:
-                              state.oneAmprah.ruangan === 4 ?
-                              (a.stok.apotik || 0) + doc.diserah
+                              state.oneAmprah.ruangan === 4
+                              ? (a.stok.apotik || 0) + doc.diserah
                               : a.stok.apotik
                           },
                           amprah: a.amprah.map(b =>
-                            b.idamprah === i.idamprah ?
-                            _.assign(b, doc) : b
+                            b.idamprah === i.idamprah
+                            ? _.assign(b, doc) : b
                           )
                         }) : a
                       )
@@ -77,9 +78,8 @@ _.assign(comp, {
           m.redraw()
         ]},
         !i.penyerah && tds([
-          i.nama_barang, i.no_batch,
-          lookUser(i.peminta), i.diminta, hari(i.tanggal_minta, true),
-          lookUser(i.penyerah), i.diserah, hari(i.tanggal_serah, true)
+          i.nama_barang, i.no_batch, lookUser(i.peminta),
+          look('bidang', i.ruangan), i.diminta, hari(i.tanggal_minta, true)
         ])
       ))),
       makeModal('modalResponAmprah')

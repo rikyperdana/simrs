@@ -3,9 +3,12 @@ var m, _, afState = {arrLen: {}, form: {}}
 function autoForm(opts){return {view: function(){
   function normal(name){return name.replace(/\d/g, '$')}
   function ors(array){return array.filter(Boolean)[0]}
-  function dateValue(timestamp){
-    var date = new Date(timestamp)
-    return [date.getFullYear(), date.getMonth(), date.getDate()].join('-')
+  function dateValue(timestamp, hour){
+    var date = new Date(timestamp),
+    dateStamp = [date.getFullYear(), date.getMonth()+1, date.getDate()].join('-'),
+    zeros = function(num){return num < 10 ? '0'+num : num},
+    hourStamp = 'T'+zeros(date.getHours())+':'+zeros(date.getMinutes())
+    return !hour ? dateStamp : dateStamp+hourStamp
   }
 
   function linearize(obj){
@@ -40,7 +43,7 @@ function autoForm(opts){return {view: function(){
       onsubmit: function(e){
         e.preventDefault()
         afState.form[opts.id] = opts.autoReset && null
-        opts.action(
+        var submit = () => opts.action(
           _.filter(e.target, function(i){
             return i.name && i.value
           }).map(function(obj){
@@ -72,6 +75,8 @@ function autoForm(opts){return {view: function(){
             return _.merge(res, recursive(inc))
           }, {})
         )
+        !opts.confirmMessage ? submit()
+        : confirm(opts.confirmMessage) && submit()
       }
     },
     arrLen: function(name, type){return {onclick: function(){
@@ -82,7 +87,7 @@ function autoForm(opts){return {view: function(){
       m('span', schema.label || _.startCase(name)),
       m('span', m('b.has-text-danger', !schema.optional && ' *'))
     )}
-  };
+  }
 
   function inputTypes(name, schema){return {
     hidden: function(){return m('input.input', {
@@ -102,9 +107,9 @@ function autoForm(opts){return {view: function(){
       m('.control', m('input.input', {
         type: 'datetime-local',
         name: !schema.exclude ? name: '',
-        required: !schema.optional
-      })),
-      m('p.help', _.get(schema, 'autoform.help'))
+        required: !schema.optional,
+        value: dateValue(_.get(afState.form, [opts.id, name]), true),
+      }))
     )},
     textarea: function(){return m('.field',
       attr.label(name, schema),

@@ -81,7 +81,7 @@ _.assign(comp, {
       'references',
       _.get(state, 'referenceList.length') / 20
     )),
-    false && [
+    [
       m('h3', 'Import Data'),
       m('.file.is-danger',
         {onchange: e => Papa.parse(e.target.files[0], {
@@ -119,6 +119,11 @@ _.assign(comp, {
                   )}
                 ))
               ),
+              result.data[0].kelas && updater(
+                'beds', result.data.map(i =>
+                  _.merge(i, {_id: randomId(), updated: _.now()})
+                )
+              ),
               result.data[0].no_batch && updater('goods',
                 result.data.map(i => _.merge(
                   {_id: randomId(), updated: _.now()},
@@ -153,7 +158,7 @@ _.assign(comp, {
       )
     ]
   ),
-  
+
   pagination: (id, length) => [
     state.pagination = state.pagination || _.fromPairs([[
       id, _.get(state.pagination, id) || 0
@@ -166,5 +171,5 @@ _.assign(comp, {
         ]
       }, i+1)))
     ))
-  ][1]
+  ][1],
 })

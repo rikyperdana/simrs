@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser*/
+/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds*/
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -96,7 +96,8 @@ _.assign(comp, {
                   rawat.kode_bed && m('tr',
                     m('th', 'Biaya kamar'),
                     m('td', rupiah(tarifInap(
-                      rawat.tanggal_masuk, rawat.keluar, rawat.kelas_bed
+                      rawat.tanggal_masuk, rawat.keluar,
+                      beds[_.get(rawat.bed, 'kelas')].tarif
                     )))
                   ),
                   m('tr',
@@ -144,7 +145,8 @@ _.assign(comp, {
                     rawat.klinik ? 1000*+look('tarif_klinik', rawat.klinik) : 45000,
                   ]),
                   rawat.kode_bed ? tarifInap(
-                    rawat.tanggal_masuk, rawat.keluar, rawat.kelas_bed
+                    rawat.tanggal_masuk, rawat.keluar,
+                    beds[_.get(rawat.bed, 'kelas')].tarif
                   ) : 0,
                   _.sum([
                     _.compact(([]).concat(

@@ -1,4 +1,4 @@
-/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis*/
+/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds*/
 
 var kop = {text: 'RUMAH SAKIT MEDICARE\nJL. Dt. Laksamana No. 1, Pangkalan Kuras, Pelalawan, Provinsi Riau.\n\n', alignment: 'center', bold: true},
 makePdf = {
@@ -112,7 +112,9 @@ makePdf = {
           tindakans ? tindakans.map(i => [i[0], rupiah(i[1])]) : [],
           obats ? obats.map(i => [i[0], rupiah(i[1])]) : [],
           rawat.observasi ? [['Biaya inap', rupiah(tarifInap(
-            rawat.tanggal_masuk, rawat.keluar, rawat.kelas_bed)
+            rawat.tanggal_masuk, rawat.keluar,
+            beds[rawat.bed.kelas].tarif
+          )
           )]] : [],
           observasi ? observasi.map(i => [i[0], rupiah(i[1])]) : []
         )}},
@@ -121,7 +123,10 @@ makePdf = {
           tindakans && tindakans.reduce((res, inc) => res + inc[1], 0),
           obats && obats.reduce((res, inc) => res + inc[1], 0),
           rawat.observasi && _.sum([
-            tarifInap(rawat.tanggal_masuk, rawat.keluar, rawat.kelas_bed),
+            tarifInap(
+              rawat.tanggal_masuk, rawat.keluar,
+              beds[rawat.bed.kelas].tarif
+            ),
             _.sum(observasi.map(j => j[1]))
           ])
         ])),

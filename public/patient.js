@@ -109,6 +109,7 @@ _.assign(comp, {
     ]}),
     m(autoForm({
       id: 'soapMedis', autoReset: true,
+      confirmMessage: 'Yakin untuk menyimpan SOAP?',
       schema: ors([
         state.login.peranan === 2 && schemas.soapPerawat,
         state.login.peranan === 3 && ors([

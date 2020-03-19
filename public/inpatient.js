@@ -1,4 +1,4 @@
-/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds*/
+/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm*/
 
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3, 4], state.login.peranan) ?
@@ -64,43 +64,44 @@ _.assign(comp, {
         {ondblclick: () => [
           state.admissionModal = m('.box',
             m('h4', 'Inapkan pasien'),
-            m('form',
-              {onsubmit: e => [
-                e.preventDefault(),
-                updateBoth('patients', i.pasien._id, _.assign(i.pasien, {
-                  rawatInap: (i.rawatInap || []).concat([{
-                    tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
-                    observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
-                    cara_bayar: i.inap.cara_bayar,
-                    kelas_bed: _.find(e.target, i =>
-                      i.name === 'kelas_bed'
-                    ).value,
-                    kode_bed: _.find(e.target, i =>
-                      i.name === 'kode_bed'
-                    ).value
-                  }])
-                })),
+            m('table.table',
+              [
+                ['Nama Lengkap', i.pasien.identitas.no_mr],
+                ['Cara bayar', look('cara_bayar', i.inap.cara_bayar)],
+                ['Anamnesa Perawat', _.get(i, 'inap.soapPerawat.anamnesa')],
+                ['Anamnesa Dokter', _.get(i, 'inap.soapDokter.anamnesa')],
+              ].map(j => m('tr', m('th', j[0]), m('td', j[1]))),
+            ),
+            m(autoForm({
+              id: 'formBed',
+              schema: {
+                kelas: {type: String, autoform: {
+                  type: 'select', options: () => _.keys(beds).map(
+                    j => ({value: j, label: _.upperCase(j)})
+                  )
+                }},
+                kamar: {type: String, autoform: {
+                  type: 'select', options: () =>
+                  _.flatten(_.values(beds).map(j => _.keys(j.kamar)))
+                  .map(j => ({value: j, label: _.startCase(j)}))
+                }},
+                nomor: {type: Number},
+              },
+              action: (doc) => [
+                updateBoth(
+                  'patients', i.pasien._id, _.assign(i.pasien, {
+                    rawatInap: (i.rawatInap || []).concat([{
+                      tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
+                      observasi: [], idinap: randomId(), idrawat: i.inap.rawat,
+                      cara_bayar: i.inap.cara_bayar,
+                      bed: doc
+                    }])
+                  })
+                ),
                 state.admissionModal = null,
                 m.redraw()
-              ]},
-              m('table.table',
-                [
-                  ['Nama Lengkap', i.pasien.identitas.no_mr],
-                  ['Cara bayar', look('cara_bayar', i.inap.cara_bayar)],
-                  ['Anamnesa Perawat', _.get(i, 'inap.soapPerawat.anamnesa')],
-                  ['Anamnesa Dokter', _.get(i, 'inap.soapDokter.anamnesa')],
-                  ['Kelas bed', m('.select', m('select',
-                    {name: 'kelas_bed', required: true},
-                    m('option', {value: ''}, '-'),
-                    selects('kelas_bed')().map(j =>
-                      m('option', {value: +j.value}, 'Kelas '+j.label)
-                    )
-                  ))],
-                  ['Kode bed', m('input.input', {type: 'text', name: 'kode_bed'})]
-                ].map(j => m('tr', m('th', j[0]), m('td', j[1])))
-              ),
-              m('input.button.is-success', {type: 'submit', value: 'Inapkan'})
-            )
+              ]
+            }))
           ), m.redraw()
         ]},
         tds([
@@ -114,16 +115,17 @@ _.assign(comp, {
     m('br'),
     m('h3', 'Daftar Pasien Menginap'),
     m('table.table',
-      {onupdate: () =>
+      {onupdate: () => [
         db.patients.toArray(array => [
           state.inpatientList = array.filter(i =>
             i.rawatInap && i.rawatInap
             .filter(j => !j.keluar).length > 0
           ), m.redraw()
-        ])
-      },
+        ]),
+        db.beds.toArray(array => state.bedsList = array)
+      ]},
       m('thead', m('tr',
-        ['No. MR', 'Nama Pasien', 'Kode Bed']
+        ['No. MR', 'Nama Pasien', 'Kelas/Kamar/Nomor']
         .map(i => m('th', i))
       )),
       m('tbody',
@@ -136,7 +138,14 @@ _.assign(comp, {
           tds([
             i.identitas.no_mr,
             i.identitas.nama_lengkap,
-            _.last(i.rawatInap).kode_bed
+            withThis(
+              _.get(_.last(i.rawatInap), 'bed'),
+              bed => [
+                _.upperCase(bed.kelas),
+                _.startCase(bed.kamar),
+                bed.nomor
+              ].join('/')
+            )
           ])
         ))
       )
@@ -146,15 +155,15 @@ _.assign(comp, {
   inpatientHistory: () => m('.content',
     m('table.table',
       m('thead', m('tr',
-        ['Tanggal masuk', 'Kode bed']
-        .map(i => m('th', _.startCase(i)))
+        ['Tanggal masuk', 'Kelas/Kamar/Nomor']
+        .map(i => m('th', i))
       )),
       m('tbody',
         (state.onePatient.rawatInap || []).map(i => m('tr',
           {ondblclick: () =>
             state.modalObservasi = _.includes([2, 3], state.login.peranan) && m('.box',
               m('h3', 'Riwayat Observasi'),
-              m('p.is-italic.has-text-danger', 'klik-ganda pada salah satu observasi untuk melihat rincian'),
+              i.observasi.length ? m('p.is-italic.has-text-danger', 'klik-ganda pada salah satu observasi untuk melihat rincian') : '',
               m('table.table',
                 m('thead', m('tr',
                   ['Waktu', 'Anamnesa', 'Petugas']
@@ -233,10 +242,64 @@ _.assign(comp, {
             )
           },
           makeModal('modalSoap'),
-          tds([hari(i.tanggal_masuk), i.kode_bed])
+          tds([
+            hari(i.tanggal_masuk),
+            i.bed && [
+              _.upperCase(i.bed.kelas),
+              _.startCase(i.bed.kamar),
+              i.bed.nomor
+            ].join('/')
+          ])
         ))
       )
     ),
     makeModal('modalObservasi')
-  )
+  ),
+  
+  beds: () => m('.content',
+    m('h3', 'Daftar Kamar'),
+    m('table.table',)
+  ),
 })
+
+var beds = {
+  vip: {
+    tarif: 350,
+    kamar: {
+      tulip: 1,
+      bougenvil: 1,
+      sakura: 1
+    }
+  },
+  iii: {
+    tarif: 200,
+    kamar: {
+      kenanga: 2,
+      cempaka: 2,
+      claudia: 2,
+      ferbia: 2,
+      yasmin: 2,
+      edelwise: 2
+    }
+  },
+  ii: {
+    tarif: 150,
+    kamar: {
+      seroja: 4,
+      mawar: 2,
+      dahlia: 2,
+      lili: 2,
+      zahara: 2,
+      matahari: 4
+    }
+  },
+  i: {
+    tarif: 100,
+    kamar: {
+      anggrek: 4,
+      teratai: 8,
+      kertas: 4,
+      melati: 4
+    }
+  }
+}

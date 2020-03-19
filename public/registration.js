@@ -42,6 +42,7 @@ _.assign(comp, {
     m('h3', 'Pendaftaran Pasien Baru'),
     m(autoForm({
       id: 'newPatient', schema: schemas.identitas,
+      confirmMessage: 'Yakin ingin menambahkan pasien BARU?',
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
           insertBoth('patients', obj),
@@ -70,19 +71,20 @@ _.assign(comp, {
     m('.box', m(autoForm({
       id: 'poliVisit', autoReset: true,
       schema: schemas.rawatJalan,
-      action: doc =>
-        db.patients.filter(i =>
-          i.rawatJalan && i.rawatJalan.filter(j => ands([
-            j.klinik === 1,
-            j.tanggal > startOfTheDay(Date.now())
-          ])).length
-        ).toArray(array => [
-          updateBoth('patients', state.onePatient._id, _.assign(state.onePatient, {
-            rawatJalan: (state.onePatient.rawatJalan || []).concat([
-              _.merge(doc, {antrian: array.length+1})
-            ])
-          })), state.route = 'onePatient'
-        ])
+      action: doc => db.patients.filter(i =>
+        i.rawatJalan && i.rawatJalan.filter(j => ands([
+          j.klinik === 1,
+          j.tanggal > startOfTheDay(Date.now())
+        ])).length
+      ).toArray(array => [
+        updateBoth('patients', state.onePatient._id, _.assign(state.onePatient, {
+          rawatJalan: (state.onePatient.rawatJalan || []).concat([
+            _.merge(doc, {antrian: array.length+1})
+          ])
+        })),
+        state.route = 'onePatient',
+        m.redraw()
+      ])
     })))
   )
 })
