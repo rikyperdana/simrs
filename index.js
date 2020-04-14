@@ -4,18 +4,16 @@ mongoDB = require("mongodb"),
 _ = require('lodash'),
 io = require('socket.io'),
 withThis = (obj, cb) => cb(obj),
-bpjs = require('./bpjs'),
 app = express()
 .use(express.static("public"))
 .use(bodyParser.urlencoded({extended: false}))
 .use(bodyParser.json())
-.post('/bpjs', bpjs.bpjs)
 .listen(3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
   process.env.atlas,
   {useNewUrlParser: true, useUnifiedTopology: true},
-  (err, client) => [action(client.db("medicare")), /*client.close()*/]
+  (err, client) => [action(client.db(process.env.dbname))]
 )
 
 var io = require('socket.io')(app)

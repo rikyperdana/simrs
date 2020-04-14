@@ -11,6 +11,7 @@ selects = name => _.reduce(
     darah: ['a', 'b', 'ab', 'o'],
     pekerjaan: ['pns', 'swasta', 'wiraswasta', 'tni', 'polri', 'pensiunan', 'lainnya'],
     cara_bayar: ['umum', 'bpjs', 'asuransi'],
+    kodepoli:     ['int',            'ana',  'obg',   'bed',   'gig'],
     klinik:       ['penyakit_dalam', 'anak', 'obgyn', 'bedah', 'gigi', 'umum'],
     tarif_klinik: [ 95,               95,     95,      95,      95,     45],
     rujukan: ['datang_sendiri', 'rs_lain', 'puskesmas', 'faskes_lainnya'],

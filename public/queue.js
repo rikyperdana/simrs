@@ -1,16 +1,22 @@
-/*global _ m comp makePdf ands selects*/
+/*global _ m comp makePdf ands selects insertBoth db startOfTheDay*/
 
 _.assign(comp, {
   queue: () => m('.content',
     m('table.is-fullwidth', m('tr',
+      {oncreate: () => db.queue.toArray(
+        array => localStorage.setItem('regQueue', array.filter(
+          i => i.timestamp > startOfTheDay(Date.now())
+        ).length)
+      )},
       m('th', m('h1', 'Antrian Pendaftaran')),
       m('th', m('h1', 'R'+(localStorage.regQueue || 0)))
     )),
     m('.buttons',
       m('.button', {
         onclick: () => ands([
+          insertBoth('queue', {timestamp: Date.now(), num: +localStorage.regQueue+1}),
           makePdf.regQueue(+localStorage.regQueue),
-          localStorage.setItem('regQueue', (+localStorage.regQueue)+1)
+          localStorage.setItem('regQueue', +localStorage.regQueue+1)
         ])
       }, 'Cetak antrian'),
       m('.button', {

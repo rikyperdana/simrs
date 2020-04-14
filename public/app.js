@@ -86,7 +86,7 @@ window.addEventListener('load', () =>
     }),
     auth2 => auth2.signIn().then(() => [
       state.gmail = Object.values(auth2.currentUser.get().getBasicProfile())
-        .find(i => _.includes(i, "@gmail.com")), // Google may change this without prior notice
+        .find(i => _.includes(i, "@gmail.com")),
       m.render(document.body, 'memverifikasi hak akses...'),
       io().on('connect', () =>
         io().emit('isMember', state.gmail, res =>

@@ -4,7 +4,7 @@ _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
   m('p', 'Hanya untuk user bidang kasir') : m('.content',
     state.login.peranan === 4 &&
-    makeReport('Kunjungan Poliklinik', e => withThis(
+    makeReport('Penerimaan Kasir (Poli & IGD)', e => withThis(
       ({
         start: (new Date(e.target[0].value)).getTime(),
         end: (new Date(e.target[1].value)).getTime(),
@@ -12,13 +12,46 @@ _.assign(comp, {
       date => [
         e.preventDefault(),
         db.patients.toArray(array => makePdf.report(
-          'Laporan Penerimaan Kasir',
-          [['Tanggal & Jam', 'Layanan', 'No. MR', 'Nama Pasien', 'Petugas', 'Jumlah']]
-          .concat(_.compact(
-            array.flatMap(pasien =>
-              ['19 Februari 2020', 'Penyakit Dalam', '123456', 'Riky Perdana', 'Syamsudin', '124.500']
-            ).sort((a, b) => a.tanggal - b.tanggal)
-          ))
+          'Penerimaan Kasir (Poli & IGD)',
+          [['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Konsultasi', 'Obat', 'Tindakan', 'Jumlah']].concat(
+            _.flattenDeep(array.map(
+              i => ([]).concat(i.rawatJalan || [],i.emergency || [])
+              .map(j => j.bayar_konsultasi && {pasien: i, rawat: j})
+              .filter(Boolean)
+            ).filter(l => l.length))
+            .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
+            .map(i => [
+              hari(i.rawat.tanggal),
+              !i.rawat.klinik ? 'IGD' :
+              look('klinik', i.rawat.klinik),
+              String(i.pasien.identitas.no_mr),
+              i.pasien.identitas.nama_lengkap,
+              rupiah(
+                !i.rawat.klinik ? 45000 :
+                +look('tarif_klinik', i.rawat.klinik)*1000
+              ),
+              rupiah(i.rawat.soapDokter.obat ? _.sum(
+                i.rawat.soapDokter.obat.map(j => j.harga)
+              ) : 0),
+              rupiah(i.rawat.soapDokter.tindakan ? _.sum(
+                i.rawat.soapDokter.tindakan.map(
+                  j => +lookReferences(j.idtindakan).harga
+                )
+              ) : 0),
+              rupiah(_.sum([
+                !i.rawat.klinik ? 45000 :
+                +look('tarif_klinik', i.rawat.klinik)*1000,
+                i.rawat.soapDokter.obat ? _.sum(
+                  i.rawat.soapDokter.obat.map(j => j.harga)
+                ) : 0,
+                i.rawat.soapDokter.tindakan ? _.sum(
+                  i.rawat.soapDokter.tindakan.map(
+                    j => +lookReferences(j.idtindakan).harga
+                  )
+                ) : 0
+              ]))
+            ])
+          )
         ))
       ]
     )),
@@ -38,9 +71,8 @@ _.assign(comp, {
             ).filter(j =>
               j.cara_bayar === 1 && ors([
                 !j.bayar_pendaftaran,
-                j.kode_bed ?
-                ands([j.kode_bed, j.keluar, !j.bayar_konsultasi])
-                : !j.bayar_konsultasi && j.soapDokter
+                ands([j.bed, j.keluar, !j.bayar_konsultasi]),
+                !j.bayar_konsultasi && j.soapDokter
               ])
             ).length
           ).toArray(array =>
@@ -71,7 +103,7 @@ _.assign(comp, {
               ])
             ]),
             ands([
-              rawat.kode_bed, rawat.keluar,
+              rawat.bed, rawat.keluar,
               !rawat.bayar_konsultasi
             ])
           ]) && m('tr',
@@ -80,20 +112,20 @@ _.assign(comp, {
               m('table.table',
                 m('tr', m('th', 'Nama Lengkap'), m('td', pasien.identitas.nama_lengkap)),
                 m('tr', m('th', 'No. MR'), m('td', pasien.identitas.no_mr)),
-                !rawat.kode_bed && ands([
+                !rawat.bed && ands([
                   ([]).concat(pasien.rawatJalan || [], pasien.emergency || []).length === 1,
                   !rawat.bayar_pendaftaran,
                   m('tr', m('th', 'Daftar pasien baru'), m('td', rupiah(8000)))
                 ]),
                 ors([
                   !rawat.bayar_pendaftaran,
-                  rawat.kode_bed && rawat.keluar
+                  rawat.bed && rawat.keluar
                 ]) && ors([
                   rawat.klinik && m('tr',
                     m('th', 'Adm + Konsultasi Poli '+look('klinik', rawat.klinik)),
                     m('td', rupiah(1000*+look('tarif_klinik', rawat.klinik)))
                   ),
-                  rawat.kode_bed && m('tr',
+                  rawat.bed && m('tr',
                     m('th', 'Biaya kamar'),
                     m('td', rupiah(tarifInap(
                       rawat.tanggal_masuk, rawat.keluar,
@@ -108,7 +140,7 @@ _.assign(comp, {
                 ands([
                   ors([
                     rawat.klinik && !rawat.bayar_konsultasi,
-                    rawat.kode_bed && !rawat.bayar_konsultasi,
+                    rawat.bed && !rawat.bayar_konsultasi,
                     !rawat.bayar_konsultasi
                   ]),
                   [
@@ -137,14 +169,14 @@ _.assign(comp, {
                 m('tr', m('th', 'Total biaya'), m('td', rupiah(_.sum([
                   ands([
                     !rawat.bayar_pendaftaran,
-                    !rawat.kode_bed
+                    !rawat.bed
                   ]) && _.sum([
                     ([]).concat(
                       pasien.rawatJalan || [], pasien.emergency || []
                     ).length === 1 ? 8000 : 0,
                     rawat.klinik ? 1000*+look('tarif_klinik', rawat.klinik) : 45000,
                   ]),
-                  rawat.kode_bed ? tarifInap(
+                  rawat.bed ? tarifInap(
                     rawat.tanggal_masuk, rawat.keluar,
                     beds[_.get(rawat.bed, 'kelas')].tarif
                   ) : 0,
@@ -172,7 +204,7 @@ _.assign(comp, {
                 {onclick: () => withThis(
                   ors([
                     rawat.klinik && 'rawatJalan',
-                    rawat.kode_bed && 'rawatInap',
+                    rawat.bed && 'rawatInap',
                     'emergency'
                   ]),
                   facility => [
@@ -182,7 +214,8 @@ _.assign(comp, {
                           rawat.idrawat && i.idrawat === rawat.idrawat,
                           rawat.idinap && i.idinap === rawat.idinap
                         ]) ? _.assign(rawat, ors([
-                          !rawat.klinik && {bayar_pendaftaran: true, bayar_konsultasi: true},
+                          !rawat.klinik && rawat.soapDokter &&
+                          {bayar_pendaftaran: true, bayar_konsultasi: true},
                           !rawat.bayar_pendaftaran && {bayar_pendaftaran: true},
                           !rawat.bayar_konsultasi && {bayar_konsultasi: true}
                         ])) : i
@@ -216,7 +249,7 @@ _.assign(comp, {
               hari(rawat.tanggal || rawat.tanggal_masuk),
               ors([
                 rawat.klinik && look('klinik', rawat.klinik),
-                rawat.kode_bed && 'Rawat Inap',
+                rawat.bed && 'Rawat Inap',
                 'IGD'
               ])
             ])

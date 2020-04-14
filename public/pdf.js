@@ -119,7 +119,7 @@ makePdf = {
           observasi ? observasi.map(i => [i[0], rupiah(i[1])]) : []
         )}},
         '\nTotal Biaya '+rupiah(_.sum([
-          !rawat.klinik && !rawat.kode_bed && 45000,
+          !rawat.klinik && !rawat.bed && 45000,
           tindakans && tindakans.reduce((res, inc) => res + inc[1], 0),
           obats && obats.reduce((res, inc) => res + inc[1], 0),
           rawat.observasi && _.sum([

@@ -46,6 +46,10 @@ _.assign(comp, {
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
           insertBoth('patients', obj),
+          doc.no_antrian && db.queue.toArray(arr => withThis(
+            arr.find(i => i.no_antrian === doc.no_antrian),
+            obj => updateBoth('queue', obj._id, _.merge(obj, {done: true}))
+          )),
           _.assign(state, {route: 'onePatient', onePatient: obj})
         ]
       ),
@@ -82,6 +86,10 @@ _.assign(comp, {
             _.merge(doc, {antrian: array.length+1})
           ])
         })),
+        doc.no_antrian && db.queue.toArray(arr => withThis(
+          arr.find(i => i.no_antrian === doc.no_antrian),
+          obj => updateBoth('queue', obj._id, _.merge(obj, {done: true}))
+        )),
         state.route = 'onePatient',
         m.redraw()
       ])

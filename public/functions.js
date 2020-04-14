@@ -80,13 +80,11 @@ makeReport = (name, action) => m('.box',
 
 tarifInap = (masuk, keluar, tarif) =>
   (daysDifference(keluar - masuk) || 1) * 1000 * +tarif,
-  // 1000 * +selects('tarif_bed')()
-  // .find(j => j.value === +kelas).label,
 
 dbCall = (body, action) =>
   io().emit('dbCall', body, action),
     
-collNames = ['patients', 'goods', 'references', 'users'],
+collNames = ['patients', 'goods', 'references', 'users', 'queue'],
 
 state = {route: 'dashboard'}, comp = {},
 

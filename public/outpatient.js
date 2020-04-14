@@ -88,7 +88,6 @@ _.assign(comp, {
       m('tbody',
         (_.get(state.onePatient, 'rawatJalan') || []).map(i => m('tr',
           {ondblclick: () => [
-            console.log('apa ya'),
             state.modalVisit = _.includes([2, 3, 4], state.login.peranan) &&
             ors([i.cara_bayar !== 1, i.bayar_pendaftaran]) && m('.box',
               m('h3', 'Rincian Kunjungan'),

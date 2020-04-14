@@ -2,6 +2,7 @@
 
 var schemas = {
   identitas: {
+    no_antrian: {type: String, optional: true, exclude: true},
     no_mr: {
       type: Number, label: 'No. MR',
       autoform: {help: 'otomatis dari sistem & boleh diubah'},
@@ -17,6 +18,7 @@ var schemas = {
     },
     nama_lengkap: {type: String,},
     ktp: {type: Number, label: 'No. KTP', optional: true},
+    bpjs: {type: Number, label: 'No. Peserta BPJS', optional: true},
     tanggal_lahir: {type: Date},
     tempat_lahir: {type: String},
     kelamin: {
@@ -58,6 +60,7 @@ var schemas = {
       autoValue: () => Date()
     }
   },
+
   rawatJalan: {
     idrawat: {
       type: String, autoform: {type: 'hidden'},
@@ -67,6 +70,7 @@ var schemas = {
       type: Number, autoform: {type: 'hidden'},
       autoValue: () => _.now()
     },
+    no_antrian: {type: String, optional: true, exclude: true},
     cara_bayar: {type: Number, autoform: {
       type: 'select', options: selects('cara_bayar')
     }},
@@ -80,6 +84,7 @@ var schemas = {
     sumber_rujukan: {type: String, optional: true},
     penaggungjawab: {type: String, optional: true}
   },
+
   soapPerawat: {
     anamnesa: {type: String, autoform: {type: 'textarea'}},
     fisik: {type: Object},
@@ -97,6 +102,7 @@ var schemas = {
       autoValue: () => _.get(state.login, '_id')
     }
   },
+
   soapDokter: {
     anamnesa: {type: String, autoform: {type: 'textarea'}},
     diagnosa: {type: Array},
@@ -154,6 +160,7 @@ var schemas = {
       autoValue: () => _.get(state.login, '_id')
     }
   },
+
   account: {
     nama: {type: String, label: 'Nama lengkap'},
     gmail: {type: String},
@@ -170,6 +177,7 @@ var schemas = {
       type: 'select', options: selects('keaktifan')
     }},
   },
+
   barang: {
     nama: {type: String},
     jenis: {type: Number, autoform: {
@@ -200,6 +208,7 @@ var schemas = {
       autoValue: () => _.get(state.login, '_id')
     }
   },
+
   batch_obat: {
     idbatch: {
       type: String, autoform: {type: 'hidden'},
@@ -224,6 +233,7 @@ var schemas = {
       autoValue: () => _.get(state.login, '_id')
     }
   },
+
   amprah: {
     idamprah: {
       type: String, autoform: {type: 'hidden'},
@@ -249,6 +259,7 @@ var schemas = {
       autoValue: () => _.now()
     }
   },
+
   responAmprah: {
     diserah: {
       type: Number, label: 'Jumlah diserahkan',
@@ -263,6 +274,7 @@ var schemas = {
       autoValue: () => _.now()
     }
   },
+
   admisi: {
     kelas_bed: {type: Number, autoform: {
       type: 'select', options: selects('kelas_bed')

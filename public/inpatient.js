@@ -3,6 +3,7 @@
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3, 4], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
+
     state.login.peranan === 4 &&
     makeReport('Kunjungan Rawat Inap', e => withThis(
       {
@@ -39,6 +40,7 @@ _.assign(comp, {
         ))
       ]
     )),
+
     m('h3', 'Daftar Admisi Rawat Inap'),
     m('table.table',
       {onupdate: () =>
@@ -113,17 +115,17 @@ _.assign(comp, {
     ),
     makeModal('admissionModal'),
     m('br'),
+
     m('h3', 'Daftar Pasien Menginap'),
     m('table.table',
-      {onupdate: () => [
+      {onupdate: () =>
         db.patients.toArray(array => [
           state.inpatientList = array.filter(i =>
             i.rawatInap && i.rawatInap
             .filter(j => !j.keluar).length > 0
           ), m.redraw()
         ]),
-        db.beds.toArray(array => state.bedsList = array)
-      ]},
+      },
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Kelas/Kamar/Nomor']
         .map(i => m('th', i))
@@ -258,48 +260,32 @@ _.assign(comp, {
   
   beds: () => m('.content',
     m('h3', 'Daftar Kamar'),
-    m('table.table',)
+    m('table.table',
+      m('tr', ['Kelas', 'Kamar', 'No. Bed', 'Penginap'].map(i => m('th', i))),
+      _.flattenDepth(
+        _.map(beds, (i, j) => _.map(
+          i.kamar, (k, l) => _.range(k).map(m => [
+            j, l, m+1, _.get(state.inpatientList.find(
+              n => n.rawatInap.find(
+                o => ands([
+                  o.bed.kelas === j,
+                  o.bed.kamar === l,
+                  o.bed.nomor === m+1
+                ])
+              )
+            ), 'identitas.nama_lengkap')
+          ])
+        )), 2
+      ).map(p => m('tr', p.map(
+        q => m('td', _.upperCase(q))
+      )))
+    )
   ),
 })
 
 var beds = {
-  vip: {
-    tarif: 350,
-    kamar: {
-      tulip: 1,
-      bougenvil: 1,
-      sakura: 1
-    }
-  },
-  iii: {
-    tarif: 200,
-    kamar: {
-      kenanga: 2,
-      cempaka: 2,
-      claudia: 2,
-      ferbia: 2,
-      yasmin: 2,
-      edelwise: 2
-    }
-  },
-  ii: {
-    tarif: 150,
-    kamar: {
-      seroja: 4,
-      mawar: 2,
-      dahlia: 2,
-      lili: 2,
-      zahara: 2,
-      matahari: 4
-    }
-  },
-  i: {
-    tarif: 100,
-    kamar: {
-      anggrek: 4,
-      teratai: 8,
-      kertas: 4,
-      melati: 4
-    }
-  }
+  vip: {tarif: 350, kamar: {tulip: 1, bougenvil: 1, sakura: 1}},
+  iii: {tarif: 200, kamar: {kenanga: 2, cempaka: 2, claudia: 2, ferbia: 2, yasmin: 2, edelwise: 2}},
+  ii: {tarif: 150, kamar: {seroja: 4, mawar: 2, dahlia: 2, lili: 2, zahara: 2, matahari: 4}},
+  i: {tarif: 100, kamar: {anggrek: 4, teratai: 8, kertas: 4, melati: 4}}
 }
