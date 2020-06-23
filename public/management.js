@@ -1,4 +1,4 @@
-/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis*/
+/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment*/
 
 _.assign(comp, {
   users: () => state.login.bidang !== 5 ?
@@ -26,7 +26,7 @@ _.assign(comp, {
         state.userList = array, m.redraw()
       ])},
       m('thead', m('tr',
-        ['Nama lengkap', 'Gmail', 'Peranan', 'Bidang', 'Poliklinik', 'Keaktifan']
+        ['Nama lengkap', 'Username', 'Peranan', 'Bidang', 'Poliklinik', 'Keaktifan']
         .map(i => m('th', i)))
       ),
       m('tbody', (state.userList.filter(i =>
@@ -46,7 +46,7 @@ _.assign(comp, {
             )
           },
           tds([
-            i.nama, i.gmail,
+            i.nama, i.username,
             look('peranan', i.peranan),
             look('bidang', i.bidang),
             look('klinik', i.poliklinik),
@@ -107,9 +107,10 @@ _.assign(comp, {
                     {
                       keluarga: {ayah: i.ayah, ibu: i.ibu, pasangan: i.pasangan},
                       kontak: i.kontak, nama_lengkap: _.startCase(i.nama_lengkap),
-                      tanggal_input: (new Date(i.tanggal_input)).getTime(),
-                      tanggal_lahir: (new Date(i.tanggal_lahir)).getTime(),
+                      tanggal_input: +moment(i.tanggal_input),
+                      tanggal_lahir: +moment(i.tanggal_lahir),
                       tempat_lahir: i.tempat_lahir, tempat_tinggal: i.tempat_tinggal,
+                      bayar_kartu: true
                     },
                     _.fromPairs(
                       ['agama', 'alias', 'darah', 'kelamin', 'ktp',
@@ -135,13 +136,13 @@ _.assign(comp, {
                     },
                     batches: [{
                       idbatch: randomId(), no_batch: i.no_batch, merek: i.merek,
-                      masuk: i.masuk && (new Date(i.masuk)).getTime(),
-                      kadaluarsa: i.kadaluarsa && (new Date(i.kadaluarsa)).getTime(),
+                      masuk: i.masuk && +moment(i.masuk),
+                      kadaluarsa: i.kadaluarsa && +moment(i.kadaluarsa),
                       stok: {gudang: +i.digudang, apotik: +i.diapotik, retur: +i.diretur},
                       harga: {beli: +i.beli, jual: +i.jual}, returnable: !!i.returnable,
                       sumber: {
                         supplier: i.supplier, anggaran: +i.anggaran, no_spk: i.no_spk,
-                        tanggal_spk: i.tanggal_spk && (new Date(i.tanggal_spk)).getTime()
+                        tanggal_spk: i.tanggal_spk && +moment(i.tanggal_spk)
                       }
                     }]
                   }

@@ -1,13 +1,11 @@
 var express = require("express"),
-bodyParser = require('body-parser'),
 mongoDB = require("mongodb"),
 _ = require('lodash'),
 io = require('socket.io'),
+bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 app = express()
 .use(express.static("public"))
-.use(bodyParser.urlencoded({extended: false}))
-.use(bodyParser.json())
 .listen(3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
@@ -18,13 +16,18 @@ dbCall = action => mongoDB.MongoClient.connect(
 
 var io = require('socket.io')(app)
 io.on('connection', socket => [
-  socket.on('isMember', (gmail, cb) =>
-    dbCall(db =>
-      db.collection('users').findOne(
-        {gmail}, (err, res) => cb(!!res)
+  socket.on('bcrypt', (type, text, cb) => 
+    bcrypt.hash(text, 10, (err, res) => cb(res))
+  ),
+  socket.on('login', (creds, cb) => dbCall(db =>
+    db.collection('users').findOne(
+      {username: creds.username},
+      (err, res) => bcrypt.compare(
+        creds.password, res.password,
+        (err, result) => cb({res: !!result})
       )
     )
-  ),
+  )), // alhamdulillah bisa pakai bcrypt
   socket.on('dbCall', (obj, cb) => dbCall(db => withThis(
     db.collection(obj.collection),
     coll => ({

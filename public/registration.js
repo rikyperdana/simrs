@@ -1,4 +1,4 @@
-/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay*/
+/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay moment*/
 
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
@@ -78,7 +78,7 @@ _.assign(comp, {
       action: doc => db.patients.filter(i =>
         i.rawatJalan && i.rawatJalan.filter(j => ands([
           j.klinik === 1,
-          j.tanggal > startOfTheDay(Date.now())
+          j.tanggal > startOfTheDay(+moment())
         ])).length
       ).toArray(array => [
         updateBoth('patients', state.onePatient._id, _.assign(state.onePatient, {

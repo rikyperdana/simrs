@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds*/
+/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment*/
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -6,8 +6,8 @@ _.assign(comp, {
     state.login.peranan === 4 &&
     makeReport('Penerimaan Kasir (Poli & IGD)', e => withThis(
       ({
-        start: (new Date(e.target[0].value)).getTime(),
-        end: (new Date(e.target[1].value)).getTime(),
+        start: +moment(e.target[0].value),
+        end: +moment(e.target[1].value)
       }),
       date => [
         e.preventDefault(),

@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis*/
+/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment*/
 
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
@@ -6,8 +6,8 @@ _.assign(comp, {
     state.login.peranan === 4 &&
     makeReport('Pengeluaran Apotik', e => withThis(
       {
-        start: (new Date(e.target[0].value)).getTime(),
-        end: (new Date(e.target[1].value)).getTime()
+        start: +moment(e.target[0].value),
+        end: +moment(e.target[1].value)
       },
       date => [
         e.preventDefault(),

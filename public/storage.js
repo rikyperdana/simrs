@@ -1,4 +1,4 @@
-/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis*/
+/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment*/
 
 _.assign(comp, {
   storage: () => !ors([
@@ -15,7 +15,7 @@ _.assign(comp, {
     m('.field.has-addons',
       m('.control.is-expanded', m('input.input.is-fullwidth', {
         type: 'text', placeholder: 'cari barang...',
-        onkeypress: e => e.target.value.length > 2 &&
+        onkeypress: e =>
           db.goods.filter(i => _.includes(
             _.lowerCase(i.nama+' '+i.kandungan), e.target.value
           )).toArray(array => [
@@ -120,7 +120,7 @@ _.assign(comp, {
         .map(i => m('th', i))
       )),
       m('tbody', (state.oneGood.batch || []).map(i => m('tr',
-        {class: (new Date()).getTime() > i.kadaluarsa && 'has-text-danger',
+        {class: +moment() > i.kadaluarsa && 'has-text-danger',
         ondblclick: () => _.assign(state, {
           oneBatch: i, modalBatch: m('.box',
             m('h4', 'Rincian batch'),

@@ -1,4 +1,4 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis io*/
+/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment*/
 
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
@@ -23,7 +23,9 @@ _.assign(comp, {
         )
       )),
       m('.navbar-end', m('.navbar-item.has-dropdown.is-hoverable',
-        m('a.navbar-link', _.get(state.login, 'gmail')),
+        m('a.navbar-link', {
+          onclick: () => [state.route = 'profile', m.redraw()]
+        }, _.get(state.login, 'username')),
         m('.navbar-dropdown',
           m('a.navbar-item',
             'Peranan: '+ look('peranan', _.get(state.login, 'peranan'))
@@ -35,16 +37,17 @@ _.assign(comp, {
             'Poliklinik: '+
             look('klinik', _.get(state.login, 'poliklinik'))
           ),
-          m('a.navbar-item', {
-            href: 'https://mail.google.com/mail/logout?hl=en'
-          },'Logout')
+          m('a.navbar-item', {onclick: () => [
+            _.assign(state, {login: null, route: 'login', loading: false}),
+            m.redraw()
+          ]},'Logout')
         )
       ))
     ),
   ),
 
   dashboard: () => m('.content',
-    {oncreate: () => [
+    m('h1', {oncreate: () => [
       collNames.map(name =>
         db[name].toArray(array =>
           dbCall({
@@ -54,17 +57,19 @@ _.assign(comp, {
             )
           }, res => [
             db[name].bulkPut(res),
+            state.lastSync = +moment(),
             m.redraw()
           ])
         )
       ),
-      db.users.filter(i => i.gmail === state.gmail)
-      .toArray(i => [state.login = i[0], m.redraw()]),
       db.users.toArray(array =>
         state.userList = array
       )
-    ]},
-    m('h1', 'Dashboard'),
+    ]}, 'Dashboard'),
+    state.lastSync ? m('span',
+      'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
+    ) : m('.button.is-loading', 'syncing'),
+    m('br'), m('br'),
     _.chunk(_.values(menus), 3).map(i =>
       m('.columns', i.map(j => m('.column',
         m('.box', m('article.media',
@@ -76,25 +81,38 @@ _.assign(comp, {
       )))
     )
   ),
+  login: () => m('.content', m('.columns',
+    m('.column'),
+    m('.column.has-text-centered',
+      state.error && m('.notification.is-danger.is-light', [
+        m('button.delete', {onclick: () => state.error = false}),
+        state.error
+      ]),
+      m(autoForm({
+        id: 'login', schema: schemas.login,
+        submit: {value: 'Login', class: state.loading ? 'is-info is-loading' : 'is-info'},
+        action: (doc) => [
+          state.loading = true, m.redraw(),
+          io().emit('login', doc, ({res}) => res ? [
+            _.assign(state, {username: doc.username, route: 'dashboard'}),
+            db.users.filter(i => i.username === state.username)
+            .toArray(i => [state.login = i[0], m.redraw()]),
+            m.redraw()
+          ] : [
+            state.loading = false,
+            state.error = 'Password salah',
+            m.redraw()
+          ]
+          )
+        ]
+      }))
+     ),
+    m('.column')
+  ))
 })
 
-window.addEventListener('load', () =>
-  gapi.load('auth2', () => withThis(
-    gapi.auth2.init({
-      client_id: '706941787203-1121t4j0h6gjdd6lje0biaub35cjjn21.apps.googleusercontent.com',
-      scope: 'profile' // change client_id value to your own
-    }),
-    auth2 => auth2.signIn().then(() => [
-      state.gmail = Object.values(auth2.currentUser.get().getBasicProfile())
-        .find(i => _.includes(i, "@gmail.com")),
-      m.render(document.body, 'memverifikasi hak akses...'),
-      io().on('connect', () =>
-        io().emit('isMember', state.gmail, res =>
-          m.mount(document.body, {view: () => m('div',
-            comp.navbar(), m('.container', m('br'), comp[state.route]())
-          )})
-        )
-      )
-    ])
-  ))
-)
+io().on('connect', () => m.mount(document.body, {view: () => m('div',
+  comp.navbar(), m('.container', m('br'),
+    state.username ? comp[state.route]() : comp.login()
+  )
+)}))

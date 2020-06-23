@@ -1,4 +1,4 @@
-/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds*/
+/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment*/
 
 _.assign(comp, {
   emergency: () => !_.includes([2, 3, 4], state.login.peranan) ?
@@ -15,8 +15,8 @@ _.assign(comp, {
     state.login.peranan === 4 &&
     makeReport('Kunjungan IGD', e => withThis(
       {
-        start: (new Date(e.target[0].value)).getTime(),
-        end: (new Date(e.target[1].value)).getTime(),
+        start: +moment(e.target[0].value),
+        end: +moment(e.target[1].value)
       },
       date => [
         e.preventDefault(),

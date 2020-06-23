@@ -1,4 +1,4 @@
-/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm*/
+/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment*/
 
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3, 4], state.login.peranan) ?
@@ -7,8 +7,8 @@ _.assign(comp, {
     state.login.peranan === 4 &&
     makeReport('Kunjungan Rawat Inap', e => withThis(
       {
-        start: (new Date(e.target[0].value)).getTime(),
-        end: (new Date(e.target[1].value)).getTime(),
+        start: +moment(e.target[0].value),
+        end: +moment(e.target[1].value)
       },
       date => [
         e.preventDefault(),

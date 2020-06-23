@@ -148,8 +148,8 @@ makePdf = {
         {table: {widths: ['*', '*', '*'], body: [
           [
             'Tinggi/Berat: '+(_.get(rawat, 'soapPerawat.fisik.tinggi') || '-')+'/'+(_.get(rawat, 'soapPerawat.fisik.berat') || '-'),
-            'Suhu: '+(_.get(rawat, 'soapPerawat.fisik.suhu') || '-')+' C', 'LILA: '+(_.get(rawat, 'soapPerawat.fisik.lila') || '-')],
-          [
+            'Suhu: '+(_.get(rawat, 'soapPerawat.fisik.suhu') || '-')+' C', 'LILA: '+(_.get(rawat, 'soapPerawat.fisik.lila') || '-')
+          ], [
             'Pernapasan: '+(_.get(rawat, 'soapPerawat.fisik.pernapasan') || '-'), 'Nadi: '+(_.get(rawat, 'soapPerawat.fisik.nadi') || '-'),
             'Tekanan darah: '+_.join(_.values(_.get(rawat, 'soapPerawat.fisik.tekanan_darah') || '-'), '/')
           ]

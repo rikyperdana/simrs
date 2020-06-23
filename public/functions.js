@@ -20,14 +20,10 @@ daysDifference = (start, end) =>
   Math.round((end - start) / (1000 * 60 * 60 * 24)),
   // miliseconds, seconds, minutes, hours
 
-startOfTheDay = (timestamp) => (new Date(withThis(
-  new Date(timestamp), date => [
-    date.getFullYear(),
-    date.getMonth()+1,
-    date.getDate()
-  ].join('-')
-))).getTime(),
-
+startOfTheDay = timestamp => +moment(
+  moment(timestamp).format('YYYY-MM-DD')
+),
+    
 rupiah = (num) =>
   'Rp '+numeral(num || 0).format('0,0'),
 
@@ -41,17 +37,17 @@ paginate = (array, name, length) => array.slice(
 
 insertBoth = (collName, doc) => withThis(
   _.merge(doc, {_id: randomId(), updated: _.now()}),
-  obj => db[collName].put(obj) && dbCall({
+  obj => [db[collName].put(obj), dbCall({
     method: 'insertOne', collection: collName, document: obj
-  }, () => '')
+  }, () => '')]
 ),
 
 updateBoth = (collName, _id, doc) => withThis(
   _.merge(doc, {_id: _id, updated: _.now()}),
-  obj => db[collName].put(obj) && dbCall({
+  obj => [db[collName].put(obj), dbCall({
     method: 'updateOne', collection: collName,
     document: obj, _id: _id
-  }, () => '')
+  }, () => '')]
 ),
 
 makeModal = name => m('.modal',
@@ -122,7 +118,7 @@ menus = {
   }
 },
 
-db = new Dexie('medicare')
+db = new Dexie('simrs')
 
 db.version(1).stores(collNames.reduce((res, inc) =>
   _.merge(res, _.fromPairs([[inc, '_id']]))  

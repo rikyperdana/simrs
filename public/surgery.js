@@ -1,4 +1,4 @@
-/*global _ m comp state db tds hari lookReferences*/
+/*global _ m comp state db tds hari lookReferences moment*/
 
 _.assign(comp, {
   surgery: () => m('.content',
@@ -12,7 +12,7 @@ _.assign(comp, {
             ([]).concat(i.rawatJalan, i.emergency).flatMap(j =>
               j && j.soapDokter && j.soapDokter.tindakan &&
               j.soapDokter.tindakan.map(k =>
-                (k.jadwal > Date.now()) && _.merge(i, j, k)
+                (k.jadwal > +moment()) && _.merge(i, j, k)
               ).filter(Boolean)
             ).filter(Boolean)
           ).filter(x => x.length))

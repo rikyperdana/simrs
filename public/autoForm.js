@@ -120,6 +120,13 @@ function autoForm(opts){return {view: function(){
         placeholder: _.get(schema, 'autoform.placeholder'),
       })
     )},
+    password: function(){return m('.field',
+      attr.label(name, schema), m('input.input', {
+        name: !schema.exclude ? name : '',
+        required: !schema.optional, type: 'password',
+        placeholder: _.get(schema, 'autoform.placeholder')
+      })
+    )},
     select: function(){return m('.field.is-expanded',
       attr.label(name, schema),
       m('.select.is-fullwidth', m('select',
@@ -202,8 +209,9 @@ function autoForm(opts){return {view: function(){
         _.get(val, 'autoform.type') || 'standard'
       ]()
     }),
-    m('.row', m('input.button', _.merge({
-      type: 'submit', value: 'Submit', class: 'is-primary'
-    }, opts.submit)))
+    m('.row', m('button.button',
+      _.assign({type: 'submit', class: 'is-info'}, opts.submit),
+      (opts.submit && opts.submit.value) || 'Submit'
+    ))
   )
 }}}

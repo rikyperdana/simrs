@@ -1,4 +1,4 @@
-/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall*/
+/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment*/
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3, 4], state.login.peranan) ?
@@ -6,8 +6,8 @@ _.assign(comp, {
     state.login.peranan === 4 &&
     makeReport('Kunjungan Poliklinik', e => withThis(
       ({
-        start: (new Date(e.target[0].value)).getTime(),
-        end: (new Date(e.target[1].value)).getTime(),
+        start: +moment(e.target[0].value),
+        end: +moment(e.target[1].value)
       }),
       date => [
         e.preventDefault(),
@@ -60,7 +60,7 @@ _.assign(comp, {
           lastDate => lastDate(a) - lastDate(b)
         ))
         .map(i => m('tr',
-          {onclick: () => _.assign(state, {
+          {ondblclick: () => _.assign(state, {
             route: 'onePatient', onePatient: i
           })},
           tds([

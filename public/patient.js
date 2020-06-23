@@ -1,4 +1,4 @@
-/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withThis*/
+/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withThis makeModal*/
 
 _.assign(comp, {
   onePatient: () => withThis(
@@ -43,6 +43,24 @@ _.assign(comp, {
           {
             label: 'Update pasien', icon: 'edit', color: 'warning', 
             click: () => state.route = 'updatePatient'
+          },
+          {
+            label: 'Riwayat SOAP', icon: 'bars', color: 'info',
+            click: () => state.modalRekapSoap = m('.box',
+              m('h3', 'Rekap SOAP Pasien'),
+              m('p.help', 'Berurut kronologis'),
+              [
+                ...(state.onePatient.rawatJalan || []),
+                ...(state.onePatient.emergency || []),
+              ].map(i => m('table.table',
+                i.soapPerawat && i.soapDokter && [
+                  ['Tanggal Kunjungan', hari(i.tanggal, true)],
+                  ['Layanan', i.klinik ? look('klinik', i.klinik) : 'Emergency'],
+                  ['Anamnesa Perawat', i.soapPerawat.anamnesa],
+                  ['Diagnosa Dokter', i.soapDokter.diagnosa.map(i => i.text).join(', ')]
+                ].map(j => m('tr', m('th', j[0]), m('td', j[1])))
+              ))
+            )
           }
         ]
         .map(i => m('.button.is-'+i.color,
@@ -51,6 +69,7 @@ _.assign(comp, {
           m('span', i.label)
         ))
       ),
+      makeModal('modalRekapSoap'),
       m('.tabs.is-boxed', m('ul',
         {style: 'margin-left: 0%'},
         _.map({
