@@ -6,7 +6,7 @@ bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 app = express()
 .use(express.static("public"))
-.listen(3000),
+.listen(process.env.PORT || 3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
   process.env.atlas,
