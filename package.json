@@ -1,11 +1,11 @@
 {
   "name": "simrs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
     "lodash": "^4.17.15",
-    "mongodb": "^3.5.8",
+    "mongodb": "^3.5.9",
     "socket.io": "^2.3.0",
     "bcrypt": "^5.0.0"
   },

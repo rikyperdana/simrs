@@ -13,24 +13,18 @@ function autoForm(opts){return {view: function(){
 
   function linearize(obj){
     function recurse(doc){
-      var value = doc[_.keys(doc)[0]] 
-      return typeof(value) === 'object' ?
-      _.map(value, function(val, key){
-        return recurse(_.fromPairs([[
-          _.keys(doc)[0]+'.'+key, val
-        ]]))
+      var value = doc[_.keys(doc)[0]]
+      return typeof(value) === 'object' ? _.map(value, function(val, key){
+        return recurse(_.fromPairs([[_.keys(doc)[0]+'.'+key, val]]))
       }) : doc
     }
     return _.fromPairs(
       _.flattenDeep(recurse({doc: obj}))
-      .map(function(i){return [
-        _.keys(i)[0].substr(4), _.values(i)[0]
-      ]})
+      .map(function(i){return [_.keys(i)[0].substr(4), _.values(i)[0]]})
     )
   }
 
-  afState.form[opts.id] = opts.doc ?
-    linearize(opts.doc) : afState.form[opts.id]
+  afState.form[opts.id] = opts.doc ? linearize(opts.doc) : afState.form[opts.id]
 
   var attr = {
     form: {
@@ -44,9 +38,8 @@ function autoForm(opts){return {view: function(){
         e.preventDefault()
         afState.form[opts.id] = opts.autoReset && null
         var submit = () => opts.action(
-          _.filter(e.target, function(i){
-            return i.name && i.value
-          }).map(function(obj){
+          _.filter(e.target, function(i){return i.name && i.value})
+          .map(function(obj){
             var type = opts.schema[normal(obj.name)].type
             return _.reduceRight(
               obj.name.split('.'),
@@ -65,18 +58,13 @@ function autoForm(opts){return {view: function(){
                   return i === +_.keys(inc)[0] ?
                   recursive(_.values(inc)[0]) : undefined
                 }),
-                _.fromPairs([[
-                  _.keys(inc)[0],
-                  recursive(_.values(inc)[0])
-                ]])
-              ]),
-              inc
+                _.fromPairs([[_.keys(inc)[0], recursive(_.values(inc)[0])]])
+              ]), inc
             ])}
             return _.merge(res, recursive(inc))
           }, {})
         )
-        !opts.confirmMessage ? submit()
-        : confirm(opts.confirmMessage) && submit()
+        !opts.confirmMessage ? submit() : confirm(opts.confirmMessage) && submit()
       }
     },
     arrLen: function(name, type){return {onclick: function(){
@@ -118,6 +106,7 @@ function autoForm(opts){return {view: function(){
         required: !schema.optional,
         value: _.get(afState.form, [opts.id, name]),
         placeholder: _.get(schema, 'autoform.placeholder'),
+        rows: _.get(schema, 'autoform.rows') || 6,
       })
     )},
     password: function(){return m('.field',
