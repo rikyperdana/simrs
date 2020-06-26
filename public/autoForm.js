@@ -15,7 +15,7 @@ function autoForm(opts){return {view: function(){
     function recurse(doc){
       var value = doc[_.keys(doc)[0]]
       return typeof(value) === 'object' ? _.map(value, function(val, key){
-        return recurse(_.fromPairs([[_.keys(doc)[0]+'.'+key, val]]))
+        return recurse({[_.keys(doc)[0]+'.'+key]: val})
       }) : doc
     }
     return _.fromPairs(
@@ -43,7 +43,7 @@ function autoForm(opts){return {view: function(){
             var type = opts.schema[normal(obj.name)].type
             return _.reduceRight(
               obj.name.split('.'),
-              function(res, inc){return _.fromPairs([[inc, res]])},
+              function(res, inc){return {[inc]: res}},
               obj.value && [ // value conversion
                 ((type === String) && obj.value),
                 ((type === Number) && +(obj.value)),
@@ -58,7 +58,7 @@ function autoForm(opts){return {view: function(){
                   return i === +_.keys(inc)[0] ?
                   recursive(_.values(inc)[0]) : undefined
                 }),
-                _.fromPairs([[_.keys(inc)[0], recursive(_.values(inc)[0])]])
+                {[_.keys(inc)[0]]: recursive(_.values(inc)[0])}
               ]), inc
             ])}
             return _.merge(res, recursive(inc))
@@ -155,9 +155,11 @@ function autoForm(opts){return {view: function(){
 
       schema.type === Array && m('.box',
         attr.label(name, schema),
-        m('.button.is-success', attr.arrLen(name, 'inc'), '+ Add'),
-        m('.button.is-warning', attr.arrLen(name, 'dec'), '- Rem'),
-        m('.button', afState.arrLen[name]),
+        m('tags',
+          m('tag.is-success', attr.arrLen(name, 'inc'), 'Add+'),
+          m('tag.is-warning', attr.arrLen(name, 'dec'), 'Rem-'),
+          m('tag', afState.arrLen[name]),
+        ),
         _.range(afState.arrLen[name]).map(function(i){
           var childSchema = opts.schema[normal(name)+'.$']
           return inputTypes(name+'.'+i, childSchema)
