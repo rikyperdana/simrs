@@ -58,17 +58,15 @@ _.assign(comp, {
                           rawatJalan: a.rawatJalan || [],
                           emergency: a.emergency || [],
                           rawatInap: a.rawatInap || []
-                        }, _.fromPairs([[
-                          facility, a[facility].map(b =>
-                            b.idrawat === a.idrawat ? _.assign(b, {soapDokter: _.assign(
-                              b.soapDokter, {diagnosa: b.soapDokter.diagnosa.map((c, d) =>
-                                ({text: c.text, code: _.compact(_.map(e.target, f =>
-                                  f.name && f.value
-                                ))[d]})
-                              )}
-                            )}) : b
-                          )
-                        ]]))
+                        }, {[facility]: a[facility].map(b =>
+                          b.idrawat === a.idrawat ? _.assign(b, {soapDokter: _.assign(
+                            b.soapDokter, {diagnosa: b.soapDokter.diagnosa.map((c, d) =>
+                              ({text: c.text, code: _.compact(_.map(e.target, f =>
+                                f.name && f.value
+                              ))[d]})
+                            )}
+                          )}) : b
+                        )})
                       ) : updateBoth('patients', a._id, {
                         _id: a._id, identitas: a.identitas,
                         rawatJalan: a.rawatJalan || [],
@@ -120,17 +118,15 @@ _.assign(comp, {
                           rawatJalan: a.rawatJalan || [],
                           emergency: a.emergency || [],
                           rawatInap: a.rawatInap || []
-                        }, _.fromPairs([[
-                          facility, a[facility].map(b =>
-                            b.idrawat === a.idrawat ? _.assign(b, {soapDokter: _.assign(
-                              b.soapDokter, {tindakan: b.soapDokter.tindakan.map((c, d) =>
-                                ({text: c.idtindakan, code: _.compact(_.map(e.target, f =>
-                                  f.name && f.value
-                                ))[d]})
-                              )}
-                            )}) : b
-                          )
-                        ]]))
+                        }, {[facility]: a[facility].map(b =>
+                          b.idrawat === a.idrawat ? _.assign(b, {soapDokter: _.assign(
+                            b.soapDokter, {tindakan: b.soapDokter.tindakan.map((c, d) =>
+                              ({text: c.idtindakan, code: _.compact(_.map(e.target, f =>
+                                f.name && f.value
+                              ))[d]})
+                            )}
+                          )}) : b
+                        )})
                       ) : updateBoth('patients', a._id, {
                         _id: a._id, identitas: a.identitas,
                         rawatJalan: a.rawatJalan || [],

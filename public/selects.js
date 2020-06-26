@@ -25,11 +25,9 @@ selects = name => _.reduce(
     tarif_bed: [ 350,   200, 150,  100],
     keaktifan: ['aktif', 'non-aktif']
   }, (res, inc, key) =>
-    _.merge(res, _.fromPairs([[key,
-      () => _.map(inc, (val, key) =>
+    _.merge(res, {[key]: () => _.map(inc, (val, key) =>
         ({label: _.startCase(val), value: key+1})
-      )
-    ]]))
+      )})
   , {}
 )[name],
 

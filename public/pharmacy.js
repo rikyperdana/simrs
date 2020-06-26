@@ -56,7 +56,7 @@ _.assign(comp, {
                 ([]).concat(
                   a.rawatJalan ? a.rawatJalan : [],
                   a.emergency ? a.emergency: [],
-                  // serahkan obat per kali observasi
+                  // untuk inap, serahkan obat per kali observasi
                   a.rawatInap ? _.compact(
                     a.rawatInap.flatMap(i =>
                       i.observasi && i.observasi.flatMap(j =>
