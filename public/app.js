@@ -1,5 +1,22 @@
 /*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment*/
 
+var getDifference = () =>
+  collNames.map(name =>
+    db[name].toArray(array =>
+      dbCall({
+        method: 'getDifference', collection: name,
+        clientColl: array.map(i =>
+          _.pick(i, ['_id', 'updated'])
+        )
+      }, res => [
+        db[name].bulkPut(res),
+        state.lastSync = +moment(),
+        state.loading = false,
+        m.redraw()
+      ])
+    )
+  )
+
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
     m('.navbar-brand', m('a.navbar-item', {
@@ -48,28 +65,20 @@ _.assign(comp, {
 
   dashboard: () => m('.content',
     m('h1', {oncreate: () => [
-      collNames.map(name =>
-        db[name].toArray(array =>
-          dbCall({
-            method: 'getDifference', collection: name,
-            clientColl: array.map(i =>
-              _.pick(i, ['_id', 'updated'])
-            )
-          }, res => [
-            db[name].bulkPut(res),
-            state.lastSync = +moment(),
-            m.redraw()
-          ])
-        )
-      ),
+      getDifference(),
       db.users.toArray(array =>
         state.userList = array
       )
     ]}, 'Dashboard'),
-    state.lastSync ? m('span',
-      'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
-    ) : m('.button.is-loading', 'syncing'),
-    m('br'), m('br'),
+    m('.buttons',
+      m('.button.is-info', {
+        class: state.loading && 'is-loading',
+        onclick: () => [state.loading = true, getDifference()]
+      }, 'Sync'),
+      state.lastSync && m('span',
+        'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
+      ), 
+    ),
     _.chunk(_.values(menus), 3).map(i =>
       m('.columns', i.map(j => m('.column',
         m('.box', m('article.media',
@@ -81,6 +90,7 @@ _.assign(comp, {
       )))
     )
   ),
+
   login: () => m('.content', m('.columns',
     m('.column'),
     m('.column.has-text-centered',
@@ -102,8 +112,7 @@ _.assign(comp, {
             state.loading = false,
             state.error = 'Password salah',
             m.redraw()
-          ]
-          )
+          ])
         ]
       }))
      ),

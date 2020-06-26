@@ -121,5 +121,5 @@ menus = {
 db = new Dexie('simrs')
 
 db.version(1).stores(collNames.reduce((res, inc) =>
-  _.merge(res, _.fromPairs([[inc, '_id']]))  
+  _.merge(res, {[inc]: '_id'})
 , {}))

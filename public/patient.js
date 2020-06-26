@@ -141,15 +141,13 @@ _.assign(comp, {
         (state.oneRawat.klinik ? 'rawatJalan' : 'emergency'),
         facility => [
           facility && updateBoth('patients', state.onePatient._id, _.assign(
-            state.onePatient, _.fromPairs([[facility,
-              state.onePatient[facility].map(i =>
-                i.idrawat === state.oneRawat.idrawat ?
-                _.merge(state.oneRawat, ors([
-                  state.login.peranan === 2 && {soapPerawat: doc},
-                  state.login.peranan === 3 && {soapDokter: doc}
-                ])) : i
-              )
-            ]])
+            state.onePatient, {[facility]: state.onePatient[facility].map(i =>
+              i.idrawat === state.oneRawat.idrawat ?
+              _.merge(state.oneRawat, ors([
+                state.login.peranan === 2 && {soapPerawat: doc},
+                state.login.peranan === 3 && {soapDokter: doc}
+              ])) : i
+            )}
           )),
           state.oneInap && updateBoth('patients', state.onePatient._id, _.assign(
             state.onePatient, {rawatInap:

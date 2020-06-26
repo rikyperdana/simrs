@@ -1,4 +1,4 @@
-# Medicare (SIMRS Open Source untuk seluruh Faskes)
+# SIMRS.dev (SIMRS Open Source untuk seluruh Faskes)
 
 Bismillahirrahmanirrahim,
 ## Pengenalan

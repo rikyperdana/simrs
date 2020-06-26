@@ -1,6 +1,7 @@
-var express = require("express"),
+var
+
+express = require("express"),
 mongoDB = require("mongodb"),
-_ = require('lodash'),
 io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),

@@ -208,8 +208,8 @@ _.assign(comp, {
                     'emergency'
                   ]),
                   facility => [
-                    updateBoth('patients', pasien._id, _.assign(pasien, _.fromPairs([[
-                      facility, pasien[facility].map(i =>
+                    updateBoth('patients', pasien._id, _.assign(pasien, {
+                      [facility]: pasien[facility].map(i =>
                         ors([
                           rawat.idrawat && i.idrawat === rawat.idrawat,
                           rawat.idinap && i.idinap === rawat.idinap
@@ -220,7 +220,7 @@ _.assign(comp, {
                           !rawat.bayar_konsultasi && {bayar_konsultasi: true}
                         ])) : i
                       )
-                    ]]))),
+                    })),
                     ors([
                       rawat.klinik && !rawat.soapDokter &&
                       makePdf.bayar_pendaftaran(
