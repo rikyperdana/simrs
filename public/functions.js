@@ -37,17 +37,25 @@ paginate = (array, name, length) => array.slice(
 
 insertBoth = (collName, doc) => withThis(
   _.merge(doc, {_id: randomId(), updated: _.now()}),
-  obj => [db[collName].put(obj), dbCall({
-    method: 'insertOne', collection: collName, document: obj
-  }, () => '')]
+  obj => [
+    db[collName].put(obj),
+    dbCall({
+      method: 'insertOne', collection: collName, document: obj
+    }, () => ''),
+    io().emit('datachange', collName)
+  ]
 ),
 
 updateBoth = (collName, _id, doc) => withThis(
   _.merge(doc, {_id: _id, updated: _.now()}),
-  obj => [db[collName].put(obj), dbCall({
-    method: 'updateOne', collection: collName,
-    document: obj, _id: _id
-  }, () => '')]
+  obj => [
+    db[collName].put(obj),
+    dbCall({
+      method: 'updateOne', collection: collName,
+      document: obj, _id: _id
+    }, () => ''),
+    io().emit('datachange', collName)
+  ]
 ),
 
 makeModal = name => m('.modal',

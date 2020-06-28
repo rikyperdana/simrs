@@ -1,6 +1,5 @@
-var
 
-express = require("express"),
+var express = require("express"),
 mongoDB = require("mongodb"),
 io = require('socket.io'),
 bcrypt = require('bcrypt'),
@@ -17,6 +16,9 @@ dbCall = action => mongoDB.MongoClient.connect(
 
 var io = require('socket.io')(app)
 io.on('connection', socket => [
+  socket.on('datachange', name =>
+    socket.broadcast.emit('datachange', name)
+  ),
   socket.on('bcrypt', (type, text, cb) => 
     bcrypt.hash(text, 10, (err, res) => cb(res))
   ),

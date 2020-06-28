@@ -104,11 +104,14 @@ _.assign(comp, {
         m('span', 'Tambah batch')
       ),
       state.login.peranan === 4 && m('.button.is-warning',
-        {ondblclick: () => [
-          updateBoth('goods', state.oneGood._id, _.assign(
-            state.oneGood, {batch: []}
-          )), state.route = 'storage', m.redraw()
-        ]},
+        {
+          "data-tooltip": 'Kosongkan semua batch barang ini',
+          ondblclick: () => [
+            updateBoth('goods', state.oneGood._id, _.assign(
+              state.oneGood, {batch: []}
+            )), state.route = 'storage', m.redraw()
+          ]
+        },
         m('span.icon', m('i.fas.fa-recycle')),
         m('span', 'Stok Opname')
       )
@@ -143,16 +146,19 @@ _.assign(comp, {
             )))),
             state.login.peranan === 4 && m('p.buttons',
               m('.button.is-warning',
-                {ondblclick: () => [
-                  updateBoth('goods', state.oneGood._id, _.assign(
-                    state.oneGood, {batch: state.oneGood.batch.map(j =>
-                      j.idbatch === i.idbatch ?
-                      _.assign(j, {stok: {gudang: 0, apotik: 0, retur:
-                        (i.stok.gudang || 0) + (i.stok.apotik || 0)
-                      }}) : j
-                    )}
-                  )), state.modalBatch = null, m.redraw()
-                ]},
+                {
+                  "data-tooltip": 'Pindahkan semua stok barang ini ke Retur',
+                  ondblclick: () => [
+                    updateBoth('goods', state.oneGood._id, _.assign(
+                      state.oneGood, {batch: state.oneGood.batch.map(j =>
+                        j.idbatch === i.idbatch ?
+                        _.assign(j, {stok: {gudang: 0, apotik: 0, retur:
+                          (i.stok.gudang || 0) + (i.stok.apotik || 0)
+                        }}) : j
+                      )}
+                    )), state.modalBatch = null, m.redraw()
+                  ]
+                },
                 m('span.icon', m('i.fas.fa-exchange-alt')),
                 m('span', 'Retur batch')
               ),
