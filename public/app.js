@@ -1,21 +1,23 @@
 /*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment*/
 
-var getDifference = () =>
-  collNames.map(name =>
-    db[name].toArray(array =>
-      dbCall({
-        method: 'getDifference', collection: name,
-        clientColl: array.map(i =>
-          _.pick(i, ['_id', 'updated'])
-        )
-      }, res => [
-        db[name].bulkPut(res),
-        state.lastSync = +moment(),
-        state.loading = false,
-        m.redraw()
-      ])
-    )
-  )
+var
+getDifference = name =>
+  db[name].toArray(array =>
+    dbCall({
+      method: 'getDifference', collection: name,
+      clientColl: array.map(i =>
+        _.pick(i, ['_id', 'updated'])
+      )
+    }, res => [
+      db[name].bulkPut(res),
+      state.lastSync = +moment(),
+      state.loading = false,
+      m.redraw()
+    ])
+  ),
+
+getDifferences = () =>
+  collNames.map(name => getDifference(name))
 
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
@@ -65,7 +67,7 @@ _.assign(comp, {
 
   dashboard: () => m('.content',
     m('h1', {oncreate: () => [
-      getDifference(),
+      getDifferences(),
       db.users.toArray(array =>
         state.userList = array
       )
@@ -73,7 +75,7 @@ _.assign(comp, {
     m('.buttons',
       m('.button.is-info', {
         class: state.loading && 'is-loading',
-        onclick: () => [state.loading = true, getDifference()]
+        onclick: () => [state.loading = true, getDifferences()]
       }, 'Sync'),
       state.lastSync && m('span',
         'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
@@ -93,7 +95,7 @@ _.assign(comp, {
 
   login: () => m('.content', m('.columns',
     m('.column'),
-    m('.column.has-text-centered',
+    m('.column',
       state.error && m('.notification.is-danger.is-light', [
         m('button.delete', {onclick: () => state.error = false}),
         state.error
@@ -120,8 +122,11 @@ _.assign(comp, {
   ))
 })
 
-io().on('connect', () => m.mount(document.body, {view: () => m('div',
-  comp.navbar(), m('.container', m('br'),
-    state.username ? comp[state.route]() : comp.login()
-  )
-)}))
+io().on('connect', () => [
+  m.mount(document.body, {view: () => m('div',
+    comp.navbar(), m('.container', m('br'),
+      state.username ? comp[state.route]() : comp.login()
+    )
+  )}),
+  io().on('datachange', name => getDifference(name))
+])
