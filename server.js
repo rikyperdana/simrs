@@ -11,13 +11,13 @@ app = express()
 .listen(process.env.PORT || 3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
-  process.env.atlas,
+  process.env.mongo || process.env.atlas,
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
     : action(client.db(process.env.dbname))
-)
+),
 
-var io = require('socket.io')(app)
+io = require('socket.io')(app)
 io.on('connection', socket => [
   socket.on('datachange', (name, doc) =>
     socket.broadcast.emit('datachange', name)
