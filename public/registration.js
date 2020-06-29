@@ -55,7 +55,7 @@ _.assign(comp, {
       ),
     }))
   ),
-  
+
   updatePatient: () => m('.content',
     m('h3', 'Update identitas pasien'),
     m(autoForm({

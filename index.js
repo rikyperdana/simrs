@@ -19,7 +19,7 @@ io.on('connection', socket => [
   socket.on('datachange', name =>
     socket.broadcast.emit('datachange', name)
   ),
-  socket.on('bcrypt', (type, text, cb) => 
+  socket.on('bcrypt', (type, text, cb) =>
     bcrypt.hash(text, 10, (err, res) => cb(res))
   ),
   socket.on('login', (creds, cb) => dbCall(db =>

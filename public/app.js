@@ -79,7 +79,7 @@ _.assign(comp, {
       }, 'Sync'),
       state.lastSync && m('span',
         'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
-      ), 
+      ),
     ),
     _.chunk(_.values(menus), 3).map(i =>
       m('.columns', i.map(j => m('.column',
@@ -102,7 +102,10 @@ _.assign(comp, {
       ]),
       m(autoForm({
         id: 'login', schema: schemas.login,
-        submit: {value: 'Login', class: state.loading ? 'is-info is-loading' : 'is-info'},
+        submit: {
+          value: 'Login',
+          class: state.loading ? 'is-info is-loading' : 'is-info'
+        },
         action: (doc) => [
           state.loading = true, m.redraw(),
           io().emit('login', doc, ({res}) => res ? [

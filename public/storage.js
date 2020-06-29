@@ -26,7 +26,7 @@ _.assign(comp, {
         onclick: () => state.searchGoods = null
       }, 'Show All'))
     ),
-    
+
     m('table.table',
       m('thead', m('tr',
         ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Retur']
