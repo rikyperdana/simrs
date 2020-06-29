@@ -1,13 +1,13 @@
 
 var
 dotenv = require('dotenv').config(),
-express = require("express"),
-mongoDB = require("mongodb"),
+express = require('express'),
+mongoDB = require('mongodb'),
 io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 app = express()
-.use(express.static("public"))
+.use(express.static('public'))
 .listen(process.env.PORT || 3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
