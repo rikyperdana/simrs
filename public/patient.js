@@ -41,7 +41,7 @@ _.assign(comp, {
             click: () => makePdf.consent(id)
           },
           {
-            label: 'Update pasien', icon: 'edit', color: 'warning', 
+            label: 'Update pasien', icon: 'edit', color: 'warning',
             click: () => state.route = 'updatePatient'
           },
           {

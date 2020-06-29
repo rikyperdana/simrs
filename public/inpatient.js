@@ -257,7 +257,7 @@ _.assign(comp, {
     ),
     makeModal('modalObservasi')
   ),
-  
+
   beds: () => m('.content',
     m('h3', 'Daftar Kamar'),
     m('table.table',

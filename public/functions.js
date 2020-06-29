@@ -23,7 +23,7 @@ daysDifference = (start, end) =>
 startOfTheDay = timestamp => +moment(
   moment(timestamp).format('YYYY-MM-DD')
 ),
-    
+
 rupiah = (num) =>
   'Rp '+numeral(num || 0).format('0,0'),
 
@@ -87,7 +87,7 @@ tarifInap = (masuk, keluar, tarif) =>
 
 dbCall = (body, action) =>
   io().emit('dbCall', body, action),
-    
+
 collNames = ['patients', 'goods', 'references', 'users', 'queue'],
 
 state = {route: 'dashboard'}, comp = {},
