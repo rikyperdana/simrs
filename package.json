@@ -3,10 +3,11 @@
   "version": "0.2.1",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.9",
-    "socket.io": "^2.3.0",
-    "bcrypt": "^5.0.0"
+    "socket.io": "^2.3.0"
   },
   "scripts": {
     "start": "node index.js"

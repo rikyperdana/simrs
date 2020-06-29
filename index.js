@@ -1,5 +1,7 @@
 
-var express = require("express"),
+var
+dotenv = require('dotenv').config(),
+express = require("express"),
 mongoDB = require("mongodb"),
 io = require('socket.io'),
 bcrypt = require('bcrypt'),
@@ -11,7 +13,8 @@ app = express()
 dbCall = action => mongoDB.MongoClient.connect(
   process.env.atlas,
   {useNewUrlParser: true, useUnifiedTopology: true},
-  (err, client) => [action(client.db(process.env.dbname))]
+  (err, client) => err ? console.log(err)
+    : action(client.db(process.env.dbname))
 )
 
 var io = require('socket.io')(app)
@@ -19,7 +22,7 @@ io.on('connection', socket => [
   socket.on('datachange', name =>
     socket.broadcast.emit('datachange', name)
   ),
-  socket.on('bcrypt', (type, text, cb) => 
+  socket.on('bcrypt', (type, text, cb) =>
     bcrypt.hash(text, 10, (err, res) => cb(res))
   ),
   socket.on('login', (creds, cb) => dbCall(db =>
