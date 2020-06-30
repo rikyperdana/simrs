@@ -20,7 +20,7 @@ dbCall = action => mongoDB.MongoClient.connect(
 var io = require('socket.io')(app)
 io.on('connection', socket => [
   socket.on('datachange', (name, doc) =>
-    socket.broadcast.emit('datachange', name)
+    socket.broadcast.emit('datachange', name, doc)
   ),
   socket.on('bcrypt', (type, text, cb) =>
     bcrypt.hash(text, 10, (err, res) => cb(res))
