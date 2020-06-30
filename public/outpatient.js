@@ -1,9 +1,9 @@
 /*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment*/
 
 _.assign(comp, {
-  outpatient: () => !_.includes([2, 3, 4], state.login.peranan) ?
+  outpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-    state.login.peranan === 4 &&
+    // state.login.peranan === 4 &&
     makeReport('Kunjungan Poliklinik', e => withThis(
       ({
         start: +moment(e.target[0].value),

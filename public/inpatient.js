@@ -1,10 +1,10 @@
 /*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment*/
 
 _.assign(comp, {
-  inpatient: () => !_.includes([2, 3, 4], state.login.peranan) ?
+  inpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
 
-    state.login.peranan === 4 &&
+    // state.login.peranan === 4 &&
     makeReport('Kunjungan Rawat Inap', e => withThis(
       {
         start: +moment(e.target[0].value),

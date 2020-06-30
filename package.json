@@ -21,6 +21,8 @@
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": ["hospital"],
+  "keywords": [
+    "hospital"
+  ],
   "author": "Riky Perdana"
 }
