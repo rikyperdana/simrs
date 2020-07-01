@@ -75,26 +75,13 @@ _.assign(comp, {
               ].map(j => m('tr', m('th', j[0]), m('td', j[1]))),
             ),
             m(autoForm({
-              id: 'formBed',
-              schema: {
-                kelas: {type: String, autoform: {
-                  type: 'select', options: () => _.keys(beds).map(
-                    j => ({value: j, label: _.upperCase(j)})
-                  )
-                }},
-                kamar: {type: String, autoform: {
-                  type: 'select', options: () =>
-                  _.flatten(_.values(beds).map(j => _.keys(j.kamar)))
-                  .map(j => ({value: j, label: _.startCase(j)}))
-                }},
-                nomor: {type: Number},
-              },
+              id: 'formBed', schema: schemas.beds,
               action: (doc) => [
                 updateBoth(
                   'patients', i.pasien._id, _.assign(i.pasien, {
                     rawatInap: (i.rawatInap || []).concat([{
                       tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
-                      observasi: [], idinap: randomId(), idrawat: i.inap.rawat,
+                      observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
                       cara_bayar: i.inap.cara_bayar,
                       bed: doc
                     }])
@@ -262,7 +249,7 @@ _.assign(comp, {
     m('h3', 'Daftar Kamar'),
     m('table.table',
       m('tr', ['Kelas', 'Kamar', 'No. Bed', 'Penginap'].map(i => m('th', i))),
-      _.flattenDepth(
+      state.inpatientList ? _.flattenDepth(
         _.map(beds, (i, j) => _.map(
           i.kamar, (k, l) => _.range(k).map(m => [
             j, l, m+1, _.get(state.inpatientList.find(
@@ -278,7 +265,7 @@ _.assign(comp, {
         )), 2
       ).map(p => m('tr', p.map(
         q => m('td', _.upperCase(q))
-      )))
+      ))) : m('tr', m('p', 'Buka halaman rawat inap terlebih dahulu'))
     )
   ),
 })
