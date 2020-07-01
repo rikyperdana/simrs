@@ -285,5 +285,19 @@ var schemas = {
   login: {
     username: {type: String},
     password: {type: String, autoform: {type: 'password'}}
-  }
+  },
+
+  beds: {
+    kelas: {type: String, autoform: {
+      type: 'select', options: () => _.keys(beds).map(
+        j => ({value: j, label: _.upperCase(j)})
+      )
+    }},
+    kamar: {type: String, autoform: {
+      type: 'select', options: () =>
+      _.flatten(_.values(beds).map(j => _.keys(j.kamar)))
+      .map(j => ({value: j, label: _.startCase(j)}))
+    }},
+    nomor: {type: Number},
+  },
 }

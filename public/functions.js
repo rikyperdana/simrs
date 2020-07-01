@@ -42,7 +42,7 @@ insertBoth = (collName, doc) => withThis(
     dbCall({
       method: 'insertOne', collection: collName, document: obj
     }, () => ''),
-    io().emit('datachange', collName)
+    io().emit('datachange', collName, doc)
   ]
 ),
 
@@ -54,7 +54,7 @@ updateBoth = (collName, _id, doc) => withThis(
       method: 'updateOne', collection: collName,
       document: obj, _id: _id
     }, () => ''),
-    io().emit('datachange', collName)
+    io().emit('datachange', collName, doc)
   ]
 ),
 
@@ -130,4 +130,22 @@ db = new Dexie('simrs')
 
 db.version(1).stores(collNames.reduce((res, inc) =>
   _.merge(res, {[inc]: '_id'})
-, {}))
+, {})),
+
+getDifference = name =>
+  db[name].toArray(array =>
+    dbCall({
+      method: 'getDifference', collection: name,
+      clientColl: array.map(i =>
+        _.pick(i, ['_id', 'updated'])
+      )
+    }, res => [
+      db[name].bulkPut(res),
+      state.lastSync = +moment(),
+      state.loading = false,
+      m.redraw()
+    ])
+  ),
+
+getDifferences = () =>
+  collNames.map(name => getDifference(name))

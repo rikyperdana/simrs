@@ -1,23 +1,4 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment*/
-
-var
-getDifference = name =>
-  db[name].toArray(array =>
-    dbCall({
-      method: 'getDifference', collection: name,
-      clientColl: array.map(i =>
-        _.pick(i, ['_id', 'updated'])
-      )
-    }, res => [
-      db[name].bulkPut(res),
-      state.lastSync = +moment(),
-      state.loading = false,
-      m.redraw()
-    ])
-  ),
-
-getDifferences = () =>
-  collNames.map(name => getDifference(name))
+/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDiferences */
 
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
@@ -34,7 +15,7 @@ _.assign(comp, {
           val.children ? [
             m('a.navbar-link', _.startCase(val.full)),
             m('.navbar-dropdown', _.map(val.children, (i, j) =>
-              m('a.navbar-item', {onclick: (e) =>
+              m('a.navbar-item', {onclick: e =>
                 [e.stopPropagation(), state.route = j]
               }, i.full)
             ))
@@ -131,5 +112,5 @@ io().on('connect', () => [
       state.username ? comp[state.route]() : comp.login()
     )
   )}),
-  io().on('datachange', name => getDifference(name))
+  io().on('datachange', (name, doc) => db[name].put(doc))
 ])

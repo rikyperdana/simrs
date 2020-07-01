@@ -1,7 +1,7 @@
 /*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment*/
 
 _.assign(comp, {
-  emergency: () => !_.includes([2, 3, 4], state.login.peranan) ?
+  emergency: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
     {onupdate: () =>
       db.patients.toArray(array =>
@@ -12,7 +12,7 @@ _.assign(comp, {
         )
       )
     },
-    state.login.peranan === 4 &&
+    // state.login.peranan === 4 &&
     makeReport('Kunjungan IGD', e => withThis(
       {
         start: +moment(e.target[0].value),
