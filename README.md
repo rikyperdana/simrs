@@ -57,8 +57,15 @@ dengan alamat server database local Anda
 Adalah menu yang dapat digunakan oleh admin untuk mendaftarkan users yang akan nantinya akan menggunakan sistem. Klik tambah akun dan isikan informasi seperti nama lengkap, alamat gmail, dan peranannya. Berikutnya sistem akan mengenali user berdasarkan alamat gmail yang digunakan untuk login dan memberikan hak akses sesuai dengan peranan yang ditetapkan oleh admin.
 #### Referensi
 Adalah menu yang dapat digunakan oleh admin untuk mendaftarkan tarif tindakan, laboratorium, dan radiologi ke dalam sistem dengan menggunakan file .csv seperti pada file [contoh](https://drive.google.com/open?id=1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ). Silahkan hapus seluruh baris kecuali header pertama dan ganti isinya sesuai dengan tarif pada faskes Anda. Setelah import berhasil, silahkan refresh browser.
-
 ### Pendaftaran
+### Emergency Unit
+### Rawat Jalan
+### Rawat Inap
+Pemetaan ketersediaan bed rawat inap dapat diubah pada file `public/inpatient.js` dalam variabel `beds`. Dengan struktur `{kelas: {tarif, kamar: {nama_kamar}}}`
+### Kasir
+### Gudang
+### Apotik
+### Manajemen
 
 ## Struktur Kode
 ## Dependensi

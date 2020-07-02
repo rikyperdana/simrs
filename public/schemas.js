@@ -295,8 +295,8 @@ var schemas = {
     }},
     kamar: {type: String, autoform: {
       type: 'select', options: () =>
-      _.flatten(_.values(beds).map(j => _.keys(j.kamar)))
-      .map(j => ({value: j, label: _.startCase(j)}))
+        _.flatten(_.values(beds).map(j => _.keys(j.kamar)))
+        .map(j => ({value: j, label: _.startCase(j)}))
     }},
     nomor: {type: Number},
   },

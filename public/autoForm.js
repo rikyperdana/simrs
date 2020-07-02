@@ -69,7 +69,8 @@ function autoForm(opts){return {view: function(){
     },
     arrLen: function(name, type){return {onclick: function(){
       afState.arrLen[name] = afState.arrLen[name] || 0
-      afState.arrLen[name] += ({inc: 1, dec: -1})[type]
+      var dec = afState.arrLen[name] > 0 ? -1 : 0
+      afState.arrLen[name] += ({inc: 1, dec})[type]
     }}},
     label: function(name, schema){return m('label.label',
       m('span', schema.label || _.startCase(name)),
