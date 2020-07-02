@@ -237,7 +237,7 @@ _.assign(comp, {
               _.upperCase(i.bed.kelas),
               _.startCase(i.bed.kamar),
               i.bed.nomor
-            ].join('/')
+            ].join(' / ')
           ])
         ))
       )
