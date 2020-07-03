@@ -82,8 +82,7 @@ _.assign(comp, {
                     rawatInap: (i.rawatInap || []).concat([{
                       tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
                       observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
-                      cara_bayar: i.inap.cara_bayar,
-                      bed: doc
+                      cara_bayar: i.inap.cara_bayar, bed: doc
                     }])
                   })
                 ),

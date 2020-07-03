@@ -85,6 +85,8 @@ makeReport = (name, action) => m('.box',
 tarifInap = (masuk, keluar, tarif) =>
   (daysDifference(keluar - masuk) || 1) * 1000 * +tarif,
 
+tarifIGD = 45000, tarifKartu = 8000,
+
 dbCall = (body, action) =>
   io().emit('dbCall', body, action),
 

@@ -27,7 +27,7 @@ _.assign(comp, {
               String(i.pasien.identitas.no_mr),
               i.pasien.identitas.nama_lengkap,
               rupiah(
-                !i.rawat.klinik ? 45000 :
+                !i.rawat.klinik ? tarifIGD :
                 +look('tarif_klinik', i.rawat.klinik)*1000
               ),
               rupiah(i.rawat.soapDokter.obat ? _.sum(
@@ -39,7 +39,7 @@ _.assign(comp, {
                 )
               ) : 0),
               rupiah(_.sum([
-                !i.rawat.klinik ? 45000 :
+                !i.rawat.klinik ? tarifIGD :
                 +look('tarif_klinik', i.rawat.klinik)*1000,
                 i.rawat.soapDokter.obat ? _.sum(
                   i.rawat.soapDokter.obat.map(j => j.harga)
@@ -115,7 +115,7 @@ _.assign(comp, {
                 !rawat.bed && ands([
                   ([]).concat(pasien.rawatJalan || [], pasien.emergency || []).length === 1,
                   !rawat.bayar_pendaftaran,
-                  m('tr', m('th', 'Daftar pasien baru'), m('td', rupiah(8000)))
+                  m('tr', m('th', 'Daftar pasien baru'), m('td', rupiah(tarifKartu)))
                 ]),
                 ors([
                   !rawat.bayar_pendaftaran,
@@ -134,7 +134,7 @@ _.assign(comp, {
                   ),
                   m('tr',
                     m('th', 'Rawat IGD'),
-                    m('td', rupiah(45000))
+                    m('td', rupiah(tarifIGD))
                   )
                 ]),
                 ands([
@@ -173,8 +173,8 @@ _.assign(comp, {
                   ]) && _.sum([
                     ([]).concat(
                       pasien.rawatJalan || [], pasien.emergency || []
-                    ).length === 1 ? 8000 : 0,
-                    rawat.klinik ? 1000*+look('tarif_klinik', rawat.klinik) : 45000,
+                    ).length === 1 ? tarifKartu : 0,
+                    rawat.klinik ? 1000*+look('tarif_klinik', rawat.klinik) : tarifIGD,
                   ]),
                   rawat.bed ? tarifInap(
                     rawat.tanggal_masuk, rawat.keluar,
