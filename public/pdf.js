@@ -54,7 +54,7 @@ makePdf = {
         identitas.no_mr,
         identitas.nama_lengkap,
         'Total: '+rupiah(_.sum([
-          rawatLength === 1 ? 8000 : 0,
+          rawatLength === 1 ? tarifKartu : 0,
           1000*+look('tarif_klinik', rawat.klinik)
         ])),
         state.login.nama
@@ -108,7 +108,7 @@ makePdf = {
         {text: '\n\nRincian Pembayaran', alignment: 'center'},
         {table: {widths: ['*', 'auto'], body: _.concat(
           [['Uraian', 'Harga']],
-          !rawat.klinik && !rawat.idinap ? [['Layanan IGD', rupiah(45000)]] : [],
+          !rawat.klinik && !rawat.idinap ? [['Layanan IGD', rupiah(tarifIGD)]] : [],
           tindakans ? tindakans.map(i => [i[0], rupiah(i[1])]) : [],
           obats ? obats.map(i => [i[0], rupiah(i[1])]) : [],
           rawat.observasi ? [['Biaya inap', rupiah(tarifInap(
@@ -119,7 +119,7 @@ makePdf = {
           observasi ? observasi.map(i => [i[0], rupiah(i[1])]) : []
         )}},
         '\nTotal Biaya '+rupiah(_.sum([
-          !rawat.klinik && !rawat.bed && 45000,
+          !rawat.klinik && !rawat.bed && tarifIGD,
           tindakans && tindakans.reduce((res, inc) => res + inc[1], 0),
           obats && obats.reduce((res, inc) => res + inc[1], 0),
           rawat.observasi && _.sum([
