@@ -9,7 +9,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 |Teknologi|Keterangan|
 |--|--|
 |Bahasa|Javascript ES6|
-|Server|Glitch|
+|Server|Node 12.18.1|
 |Paradigma|Functional|
 |Backend|Express 4.16.4|
 |Database|MongoDB 3.3.3|
