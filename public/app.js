@@ -39,6 +39,7 @@ _.assign(comp, {
           ),
           m('a.navbar-item', {onclick: () => [
             _.assign(state, {login: null, route: 'login', loading: false}),
+            localStorage.removeItem('login'),
             m.redraw()
           ]},'Logout')
         )
@@ -114,7 +115,7 @@ io().on('connect', () => [
   state.login = JSON.parse(localStorage.login || '{}'),
   m.mount(document.body, {view: () => m('div',
     comp.navbar(), m('.container', m('br'),
-      state.login ? comp[state.route]() : comp.login()
+      _.get(state, 'login.username') ? comp[state.route]() : comp.login()
     )
   )}),
   io().on('datachange', (name, doc) => [

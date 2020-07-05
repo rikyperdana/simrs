@@ -244,7 +244,8 @@ _.assign(comp, {
     makeModal('modalObservasi')
   ),
 
-  beds: () => m('.content',
+  beds: () => !_.includes([2, 3], state.login.peranan) ?
+  m('p', 'Hanya untuk tenaga medis') : m('.content',
     m('h3', 'Daftar Kamar'),
     m('table.table',
       m('tr', ['Kelas', 'Kamar', 'No. Bed', 'Penginap'].map(i => m('th', i))),
