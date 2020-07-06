@@ -49,11 +49,10 @@ io.on('connection', socket => [
         obj.document,
         (err, res) => cb(res)
       ),
-      insertMany: () =>
-        obj.documents.map(doc =>
-          coll.insertOne(doc)
-        )
-      ,
+      insertMany: () => coll.insertMany(
+        obj.documents,
+        (err, res) => cb(res)
+      ),
       updateOne: () => coll.updateOne(
         {_id: obj._id},
         {$set: obj.document},

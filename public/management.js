@@ -94,7 +94,7 @@ _.assign(comp, {
                 last && alert('Berhasil import, silahkan refresh')
               )
             ],
-            updater => result.data.length < 1001 && ors([
+            updater => ors([
               result.data[0].harga && updater(
                 'references', result.data.map(i =>
                   _.merge(i, {_id: randomId(), updated: _.now()})
@@ -119,11 +119,6 @@ _.assign(comp, {
                     )
                   )}
                 ))
-              ),
-              result.data[0].kelas && updater(
-                'beds', result.data.map(i =>
-                  _.merge(i, {_id: randomId(), updated: _.now()})
-                )
               ),
               result.data[0].no_batch && updater('goods',
                 result.data.map(i => _.merge(
@@ -154,8 +149,7 @@ _.assign(comp, {
         m('label.file-label',
           m('input.file-input', {type: 'file', name: 'import'}),
           m('span.file-cta', m('span.file-label', 'Pilih file'))
-        ),
-        m('p', 'Pastikan jumlah baris data kurang dari 1.000 atau akan ditolak server.')
+        )
       )
     ]
   ),
