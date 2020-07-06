@@ -19,10 +19,14 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node bundler.js && node server.js",
+    "bundle": "node bundler.js"
   },
   "keywords": [
     "hospital"
   ],
-  "author": "Riky Perdana"
+  "author": "Riky Perdana",
+  "devDependencies": {
+    "concat": "^1.0.3"
+  }
 }

@@ -7,7 +7,7 @@ io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 app = express()
-.use(express.static('public'))
+.use(express.static('client'))
 .listen(process.env.PORT || 3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
