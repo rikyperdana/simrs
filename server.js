@@ -11,7 +11,7 @@ app = express()
 .listen(process.env.PORT || 3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
-  process.env.atlas,
+  process.env.atlas || process.env.MONGO,
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
     : action(client.db(process.env.dbname))
@@ -64,12 +64,16 @@ io.on('connection', socket => [
         (err, res) => cb(res)
       ),
       getDifference: () => withThis(
-        obj.clientColl,
-        clientColl => coll.find({$or: [
-          {_id: {$not: {$in: clientColl.map(i => i._id)}}},
-          {updated: {$gt: clientColl.reduce((res, inc) =>
-            inc.updated > res ? inc.updated : res
-          , 0)}}
+        {
+          ids: obj.clientColl.map(i => i._id),
+          latest: obj.clientColl.reduce(
+            (acc, inc) => inc.updated > acc ?
+            inc.updated : acc, 0
+          )
+        },
+        ({ids, latest}) => coll.find({$or: [
+          {_id: {$not: {$in: ids}}},
+          {updated: {$gt: latest}}
         ]}).toArray((err, res) => cb(res))
       )
     }[obj.method]())
