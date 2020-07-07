@@ -7,5 +7,5 @@ concat(
     'transfer', 'pharmacy', 'cashier', 'management',
     'queue', 'surgery', 'profile', 'app'
   ].map(i => ['./public/', i, '.js'].join('')),
-  './client/client.js'
+  './deploy/development/client.js'
 )

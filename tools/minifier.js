@@ -1,4 +1,8 @@
 var minify = require('minify'),
 fs = require('fs')
-minify('./client/client.js')
-.then(min => fs.writeFile('./client/client.min.js', min, console.log))
+minify('./deploy/development/client.js').then(
+  min => fs.writeFile(
+    './deploy/production/client.min.js',
+    min, console.log
+  )
+)
