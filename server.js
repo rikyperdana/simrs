@@ -9,7 +9,7 @@ withThis = (obj, cb) => cb(obj),
 app = express()
 .use(express.static(
   process.env.production ?
-  'production' : 'public'
+  'production' : 'development'
 ))
 .listen(process.env.PORT || 3000),
 

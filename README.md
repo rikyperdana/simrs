@@ -27,7 +27,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 
 ### Bagian App (jika dari NodeJS)
 1. `git clone https://github.com/rikyperdana/simrs`
-2. node server.js
+2. `node server.js`
 
 ### Bagian DB
 1. Login MongoDB Atlas, create Free cluster, klik create cluster
