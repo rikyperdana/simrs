@@ -93,7 +93,7 @@ _.assign(comp, {
           io().emit('login', doc, ({res}) => res ? [
             _.assign(state, {username: doc.username, route: 'dashboard'}),
             db.users.filter(i => i.username === state.username)
-            .toArray(i => [
+            .toArray(i => i.length && [
               state.login = i[0],
               localStorage.setItem('login', JSON.stringify(i[0])),
               m.redraw()
@@ -112,10 +112,12 @@ _.assign(comp, {
 })
 
 io().on('connect', () => [
-  state.login = JSON.parse(localStorage.login || '{}'),
+  state.login = localStorage.login &&
+    JSON.parse(localStorage.login || '{}'),
   m.mount(document.body, {view: () => m('div',
     comp.navbar(), m('.container', m('br'),
-      _.get(state, 'login.username') ? comp[state.route]() : comp.login()
+      state.username || _.get(state, 'login.username') ?
+      comp[state.route]() : comp.login()
     )
   )}),
   io().on('datachange', (name, doc) => [

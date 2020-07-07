@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "minifier": "node minifier.js"
+    "bundle": "node bundler.js"
   },
   "keywords": [
     "hospital"

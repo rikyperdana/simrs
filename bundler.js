@@ -9,15 +9,15 @@ concat(
     'outpatient', 'inpatient', 'igd', 'storage',
     'transfer', 'pharmacy', 'cashier', 'management',
     'queue', 'surgery', 'profile', 'app'
-  ].map(i => ['./public/', i, '.js'].join(''))
+  ].map(i => ['./development/', i, '.js'].join(''))
 ).then(result => fs.writeFile(
-  './production/client.js', result,
-  err => !err && minify('./production/client.js')
+  './production/bundled.js', result,
+  err => !err && minify('./production/bundled.js')
     .then(min => fs.writeFile(
-      './production/client.min.js',
+      './production/bundled.min.js',
       min, err => !err && [
         console.log('berhasil'),
-        fs.unlink('./production/client.js', err => err)
+        fs.unlink('./production/bundled.js', err => err)
       ]
     ))
 ))
