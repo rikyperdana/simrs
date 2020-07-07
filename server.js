@@ -7,10 +7,9 @@ io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 app = express()
-// .use(express.static('./deploy/'+(process.env.deploy || 'development')))
 .use(express.static(
   process.env.production ?
-  './deploy/production' : 'public'
+  'production' : 'public'
 ))
 .listen(process.env.PORT || 3000),
 
@@ -19,9 +18,9 @@ dbCall = action => mongoDB.MongoClient.connect(
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
     : action(client.db(process.env.dbname))
-)
+),
 
-var io = require('socket.io')(app)
+io = require('socket.io')(app)
 io.on('connection', socket => [
   socket.on('datachange', (name, doc) =>
     socket.broadcast.emit('datachange', name, doc)

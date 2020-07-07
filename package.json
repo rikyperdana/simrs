@@ -19,8 +19,8 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "bundle": "node ./tools/bundler.js",
-    "minify": "node ./tools/minifier.js"
+    "start": "node server.js",
+    "minifier": "node minifier.js"
   },
   "keywords": [
     "hospital"
