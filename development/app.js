@@ -91,13 +91,10 @@ _.assign(comp, {
         action: (doc) => [
           state.loading = true, m.redraw(),
           io().emit('login', doc, ({res}) => res ? [
-            _.assign(state, {username: doc.username, route: 'dashboard'}),
-            db.users.filter(i => i.username === state.username)
-            .toArray(i => i.length && [
-              state.login = i[0],
-              localStorage.setItem('login', JSON.stringify(i[0])),
-              m.redraw()
-            ]),
+            _.assign(state, {
+              username: doc.username, route: 'dashboard', login: res
+            }),
+            localStorage.setItem('login', JSON.stringify(res)),
             m.redraw()
           ] : [
             state.loading = false,
