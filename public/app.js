@@ -39,6 +39,7 @@ _.assign(comp, {
           ),
           m('a.navbar-item', {onclick: () => [
             _.assign(state, {login: null, route: 'login', loading: false}),
+            localStorage.removeItem('login'),
             m.redraw()
           ]},'Logout')
         )
@@ -92,7 +93,11 @@ _.assign(comp, {
           io().emit('login', doc, ({res}) => res ? [
             _.assign(state, {username: doc.username, route: 'dashboard'}),
             db.users.filter(i => i.username === state.username)
-            .toArray(i => [state.login = i[0], m.redraw()]),
+            .toArray(i => [
+              state.login = i[0],
+              localStorage.setItem('login', JSON.stringify(i[0])),
+              m.redraw()
+            ]),
             m.redraw()
           ] : [
             state.loading = false,
@@ -107,10 +112,14 @@ _.assign(comp, {
 })
 
 io().on('connect', () => [
+  state.login = JSON.parse(localStorage.login || '{}'),
   m.mount(document.body, {view: () => m('div',
     comp.navbar(), m('.container', m('br'),
-      state.username ? comp[state.route]() : comp.login()
+      _.get(state, 'login.username') ? comp[state.route]() : comp.login()
     )
   )}),
-  io().on('datachange', (name, doc) => db[name].put(doc))
+  io().on('datachange', (name, doc) => [
+    db[name].put(doc),
+    state.lastSync = +moment()
+  ])
 ])

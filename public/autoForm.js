@@ -69,7 +69,8 @@ function autoForm(opts){return {view: function(){
     },
     arrLen: function(name, type){return {onclick: function(){
       afState.arrLen[name] = afState.arrLen[name] || 0
-      afState.arrLen[name] += ({inc: 1, dec: -1})[type]
+      var dec = afState.arrLen[name] > 0 ? -1 : 0
+      afState.arrLen[name] += ({inc: 1, dec})[type]
     }}},
     label: function(name, schema){return m('label.label',
       m('span', schema.label || _.startCase(name)),
@@ -156,9 +157,9 @@ function autoForm(opts){return {view: function(){
       schema.type === Array && m('.box',
         attr.label(name, schema),
         m('tags',
-          m('tag.is-success', attr.arrLen(name, 'inc'), 'Add+'),
-          m('tag.is-warning', attr.arrLen(name, 'dec'), 'Rem-'),
-          m('tag', afState.arrLen[name]),
+          m('.tag.is-success', attr.arrLen(name, 'inc'), 'Add+'),
+          m('.tag.is-warning', attr.arrLen(name, 'dec'), 'Rem-'),
+          m('.tag', afState.arrLen[name]),
         ),
         _.range(afState.arrLen[name]).map(function(i){
           var childSchema = opts.schema[normal(name)+'.$']

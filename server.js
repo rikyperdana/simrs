@@ -7,11 +7,14 @@ io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 app = express()
-.use(express.static('public'))
+.use(express.static(
+  process.env.production ?
+  'production' : 'public'
+))
 .listen(process.env.PORT || 3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
-  process.env.mongo || process.env.atlas,
+  process.env.atlas || process.env.MONGO,
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
     : action(client.db(process.env.dbname))
@@ -20,7 +23,7 @@ dbCall = action => mongoDB.MongoClient.connect(
 io = require('socket.io')(app)
 io.on('connection', socket => [
   socket.on('datachange', (name, doc) =>
-    socket.broadcast.emit('datachange', name)
+    socket.broadcast.emit('datachange', name, doc)
   ),
   socket.on('bcrypt', (type, text, cb) =>
     bcrypt.hash(text, 10, (err, res) => cb(res))
@@ -49,11 +52,10 @@ io.on('connection', socket => [
         obj.document,
         (err, res) => cb(res)
       ),
-      insertMany: () =>
-        obj.documents.map(doc =>
-          coll.insertOne(doc)
-        )
-      ,
+      insertMany: () => coll.insertMany(
+        obj.documents,
+        (err, res) => cb(res)
+      ),
       updateOne: () => coll.updateOne(
         {_id: obj._id},
         {$set: obj.document},
@@ -64,12 +66,16 @@ io.on('connection', socket => [
         (err, res) => cb(res)
       ),
       getDifference: () => withThis(
-        obj.clientColl,
-        clientColl => coll.find({$or: [
-          {_id: {$not: {$in: clientColl.map(i => i._id)}}},
-          {updated: {$gt: clientColl.reduce((res, inc) =>
-            inc.updated > res ? inc.updated : res
-          , 0)}}
+        {
+          ids: obj.clientColl.map(i => i._id),
+          latest: obj.clientColl.reduce(
+            (acc, inc) => inc.updated > acc ?
+            inc.updated : acc, 0
+          )
+        },
+        ({ids, latest}) => coll.find({$or: [
+          {_id: {$not: {$in: ids}}},
+          {updated: {$gt: latest}}
         ]}).toArray((err, res) => cb(res))
       )
     }[obj.method]())

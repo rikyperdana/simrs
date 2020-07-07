@@ -1,6 +1,6 @@
 {
   "name": "simrs",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "description": "Integrated Hospital Software",
   "repository": {
@@ -19,8 +19,15 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "minifier": "node minifier.js"
   },
-  "keywords": ["hospital"],
-  "author": "Riky Perdana"
+  "keywords": [
+    "hospital"
+  ],
+  "author": "Riky Perdana",
+  "devDependencies": {
+    "concat": "^1.0.3",
+    "minify": "^5.1.1"
+  }
 }
