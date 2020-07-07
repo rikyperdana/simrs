@@ -15,9 +15,9 @@ concat(
   err => !err && minify('./production/bundled.js')
     .then(min => fs.writeFile(
       './production/bundled.min.js',
-      min, err => !err && [
-        console.log('berhasil'),
-        fs.unlink('./production/bundled.js', err => err)
-      ]
+      min, err => !err && fs.unlink(
+        './production/bundled.js',
+        err => !err && console.log('berhasil')
+      )
     ))
 ))

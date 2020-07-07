@@ -33,7 +33,7 @@ io.on('connection', socket => [
       {username: creds.username},
       (err, res) => bcrypt.compare(
         creds.password, res.password,
-        (err, result) => cb({res: !!result})
+        (err, result) => cb({res: res || err || false})
       )
     )
   )), // alhamdulillah bisa pakai bcrypt
