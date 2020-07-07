@@ -17,14 +17,17 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 |CSS|Bulma 0.7.5|
 
 ## Persiapan Pra-install
-1. Paham tentang server publik [Glitch](https://glitch.com/)
-2. Paham tentang [MongoDB](https://docs.mongodb.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-3. Paham tentang paradigma Functional Javascript, [MithrilJS](https://mithril.js.org/), [Lodash](https://lodash.com/docs/4.17.15), [Bulma](https://bulma.io/), dan [DexieJS](https://dexie.org/)
-4. Paham tentang ragam prosedur operasional Rumah Sakit Umum
+1. Paham tentang [MongoDB](https://docs.mongodb.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Paham tentang paradigma Functional Javascript, [MithrilJS](https://mithril.js.org/), [Lodash](https://lodash.com/docs/4.17.15), [Bulma](https://bulma.io/), dan [DexieJS](https://dexie.org/)
+3. Paham tentang ragam prosedur operasional Rumah Sakit Umum
 
 ## Cara Install
-### Bagian App
+### Bagian App (jika dari Glitch)
 1. Clone project ini dari halaman glitch, rename nama project bila diperlukan
+
+### Bagian App (jika dari NodeJS)
+1. `git clone https://github.com/rikyperdana/simrs`
+2. node server.js
 
 ### Bagian DB
 1. Login MongoDB Atlas, create Free cluster, klik create cluster
@@ -49,6 +52,14 @@ dengan alamat server database local Anda
 3. Batasi kembali akses menu manajemen dengan mengganti false pada line 4 dengan state.login.bidang !== 5
 4. Unduh dan ganti isi [Daftar tarif tindakan](https://docs.google.com/spreadsheets/d/1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ/edit?usp=sharing), simpan sebagai .csv dan unggah melalui tombol Import
 5. Selamat mengikuti video tutorial pada playlist youtube berikut ini [Playlist Tutorial Pemakaian SIMRST Open Source](https://www.youtube.com/playlist?list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ)
+
+## Cara Menjalankan
+### Development
+1. `nodemon server.js`
+### Production
+1. Pada .env berikan `production=true` (jika belum ada)
+2. `npm run bundle && npm run minify` (setiap kali pindah ke mode production)
+3. `node server.js`
 
 ## Deskripsi Menu & Sub-menu
 
