@@ -55,12 +55,11 @@ dengan alamat server database local Anda
 
 ## Cara Menjalankan
 ### Development
-1. npm run bundle (hanya saat setelah melakukan perubahan kode js pada `public`)
-2. node server.js
+1. `nodemon server.js`
 ### Production
-1. Pada .env berikan `deploy="production"` (jika belum ada)
-2. npm run minify (setiap kali pindah ke mode production)
-3. node server.js
+1. Pada .env berikan `production=true` (jika belum ada)
+2. `npm run bundle && npm run minify` (setiap kali pindah ke mode production)
+3. `node server.js`
 
 ## Deskripsi Menu & Sub-menu
 
