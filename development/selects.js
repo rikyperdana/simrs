@@ -23,7 +23,8 @@ selects = name => _.reduce(
     bidang: ['pendaftaran', 'kasir', 'farmasi', 'apotik', 'manajemen'],
     kelas_bed: ['VIP', 'I', 'II', 'III'],
     tarif_bed: [ 350,   200, 150,  100],
-    keaktifan: ['aktif', 'non-aktif']
+    keaktifan: ['aktif', 'non-aktif'],
+    pengarsipan: ['Rumah Sakit', 'Pribadi']
   }, (res, inc, key) =>
     _.merge(res, {[key]: () => _.map(inc, (val, key) =>
         ({label: _.startCase(val), value: key+1})

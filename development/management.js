@@ -1,4 +1,4 @@
-/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment*/
+/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io*/
 
 _.assign(comp, {
   users: () => state.login.bidang !== 5 ?
@@ -10,10 +10,11 @@ _.assign(comp, {
           m('h3', 'Tambah Akun'),
           m(autoForm({
             id: 'createAccount', schema: schemas.account,
-            action: doc => [
-              insertBoth('users', doc),
-              state.modalAccount = null
-            ]
+            action: doc =>
+              io().emit('bcrypt', doc.password, res => [
+                insertBoth('users', _.assign(doc, {password: res})),
+                state.modalAccount = null
+              ])
           }))
         )
       },
@@ -57,8 +58,8 @@ _.assign(comp, {
     )
   ),
 
-  references: () => !_.includes([2, 5], state.login.bidang) ?
-  m('p', 'Hanya untuk user manajemen dan kasir') : m('.content',
+  // referensi harus terbuka untuk seluruh pihak
+  references: () => m('.content',
     m('h3', 'Daftar Tarif'),
     m('table.table',
       {oncreate: () => db.references.toArray(array => [

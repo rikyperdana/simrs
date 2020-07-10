@@ -1,4 +1,4 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDiferences */
+/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus*/
 
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
@@ -6,7 +6,9 @@ _.assign(comp, {
       onclick: () => state.route = 'dashboard'
     }, 'RS Medicare')),
     m('.navbar-menu',
-      m('.navbar-start', _.map(menus, (val, key) =>
+      m('.navbar-start', _.map(_.merge(
+        {}, menus, localStorage.openBeta ? betaMenus : {}
+      ), (val, key) =>
         m('a.navbar-item',
           {
             class: val.children && 'has-dropdown is-hoverable',
@@ -63,7 +65,9 @@ _.assign(comp, {
         'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
       ),
     ),
-    _.chunk(_.values(menus), 3).map(i =>
+    _.chunk(_.values(_.merge(
+      {}, menus, localStorage.openBeta ? betaMenus : {}
+    )), 3).map(i =>
       m('.columns', i.map(j => m('.column',
         m('.box', m('article.media',
           m('.media-left', m('span.icon.has-text-primary',
@@ -91,6 +95,7 @@ _.assign(comp, {
         action: (doc) => [
           state.loading = true, m.redraw(),
           io().emit('login', doc, ({res}) => res ? [
+            console.log(res),
             _.assign(state, {
               username: doc.username, route: 'dashboard', login: res
             }),
@@ -117,6 +122,7 @@ io().on('connect', () => [
       comp[state.route]() : comp.login()
     )
   )}),
+  // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi
   io().on('datachange', (name, doc) => [
     db[name].put(doc),
     state.lastSync = +moment()

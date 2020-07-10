@@ -115,16 +115,16 @@ _.assign(comp, {
     },
     m('h3', 'Form SOAP'),
     m('div', {oncreate: () => [
-      db.references.filter(i =>
-        _.every([
-          i[0] === 'rawatJalan',
-          i[1] === _.snakeCase(look(
-            'klinik', state.login.poliklinik
-          ))
-        ])
-      ).toArray(array =>
-        state.references = array
-      ), state.spm = _.now()
+      db.references.filter(i => _.every([
+        i[0] === 'rawatJalan',
+        i[1] === _.snakeCase(look(
+          'klinik', state.login.poliklinik
+        ))
+      ]))
+      .toArray(array => state.daftarTindakan = array),
+      db.references.filter(i => i[0] === 'radiologi')
+      .toArray(array => state.daftarRadio = array),
+      state.spm = _.now()
     ]}),
     m(autoForm({
       id: 'soapMedis', autoReset: true,

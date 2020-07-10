@@ -1,4 +1,4 @@
-/*global ors _ state selects randomId*/
+/*global ors _ state selects randomId beds ands withThis*/
 
 var schemas = {
   identitas: {
@@ -112,7 +112,7 @@ var schemas = {
     'tindakan.$': {type: Object},
     'tindakan.$.idtindakan': {type: String, autoform: {
       type: 'select', options: (name, doc) =>
-        _.sortBy(state.references.map(i =>
+        _.sortBy(state.daftarTindakan.map(i =>
           ({value: i._id, label: i.nama})
         ), ['label'])
     }},
@@ -164,6 +164,7 @@ var schemas = {
   account: {
     nama: {type: String, label: 'Nama lengkap'},
     username: {type: String},
+    password: {type: String, autoform: {type: 'password'}},
     peranan: {type: Number, autoform: {
       type: 'select', options: selects('peranan')
     }},
@@ -301,3 +302,75 @@ var schemas = {
     nomor: {type: Number},
   },
 }
+
+localStorage.openBeta && [
+  _.assign(schemas.soapDokter, {
+
+    radio: {type: Array, optional: true},
+    'radio.$': {type: Object},
+    'radio.$.grup': {type: String, optional: true, autoform: {
+      help: 'Saring berdasarkan kategori',
+      type: 'select', options: () => _.uniq(
+        state.references
+        .filter(i => i[0] === 'radiologi')
+        .map(i => i[1])
+      ).map(i => ({value: i, label: _.startCase(i)}))
+    }},
+    'radio.$.idradio': {type: String, autoRedraw: true, autoform: {
+      type: 'select', options: (name, doc) =>
+        _.sortBy(
+          state.references.filter(i => ands([
+            i[0] === 'radiologi',
+            withThis(
+              _.initial(name.split('.')).join('.') + '.grup',
+              siblingGrup => _.get(doc, siblingGrup) ?
+                doc[siblingGrup] === i[1] : true
+            )
+          ]))
+          .map(i => ({value: i._id, label: i.nama})),
+          'label'
+        )
+    }},
+    'radio.$.catatan': {type: String, optional: true},
+
+    labor: {type: Array, optional: true},
+    'labor.$': {type: Object},
+    'labor.$.grup': {type: String, optional: true, autoform: {
+      help: 'Saring berdasarkan kategori',
+      type: 'select', options: () => _.uniq(
+        state.references
+        .filter(i => i[0] === 'laboratorium')
+        .map(i => i[1])
+      ).map(i => ({value: i, label: _.startCase(i)}))
+    }},
+    'labor.$.idlabor': {type: String, autoRedraw: true, autoform: {
+      type: 'select', options: (name, doc) =>
+        _.sortBy(
+          state.references.filter(i => ands([
+            i[0] === 'laboratorium',
+            withThis(
+              _.initial(name.split('.')).join('.') + '.grup',
+              siblingGrup => _.get(doc, siblingGrup) ?
+                doc[siblingGrup] === i[1] : true
+            )
+          ]))
+          .map(i => ({value: i._id, label: i.nama})),
+          'label'
+        )
+    }},
+    'radio.$.catatan': {type: String, optional: true},
+  }),
+  _.assign(schemas, {
+    responRadiology: {
+      kode_berkas: {type: String},
+      diagnosa: {type: String, autoform: {type: 'textarea', rows: 10}},
+      pengarsipan: {type: Number, autoform: {
+        type: 'select', options: selects('pengarsipan')
+      }},
+      petugas: {
+        type: String, autoform: {type: 'hidden'},
+        autoValue: () => _.get(state.login, '_id')
+      }
+    }
+  })
+]

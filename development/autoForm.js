@@ -123,7 +123,8 @@ function autoForm(opts){return {view: function(){
         {
           name: !schema.exclude ? name : '',
           required: !schema.optional,
-          value: _.get(afState.form, [opts.id, name])
+          value: _.get(afState.form, [opts.id, name]),
+          onchange: schema.autoRedraw && function(){}
         },
         m('option', {value: ''}, '-'),
         schema.autoform.options(name, afState.form[opts.id])

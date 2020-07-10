@@ -1,4 +1,4 @@
-/*global moment numeral _ m Dexie selects io*/
+/*global moment numeral _ m Dexie selects io getDifference getDifferences*/
 
 var
 withThis = (obj, cb) => cb(obj),
@@ -118,7 +118,7 @@ menus = {
       transfer: {full: 'Amprah'}
     }
   },
-  pharmacy: {full: 'Apotik', icon: 'flask'},
+  pharmacy: {full: 'Apotik', icon: 'pills'},
   management: {
     full: 'Manajemen', icon: 'users',
     children: {
@@ -126,6 +126,11 @@ menus = {
       references: {full: 'Referensi'}
     }
   }
+},
+
+betaMenus = {
+  laboratory: {full: 'Laboratorium', icon: 'flask'},
+  radiology: {full: 'Radiologi', icon: 'radiation'}
 },
 
 db = new Dexie('simrs')
