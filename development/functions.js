@@ -1,4 +1,4 @@
-/*global moment numeral _ m Dexie selects io getDifference getDifferences*/
+/*global moment numeral _ m Dexie selects io*/
 
 var
 withThis = (obj, cb) => cb(obj),
@@ -35,25 +35,28 @@ paginate = (array, name, length) => array.slice(
   _.get(state, ['pagination', name]) * length + length,
 ),
 
-insertBoth = (collName, doc) => withThis(
+dbCall = (body, action) =>
+  io().emit('dbCall', body, action),
+
+insertBoth = (collName, doc, cb) => withThis(
   _.merge(doc, {_id: randomId(), updated: _.now()}),
   obj => [
     db[collName].put(obj),
     dbCall({
       method: 'insertOne', collection: collName, document: obj
-    }, () => ''),
+    }, res => ands([res, cb]) && cb(res)),
     io().emit('datachange', collName, doc)
   ]
 ),
 
-updateBoth = (collName, _id, doc) => withThis(
+updateBoth = (collName, _id, doc, cb) => withThis(
   _.merge(doc, {_id: _id, updated: _.now()}),
   obj => [
     db[collName].put(obj),
     dbCall({
       method: 'updateOne', collection: collName,
       document: obj, _id: _id
-    }, () => ''),
+    }, res => ands([res, cb]) && cb(res)),
     io().emit('datachange', collName, doc)
   ]
 ),
@@ -87,9 +90,6 @@ tarifInap = (masuk, keluar, tarif) =>
 
 tarifIGD = 45000, tarifKartu = 8000,
 
-dbCall = (body, action) =>
-  io().emit('dbCall', body, action),
-
 collNames = ['patients', 'goods', 'references', 'users', 'queue'],
 
 state = {route: 'dashboard'}, comp = {},
@@ -122,8 +122,8 @@ menus = {
   management: {
     full: 'Manajemen', icon: 'users',
     children: {
-      users: {full: 'Pengguna'},
-      references: {full: 'Referensi'}
+      users: {full: 'Pengguna', icon: 'users'},
+      references: {full: 'Referensi', icon: 'file-contract'}
     }
   }
 },
@@ -133,11 +133,7 @@ betaMenus = {
   radiology: {full: 'Radiologi', icon: 'radiation'}
 },
 
-db = new Dexie('simrs')
-
-db.version(1).stores(collNames.reduce((res, inc) =>
-  _.merge(res, {[inc]: '_id'})
-, {})),
+db = new Dexie('simrs'),
 
 getDifference = name =>
   db[name].toArray(array =>
@@ -156,3 +152,7 @@ getDifference = name =>
 
 getDifferences = () =>
   collNames.map(name => getDifference(name))
+
+db.version(1).stores(collNames.reduce((res, inc) =>
+  _.merge(res, {[inc]: '_id'})
+, {}))

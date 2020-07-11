@@ -1,4 +1,4 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus*/
+/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor*/
 
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
@@ -65,18 +65,62 @@ _.assign(comp, {
         'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
       ),
     ),
-    _.chunk(_.values(_.merge(
+    _.chunk(_.map(_.merge(
       {}, menus, localStorage.openBeta ? betaMenus : {}
-    )), 3).map(i =>
+    ), (v, k) => [v, k]), 3).map(i =>
       m('.columns', i.map(j => m('.column',
         m('.box', m('article.media',
+          {onclick: () => [state.route = j[1], m.redraw()]},
           m('.media-left', m('span.icon.has-text-primary',
-            m('i.fas.fa-2x.fa-'+j.icon))
+            m('i.fas.fa-2x.fa-'+j[0].icon))
           ),
-          m('.media-content', m('.content',m('h3', j.full)))
+          m('.media-content', m('.content',m('h3', j[0].full)))
         ))
       )))
-    )
+    ),
+    m('h1', 'Statistik Sistem'),
+    localStorage.openBeta && [
+      m('.tabs.is-boxed', m('ul',
+        {style: 'margin-left: 0%'},
+        _.map({
+          pasien: ['Pasien', 'walking'],
+          rawatJalan: ['Rawat Jalan', 'ambulance'],
+          emergency: ['Emergency', 'heart'],
+          rawatInap: ['Rawat Inap', 'bed'],
+          radiology: ['Radiologi', 'radiation'],
+          laboratory: ['Laboratorium', 'flask'],
+          manajemen: ['Manajemen', 'people']
+        }, (val, key) => m('li',
+          {class: key === state.dashboardTab && 'is-active'},
+          m('a',
+            {onclick: () => [state.dashboardTab = key, m.redraw()]},
+            m('span.icon', m('i.fas.fa-'+val[1])),
+            m('span', val[0])
+          )
+        ))
+      )),
+      m('.columns', ({
+        pasien: [
+          'Total jumlah pasien: ',
+          'Total pasien pria: ',
+          'Total pasien wanita: '
+        ],
+        rawatJalan: selects('klinik')()
+        .map(i => 'Total pasien klinik '+i.label+': '),
+        emergency: ['Total pasien emergency: '],
+        rawatInap: ['Total okupasi bed: '],
+        radiology: ['Total layanan radiologi: '],
+        laboratory: ['Total layanan laboratorium: '],
+        manajemen: [
+          'Jumlah petugas: ',
+          'Jumlah perawat: ',
+          'Jumlah dokter: '
+        ]
+      })[state.dashboardTab || 'pasien']
+      .map(i => m('.column', m('.notification',
+        {class: 'is-primary'}, i
+      ))))
+    ],
   ),
 
   login: () => m('.content', m('.columns',
@@ -95,7 +139,6 @@ _.assign(comp, {
         action: (doc) => [
           state.loading = true, m.redraw(),
           io().emit('login', doc, ({res}) => res ? [
-            console.log(res),
             _.assign(state, {
               username: doc.username, route: 'dashboard', login: res
             }),

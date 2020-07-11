@@ -83,3 +83,4 @@ Pemetaan ketersediaan bed rawat inap dapat diubah pada file `public/inpatient.js
 ## Dependensi
 ## Permasalahan
 ## Pengembangan
+- Percantik dashboard dengan informasi statistik (jumlah pasien, rawatJalan, rawatInap, emergency)

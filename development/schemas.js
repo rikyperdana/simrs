@@ -276,13 +276,6 @@ var schemas = {
     }
   },
 
-  admisi: {
-    kelas_bed: {type: Number, autoform: {
-      type: 'select', options: selects('kelas_bed')
-    }},
-    kode_bed: {type: String}
-  },
-
   login: {
     username: {type: String},
     password: {type: String, autoform: {type: 'password'}}
@@ -361,6 +354,17 @@ localStorage.openBeta && [
     'radio.$.catatan': {type: String, optional: true},
   }),
   _.assign(schemas, {
+    confirmRadiology: {
+      konfirmasi: {
+        type: Number, autoform: {
+          type: 'select', options: selects('konfirmasi')
+        }
+      },
+      tanggal: {
+        type: Number, autoform: {type: 'hidden'},
+        autoValue: () => _.now()
+      }
+    },
     responRadiology: {
       kode_berkas: {type: String},
       diagnosa: {type: String, autoform: {type: 'textarea', rows: 10}},

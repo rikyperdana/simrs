@@ -1,4 +1,4 @@
-/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io*/
+/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io menus betaMenus*/
 
 _.assign(comp, {
   users: () => state.login.bidang !== 5 ?
@@ -73,7 +73,7 @@ _.assign(comp, {
       m('tbody',
         state.referenceList &&
         paginate(state.referenceList, 'references', 20)
-        .map(i => m('tr', tds([
+        .map(i => i.nama && m('tr', tds([
           i.nama, rupiah(i.harga), i[0], i[1], i[2]
         ])))
       )
@@ -156,14 +156,28 @@ _.assign(comp, {
   ),
 
   pagination: (id, length) => [
-    state.pagination = state.pagination || {[id]: _.get(state.pagination, id) || 0},
+    state.pagination = state.pagination ||
+      {[id]: _.get(state.pagination, id) || 0},
     m('nav.pagination', m('.pagination-list',
       _.range(length).map(i => m('div', m('a.pagination-link', {
         class: i === state.pagination[id] && 'is-current',
-        onclick: () => [
-          state.pagination[id] = i, m.redraw()
-        ]
+        onclick: () => [state.pagination[id] = i, m.redraw()]
       }, i+1)))
     ))
   ][1],
+  
+  management: () =>
+    _.chunk(_.map(
+      menus.management.children, (v, k) => [v, k]
+    ), 3).map(i =>
+      m('.columns', i.map(j => m('.column',
+        m('.box', m('article.media',
+          {onclick: () => [state.route = j[1], m.redraw()]},
+          m('.media-left', m('span.icon.has-text-primary',
+            m('i.fas.fa-2x.fa-'+j[0].icon))
+          ),
+          m('.media-content', m('.content',m('h3', j[0].full)))
+        ))
+      )))
+    ),
 })

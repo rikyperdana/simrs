@@ -109,7 +109,11 @@ _.assign(comp, {
                   localStorage.openBeta && [
                     (i.soapDokter.radio || []).map((j, k) => m('tr',
                       m('th', 'Cek radiologi '+k),
-                      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama)
+                      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
+                      m('td', m('.button.is-info', {
+                        "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
+                        onclick: () => makePdf.radio(state.onePatient.identitas, j)
+                      }, 'Cetak'))
                     )),
                     (i.soapDokter.labor).map((j, k) => m('tr',
                       m('th', 'Cek labor '+k),
@@ -152,7 +156,7 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
           state.login.peranan === 4 && m('td', m('.button.is-danger', {
-            ondblclick: (e) => [
+            ondblclick: e => [
               e.stopPropagation(),
               updateBoth('patients', state.onePatient._id, _.assign(
                 state.onePatient, {rawatJalan:
