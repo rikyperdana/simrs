@@ -52,7 +52,8 @@ insertBoth = (collName, doc, cb) => withThis(
 updateBoth = (collName, _id, doc, cb) => withThis(
   _.merge(doc, {_id: _id, updated: _.now()}),
   obj => [
-    db[collName].put(obj),
+    db[collName].put(obj)
+    .then(res => ands([res, cb]) && cb(res)),
     dbCall({
       method: 'updateOne', collection: collName,
       document: obj, _id: _id
@@ -95,7 +96,6 @@ collNames = ['patients', 'goods', 'references', 'users', 'queue'],
 state = {route: 'dashboard'}, comp = {},
 
 menus = {
-  emergency: {full: 'IGD', icon: 'heartbeat'},
   registration: {
     full: 'Pendaftaran', icon: 'address-book',
     children: {
@@ -103,7 +103,8 @@ menus = {
       queue: {full: 'Antrian'}
     }
   },
-  outpatient: {full: 'Rawat Jalan', icon: 'male'},
+  emergency: {full: 'IGD', icon: 'heartbeat'},
+  outpatient: {full: 'Rawat Jalan', icon: 'walking'},
   inpatient: {
     full: 'Rawat Inap', icon: 'bed',
     children: {
@@ -130,7 +131,9 @@ menus = {
 
 betaMenus = {
   laboratory: {full: 'Laboratorium', icon: 'flask'},
-  radiology: {full: 'Radiologi', icon: 'radiation'}
+  radiology: {full: 'Radiologi', icon: 'radiation'},
+  cssd: {full: 'Laundry', icon: 'tshirt'},
+  gizi: {full: 'Gizi', icon: 'utensils'}
 },
 
 db = new Dexie('simrs'),

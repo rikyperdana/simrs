@@ -21,7 +21,7 @@ selects = name => _.reduce(
     boolean: ['ya', 'tidak'],
     konfirmasi: ['proses', 'tolak'],
     peranan: ['petugas', 'perawat', 'dokter', 'admin'],
-    bidang: ['pendaftaran', 'kasir', 'farmasi', 'apotik', 'manajemen'],
+    bidang: ['pendaftaran', 'kasir', 'farmasi', 'apotik', 'manajemen', 'rawat_jalan', 'rawat_inap', 'laboratorium', 'radiologi'],
     keaktifan: ['aktif', 'non-aktif'],
     pengarsipan: ['Rumah Sakit', 'Pribadi']
   }, (res, inc, key) =>

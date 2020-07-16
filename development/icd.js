@@ -52,7 +52,9 @@ _.assign(comp, {
                     a.idrawat && a.klinik ? 'rawatJalan' : 'emergency',
                     facility => [
                       e.preventDefault(),
-                      a.idrawat ? updateBoth('patients', a._id,
+                      a.idrawat ?
+                      updateBoth(
+                        'patients', a._id,
                         _.assign({
                           _id: a._id, identitas: a.identitas,
                           rawatJalan: a.rawatJalan || [],
@@ -66,23 +68,27 @@ _.assign(comp, {
                               ))[d]})
                             )}
                           )}) : b
-                        )})
-                      ) : updateBoth('patients', a._id, {
-                        _id: a._id, identitas: a.identitas,
-                        rawatJalan: a.rawatJalan || [],
-                        emergency: a.emergency || [],
-                        rawatInap : a.rawatInap.map(b =>
-                          b.idinap === a.idinap ?
-                          _.assign(b, {observasi: b.observasi.map(c =>
-                            c.idobservasi === a.soapDokter.idobservasi ?
-                            _.assign(c, {diagnosa: c.diagnosa.map((d, f) =>
-                              ({text: d.text, code: _.compact(_.map(e.target, g =>
-                                g.name && g.value
-                              ))[f]})
-                            )}) : c
-                          )}) : b
-                        )
-                      }),
+                        )}),
+                        res => res && m.redraw()
+                      ) : updateBoth(
+                        'patients', a._id, {
+                          _id: a._id, identitas: a.identitas,
+                          rawatJalan: a.rawatJalan || [],
+                          emergency: a.emergency || [],
+                          rawatInap : a.rawatInap.map(b =>
+                            b.idinap === a.idinap ?
+                            _.assign(b, {observasi: b.observasi.map(c =>
+                              c.idobservasi === a.soapDokter.idobservasi ?
+                              _.assign(c, {diagnosa: c.diagnosa.map((d, f) =>
+                                ({text: d.text, code: _.compact(_.map(e.target, g =>
+                                  g.name && g.value
+                                ))[f]})
+                              )}) : c
+                            )}) : b
+                          )
+                        },
+                        res => res && m.redraw()
+                      ),
                       state.modalICD10 = null,
                       m.redraw()
                     ]

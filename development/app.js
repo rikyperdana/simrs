@@ -1,5 +1,6 @@
 /*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor*/
 
+var {laboratory, radiology} = betaMenus
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
     m('.navbar-brand', m('a.navbar-item', {
@@ -7,7 +8,8 @@ _.assign(comp, {
     }, "SIMRS.dev")),
     m('.navbar-menu',
       m('.navbar-start', _.map(_.merge(
-        {}, menus, localStorage.openBeta ? betaMenus : {}
+        {}, menus, localStorage.openBeta ?
+        {laboratory, radiology} : {}
       ), (val, key) =>
         m('a.navbar-item',
           {
@@ -78,8 +80,8 @@ _.assign(comp, {
         ))
       )))
     ),
-    m('h1', 'Statistik Sistem'),
     localStorage.openBeta && [
+      m('h1', 'Statistik Sistem'),
       m('.tabs.is-boxed', m('ul',
         {style: 'margin-left: 0%'},
         _.map({
@@ -89,7 +91,7 @@ _.assign(comp, {
           rawatInap: ['Rawat Inap', 'bed'],
           radiology: ['Radiologi', 'radiation'],
           laboratory: ['Laboratorium', 'flask'],
-          manajemen: ['Manajemen', 'people']
+          manajemen: ['Manajemen', 'users']
         }, (val, key) => m('li',
           {class: key === state.dashboardTab && 'is-active'},
           m('a',
@@ -129,7 +131,10 @@ _.assign(comp, {
       state.error && m('.notification.is-danger.is-light', [
         m('button.delete', {onclick: () => state.error = false}),
         state.error
-      ]),
+      ]), _.range(3).map(() => m('br')),
+      m('.level', m('.level-item.has-text-centered',
+        m('span.icon.is-large.has-text-primary', m('i.fas.fa-8x.fa-stethoscope'))
+      )), m('br'),
       m(autoForm({
         id: 'login', schema: schemas.login,
         submit: {
@@ -159,15 +164,15 @@ _.assign(comp, {
 io().on('connect', () => [
   state.login = localStorage.login &&
     JSON.parse(localStorage.login || '{}'),
-  m.mount(document.body, {view: () => m('div',
-    comp.navbar(), m('.container', m('br'),
+  m.mount(document.body, {view: () => m('.has-background-light',
+    comp.navbar(), m('.container',
+      {style: 'min-height:100vh'}, m('br'),
       state.username || _.get(state, 'login.username') ?
       comp[state.route]() : comp.login()
     )
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi
   io().on('datachange', (name, doc) => [
-    db[name].put(doc),
-    state.lastSync = +moment()
+    db[name].put(doc), state.lastSync = _.now()
   ])
 ])
