@@ -104,7 +104,7 @@ _.assign(comp, {
 
   formSoap: () => m('.content',
     {
-      onupdate: () =>
+      onupdate: () => [
         db.goods.toArray(array => [
           state.goodsList = array,
           state.drugList = array.filter(i =>
@@ -112,8 +112,7 @@ _.assign(comp, {
               j + (k.stok.apotik || 0)
             , 0) > (_.get(i, 'stok_minimum.apotik') || 0)
           )
-       ]),
-      oncreate: () => [
+        ]),
         db.references.filter(i => _.every([
           i[0] === 'rawatJalan',
           i[1] === _.snakeCase(look(

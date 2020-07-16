@@ -180,7 +180,7 @@ _.assign(comp, {
                     m('span', 'Cetak salinan resep')
                   ),
                   m('.button.is-primary',
-                    {ondblclick: () => [
+                    {onlick: () => [
                       updateBoth('patients', updatedPatient._id, updatedPatient),
                       updatedGoods.map(j => updateBoth('goods', j._id, j)),
                       state.modalSerahObat = null, m.redraw()

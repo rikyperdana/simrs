@@ -4,7 +4,7 @@ _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary',
     m('.navbar-brand', m('a.navbar-item', {
       onclick: () => state.route = 'dashboard'
-    }, 'RS Medicare')),
+    }, "SIMRS.dev")),
     m('.navbar-menu',
       m('.navbar-start', _.map(_.merge(
         {}, menus, localStorage.openBeta ? betaMenus : {}

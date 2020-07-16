@@ -68,7 +68,7 @@ makeModal = name => m('.modal',
   m('.modal-close.is-large', {onclick: () =>
     [state[name] = null, m.redraw()]
   })
-),
+), // BUG: yg di dalam modal tidak mempan m.redraw()
 
 makeReport = (name, action) => m('.box',
   m('h4', 'Unduh Laporan '+name),
@@ -113,7 +113,7 @@ menus = {
   },
   cashier: {full: 'Kasir', icon: 'cash-register'},
   storage: {
-    full: 'Gudang', icon: 'cubes',
+    full: 'Storage', icon: 'cubes',
     children: {
       transfer: {full: 'Amprah'}
     }

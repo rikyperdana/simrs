@@ -46,7 +46,7 @@ _.assign(comp, {
                 }))
               )
             ))
-          ]),
+          ]).filter(Boolean),
           m.redraw()
         ])
       ]},

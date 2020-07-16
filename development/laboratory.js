@@ -1,4 +1,11 @@
-/*global m _ comp state tds db hari ors look lookUser makeModal lookReferences withThis updateBoth*/
+/*global m _ comp state tds db hari ors look lookUser makeModal lookReferences withThis updateBoth autoForm schemas selects*/
+
+/*
+  TODOS:
+  - integrasi soapView soapPdf (ok)
+  - integrasi cashier
+  - intermediat konfirmasi (ok)
+*/
 
 _.assign(comp, {
   laboratory: () => m('.content',
@@ -25,58 +32,17 @@ _.assign(comp, {
         ))
       ]},
       m('thead', m('tr',
-        ['Waktu Permintaan', 'No. MR', 'Nama Pasien', 'Instalasi', 'Dokter']
+        ['Waktu Permintaan', 'No. MR', 'Nama Pasien', 'Instalasi', 'Dokter', 'Diproses']
         .map(i => m('th', i))
       )),
       // berbeda dengan radiologi, 1 baris mewakili 1 kali rawat
       m('tbody',
         (state.laboratoryList || []).map(i => m('tr',
-          {ondblclick: () => state.modalLaboratory = m('.box',
-            m('h3', 'Respon Laboratorium'),
-            m('table.table',
-              // m('tr', m('th', 'Jenis cek'), m('th', 'Nilai isian')),
-              m('tr', ['Jenis cek', 'Nilai isian', 'Input'].map(j => m('th', j))),
-              i.rawat.soapDokter.labor.map(
-                j => m('tr', tds([
-                  // mungkin tidak butuh intermediat konfirmasi seperti radiologi
-                  lookReferences(j.idlabor).nama, j.hasil,
-                  m('.button.is-link', {onclick: e => [
-                    e.stopPropagation, withThis(
-                      // setiap baris di dalam tabel modal mewakili 1 item labor, diisi secara terpisah
-                      prompt('Nilai hasil cek?'),
-                      hasil => updateBoth(
-                        'patients', i.pasien._id, _.assign(i.pasien, {
-                          rawatJalan: (i.pasien.rawatJalan || []).map(
-                            k => k.idrawat === i.rawat.idrawat ? _.assign(k, {
-                              soapDokter: _.assign(i.rawat.soapDokter, {
-                                labor: i.rawat.soapDokter.labor.map(
-                                  l => l.idlabor === j.idlabor ?
-                                  _.assign(l, {hasil}) : l
-                                )
-                              })
-                            }) : k
-                          ),
-                          emergency: (i.pasien.emergency || []).map(
-                            k => k.idrawat === i.rawat.idrawat ? _.assign(k, {
-                              soapDokter: _.assign(i.rawat.soapDokter, {
-                                labor: i.rawat.soapDokter.labor.map(
-                                  l => l.idlabor === j.idlabor ?
-                                  _.assign(l, {hasil}) : l
-                                )
-                              })
-                            }) : k
-                          ), // TODO: jangan lupa untuk rawatInap
-                        })
-                      ) && _.assign(state, {
-                        // BUG: ini hanya solusi sementara, upayakan auto update
-                        laboratoryList: null, modalLaboratory: null
-                      })
-                    )
-                  ]}, 'isi')
-                ]))
-              )
-             )
-          )},
+          {ondblclick: () => _.assign(state, {
+            route: 'responLaboratory', responLaboratory: _.assign(
+              i, {labor: _.get(i, 'rawat.soapDokter.labor')}
+            )
+          }) && m.redraw()},
           tds([
             hari(i.rawat.tanggal),
             i.pasien.identitas.no_mr,
@@ -86,11 +52,55 @@ _.assign(comp, {
               i.observasi && 'Rawat Inap',
               'Emergency'
             ]),
-            lookUser(i.rawat.soapDokter.dokter)
+            lookUser(i.rawat.soapDokter.dokter),
+            withThis(
+              i.rawat.soapDokter.labor.find(j => j.tanggal),
+              tanggal => hari(tanggal, true)
+            )
           ])
         ))
-      ),
-      makeModal('modalLaboratory')
+      )
     )
+  ),
+  responLaboratory: () => m('.content',
+    m('h2', 'Respon Laboratorium'),
+    m(autoForm({
+      id: 'responLaboratory',
+      schema: _.merge({},
+        schemas.responLaboratory,
+        // cek apakah salah satu item labor sudah dikonfirmasi
+        state.responLaboratory.labor.filter(i => i.konfirmasi).length ?
+        // jika salah satu sudah dikonfirmasi maka buka form isian hasil
+        {'labor.$.hasil': {type: String}} :
+        // jika belum ada yg dikonfirmasi pada array labor, konfirmasi dulu
+        {'labor.$.konfirmasi': {
+          type: Number, autoform: {
+            type: 'select', options: selects('konfirmasi')
+          }
+        }}
+      ),
+      doc: {labor: state.responLaboratory.labor},
+      action: doc => [
+        updateBoth(
+          'patients', state.responLaboratory.pasien._id,
+          _.assign(state.responLaboratory.pasien, {
+            rawatJalan: (state.responLaboratory.pasien.rawatJalan || []).map(
+              i => i.idrawat === state.responLaboratory.rawat.idrawat ?
+              _.assign(i, {soapDokter: _.assign(
+                state.responLaboratory.rawat.soapDokter,
+                {labor: state.responLaboratory.rawat.soapDokter.labor.map(
+                  // cari pada doc.labor pasangannya
+                  j => _.assign(j, doc.labor.find(
+                    k => k.idlabor === j.idlabor
+                  ) || {})
+                )}
+              )}) : i
+            )
+          })
+        ),
+        _.assign(state, {route: 'laboratory', laboratoryList: []}),
+        m.redraw()
+      ]
+    }))
   )
 })

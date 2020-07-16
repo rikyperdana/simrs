@@ -214,7 +214,7 @@ makePdf = {
             [['Laboratorium', 'Diagnosa']],
             _.get(rawat, 'soapDokter.labor').map(i => [
               lookReferences(i.labor).nama,
-              i.diagnosa
+              i.hasil
             ])
           )}}
         ]
@@ -225,13 +225,18 @@ makePdf = {
     pdfMake.createPdf({content: [
       kop,
       {text: 'Salinan Resep\n\n', alignment: 'center', bold: true},
-      {table: {widths: ['*', 'auto'], body: ([]).concat(
-        [['Nama Obat', 'Jumlah', 'Kali', 'Dosis', 'Puyer']],
-        drugs.map(i => [
-          i.nama_barang, i.serahkan+' unit',
-          _.get(i, 'aturan.kali') || '-', _.get(i, 'aturan.dosis') || '-', i.puyer
-        ])
-      )}},
+      {table: {
+        widths: ['*', 'auto', 'auto', 'auto', 'auto'],
+        body: ([]).concat(
+          [['Nama Obat', 'Jumlah', 'Kali', 'Dosis', 'Puyer']],
+          drugs.map(i => [
+            i.nama_barang, i.serahkan+' unit',
+            _.get(i, 'aturan.kali') || '-',
+            _.get(i, 'aturan.dosis') || '-',
+            i.puyer || '-'
+          ])
+        )
+      }},
       {alignment: 'justify', columns: [
         {text: '', alignment: 'center'},
         {text: '\nPangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'}

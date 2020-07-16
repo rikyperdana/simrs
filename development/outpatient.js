@@ -110,14 +110,15 @@ _.assign(comp, {
                     (i.soapDokter.radio || []).map((j, k) => m('tr',
                       m('th', 'Cek radiologi '+k),
                       m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
-                      m('td', m('.button.is-info', {
+                      j.diagnosa && m('td', m('.button.is-info', {
                         "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
                         onclick: () => makePdf.radio(state.onePatient.identitas, j)
                       }, 'Cetak'))
                     )),
-                    (i.soapDokter.labor).map((j, k) => m('tr',
+                    (i.soapDokter.labor || []).map((j, k) => m('tr',
                       m('th', 'Cek labor '+k),
-                      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama)
+                      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama),
+                      m('td', j.hasil)
                     ))
                   ]
                 ]
