@@ -95,7 +95,19 @@ _.assign(comp, {
                   ) || {})
                 )}
               )}) : i
-            )
+            ),
+            emergency: (state.responLaboratory.pasien.emergency || []).map(
+              i => i.idrawat === state.responLaboratory.rawat.idrawat ?
+              _.assign(i, {soapDokter: _.assign(
+                state.responLaboratory.rawat.soapDokter,
+                {labor: state.responLaboratory.rawat.soapDokter.labor.map(
+                  // cari pada doc.labor pasangannya
+                  j => _.assign(j, doc.labor.find(
+                    k => k.idlabor === j.idlabor
+                  ) || {})
+                )}
+              )}) : i
+            ),
           })
         ),
         _.assign(state, {route: 'laboratory', laboratoryList: []}),

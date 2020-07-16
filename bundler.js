@@ -1,4 +1,3 @@
-
 var concat = require('concat'),
 minify = require('minify'),
 fs = require('fs')
@@ -9,7 +8,8 @@ concat(
     'pdf', 'registration', 'patient', 'icd',
     'outpatient', 'inpatient', 'igd', 'storage',
     'transfer', 'pharmacy', 'cashier', 'management',
-    'queue', 'surgery', 'profile', 'app'
+    'queue', 'surgery', 'profile', 'radiology',
+    'laboratory', 'laundry', 'gizi', 'app'
     // libatkan fitur beta hanya kalau sudah stabil
   ].map(i => ['./development/', i, '.js'].join(''))
 ).then(result => fs.writeFile(

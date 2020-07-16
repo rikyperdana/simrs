@@ -32,7 +32,7 @@ io.on('connection', socket => [
     // cek ketersedian user yang dimaksud
     db.collection('users').findOne(
       {username: creds.username},
-      (err, res) => bcrypt.compare(
+      (err, res) => res && bcrypt.compare(
         // tes kebenaran password
         creds.password, res.password,
         // kembalikan doc user yg ditemukan

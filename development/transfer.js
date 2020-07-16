@@ -92,7 +92,9 @@ _.assign(comp, {
         .map(i => m('th', i))
       )),
       m('tbody', state.transferList &&
-        state.transferList.map(i => m('tr',
+        state.transferList
+        .sort((a, b) => b.tanggal_serah - a.tanggal_serah)
+        .map(i => m('tr',
           i.penyerah && tds([
             i.nama_barang, i.no_batch,
             lookUser(i.peminta), i.diminta, hari(i.tanggal_minta, true),

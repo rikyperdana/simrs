@@ -1,4 +1,4 @@
-/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment*/
+/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState*/
 
 _.assign(comp, {
   storage: () => !ors([
@@ -63,9 +63,10 @@ _.assign(comp, {
     m('h3', 'Form input jenis barang baru'),
     m(autoForm({
       id: 'formGood', schema: schemas.barang,
-      confirmMessage: 'Yakin untuk menambahkan JENIS barang baru?',
+      confirmMessage: 'Yakin untuk menyimpan JENIS barang baru?',
+      doc: state.oneGood,
       action: doc => withThis(
-        _.merge(doc, {_id: randomId()}),
+        _.merge(doc, {_id: randomId()}, state.oneGood),
         obj => [
           insertBoth('goods', obj),
           _.assign(state, {route: 'oneGood', oneGood: obj})
@@ -103,7 +104,12 @@ _.assign(comp, {
         m('span.icon', m('i.fas.fa-plus-circle')),
         m('span', 'Tambah batch')
       ),
-      state.login.peranan === 4 && m('.button.is-warning',
+      m('.button.is-warning',
+        {onclick: () => state.route = 'formGood'},
+        m('span.icon', m('i.fas.fa-edit')),
+        m('span', 'Edit obat')
+      ),
+      state.login.peranan === 4 && m('.button.is-danger',
         {
           "data-tooltip": 'Kosongkan semua batch barang ini',
           ondblclick: () => [

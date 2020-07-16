@@ -26,8 +26,8 @@ _.assign(comp, {
       )
     )),
     m('.buttons',
-      m('.button.is-warning', {
-        onclick: () => state.modalProfile = m('.box',
+      m('.button.is-warning',
+        {onclick: () => state.modalProfile = m('.box',
           m(autoForm({
             id: 'formProfile',
             schema: {
@@ -47,25 +47,35 @@ _.assign(comp, {
             },
             action: doc => [
               doc.password ?
-              io().emit('passwordCrypt', doc.password, res =>
-                updateBoth('users', state.login.id, _.assign(state.login, doc, {password: res}))
-              ) : updateBoth('users', state.login.id, _.assign(state.login, doc)),
+              io().emit('bcrypt', doc.password, res => updateBoth(
+                'users', state.login._id, _.assign(state.login, doc, {password: res})
+              )) : updateBoth('users', state.login._id, _.assign(state.login, doc)),
               state.modalProfile = null, m.redraw()
             ]
           }))
-        )
-      }, 'Update akun'),
-      m('a.button.is-info', {
-        href: 'https://wa.me/628117696000?text=simrs.dev',
-        target: '_blank'
-      }, 'Kritik/Saran'),
-      m('a.button.is-danger', {
-        "data-tooltip": 'Double-click untuk buka/tutup menu beta (radiologi & laboratorium)',
-        ondblclick: () =>
-          localStorage.openBeta ?
-          localStorage.removeItem('openBeta')
-          : localStorage.setItem('openBeta', true)
-      }, 'Versi Beta')
+        )},
+        m('span.icon', m('i.fas.fa-edit')),
+        m('span', 'Update akun')
+      ),
+      m('a.button.is-info',
+        {
+          href: 'https://wa.me/628117696000?text=simrs.dev',
+          target: '_blank'
+        },
+        m('span.icon', m('i.fas.fa-envelope-open-text')),
+        m('span', 'Kritik/Saran')
+       ),
+      m('a.button.is-danger',
+        {
+          "data-tooltip": 'Double-click untuk buka/tutup menu beta (radiologi & laboratorium)',
+          ondblclick: () =>
+            localStorage.openBeta ?
+            localStorage.removeItem('openBeta')
+            : localStorage.setItem('openBeta', true)
+        },
+        m('span.icon', m('i.fas.fa-adjust')),
+        m('span', 'Versi Beta')
+      )
     ),
     makeModal('modalProfile')
   )

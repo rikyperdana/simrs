@@ -38,11 +38,12 @@ _.assign(comp, {
             state.modalAccount = m('.box',
               m('h4', 'Profil Pengguna'),
               m(autoForm({
-                id: 'updateAccount', schema: schemas.account,
-                doc: i, action: doc => [
-                  updateBoth('users', i._id, doc),
-                  state.modalAccount = null, m.redraw()
-                ]
+                id: 'updateAccount', schema: schemas.account, doc: i,
+                action: doc =>
+                  io().emit('bcrypt', doc.password, res => [
+                    updateBoth('users', i._id, _.assign(doc, {password: res})),
+                    state.modalAccount = null, m.redraw()
+                  ])
               }))
             )
           },

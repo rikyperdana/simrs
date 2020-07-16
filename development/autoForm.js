@@ -64,11 +64,11 @@ function autoForm(opts){return {view: function(){
             return _.merge(res, recursive(inc))
           }, {})
         )
-        !opts.confirmMessage ? submit() : confirm(opts.confirmMessage) && submit()
+        !opts.confirmMessage ? submit()
+        : confirm(opts.confirmMessage) && submit()
       }
     },
     arrLen: function(name, type){return {onclick: function(){
-      // seharusnya arrLen juga mempertimbangkan doc.length
       afState.arrLen[name] = _.get(afState.arrLen, name) || 0
       var dec = afState.arrLen[name] > 0 ? -1 : 0
       afState.arrLen[name] += ({inc: 1, dec})[type]
