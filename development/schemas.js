@@ -1,4 +1,4 @@
-/*global ors _ state selects randomId*/
+/*global ors _ state selects randomId beds ands withThis lookReferences*/
 
 var schemas = {
   identitas: {
@@ -6,11 +6,12 @@ var schemas = {
     no_mr: {
       type: Number, label: 'No. MR',
       autoform: {help: 'otomatis dari sistem & boleh diubah'},
-      autoValue: (name, doc, opts) => ors([
-        opts.id === 'updatePatient' &&
-        _.get(state, 'onePatient.identitas.no_mr'),
-        Math.floor(Math.random() * 1e6)
-      ])
+      autoValue: (name, doc, opts) =>
+        // jika update, gunakan No. MR yg sudah ada
+        opts.id === 'updatePatient' ?
+        _.get(state, 'onePatient.identitas.no_mr')
+        // No. MR otomatis 6 angka, silahkan naikkan jika perlu
+        : Math.floor(Math.random() * 1e6)
     },
     alias: {
       type: Number, optional: true,
@@ -56,8 +57,8 @@ var schemas = {
       autoValue: () =>_.get(state.login, '_id')
     },
     tanggal_input: {
-      type: Date, autoform: {type: 'hidden'},
-      autoValue: () => Date()
+      type: Number, autoform: {type: 'hidden'},
+      autoValue: () => _.now()
     }
   },
 
@@ -74,7 +75,10 @@ var schemas = {
     cara_bayar: {type: Number, autoform: {
       type: 'select', options: selects('cara_bayar')
     }},
-    no_sep: {type: String, optional: true},
+    no_sep: {
+      type: String, optional: true,
+      autoform: {placeholder: 'isikan bila cara bayar bpjs'}
+    },
     klinik: {type: Number, autoform: {
       type: 'select', options: selects('klinik')
     }},
@@ -112,7 +116,7 @@ var schemas = {
     'tindakan.$': {type: Object},
     'tindakan.$.idtindakan': {type: String, autoform: {
       type: 'select', options: (name, doc) =>
-        _.sortBy(state.references.map(i =>
+        _.sortBy(state.daftarTindakan.map(i =>
           ({value: i._id, label: i.nama})
         ), ['label'])
     }},
@@ -164,6 +168,7 @@ var schemas = {
   account: {
     nama: {type: String, label: 'Nama lengkap'},
     username: {type: String},
+    password: {type: String, autoform: {type: 'password'}},
     peranan: {type: Number, autoform: {
       type: 'select', options: selects('peranan')
     }},
@@ -275,13 +280,6 @@ var schemas = {
     }
   },
 
-  admisi: {
-    kelas_bed: {type: Number, autoform: {
-      type: 'select', options: selects('kelas_bed')
-    }},
-    kode_bed: {type: String}
-  },
-
   login: {
     username: {type: String},
     password: {type: String, autoform: {type: 'password'}}
@@ -301,3 +299,104 @@ var schemas = {
     nomor: {type: Number},
   },
 }
+
+localStorage.openBeta && [
+  _.assign(schemas.soapDokter, {
+
+    radio: {type: Array, optional: true},
+    'radio.$': {type: Object},
+    'radio.$.grup': {type: String, optional: true, autoform: {
+      help: 'Saring berdasarkan kategori',
+      type: 'select', options: () => _.uniq(
+        state.references
+        .filter(i => i[0] === 'radiologi')
+        .map(i => i[1])
+      ).map(i => ({value: i, label: _.startCase(i)}))
+    }},
+    'radio.$.idradio': {type: String, autoRedraw: true, autoform: {
+      type: 'select', options: (name, doc) =>
+        _.sortBy(
+          state.references.filter(i => ands([
+            i[0] === 'radiologi',
+            withThis(
+              _.initial(name.split('.')).join('.') + '.grup',
+              siblingGrup => _.get(doc, siblingGrup) ?
+                doc[siblingGrup] === i[1] : true
+            )
+          ]))
+          .map(i => ({value: i._id, label: i.nama})),
+          'label'
+        )
+    }},
+    'radio.$.catatan': {type: String, optional: true},
+
+    labor: {type: Array, optional: true},
+    'labor.$': {type: Object},
+    'labor.$.grup': {type: String, optional: true, autoform: {
+      help: 'Saring berdasarkan kategori',
+      type: 'select', options: () => _.uniq(
+        state.references
+        .filter(i => i[0] === 'laboratorium')
+        .map(i => i[1])
+      ).map(i => ({value: i, label: _.startCase(i)}))
+    }},
+    'labor.$.idlabor': {type: String, autoRedraw: true, autoform: {
+      type: 'select', options: (name, doc) =>
+        _.sortBy(
+          state.references.filter(i => ands([
+            i[0] === 'laboratorium',
+            withThis(
+              _.initial(name.split('.')).join('.') + '.grup',
+              siblingGrup => _.get(doc, siblingGrup) ?
+                doc[siblingGrup] === i[1] : true
+            )
+          ]))
+          .map(i => ({value: i._id, label: i.nama})),
+          'label'
+        )
+    }},
+    'radio.$.catatan': {type: String, optional: true},
+  }),
+  _.assign(schemas, {
+    confirmRadiology: {
+      konfirmasi: {
+        type: Number, autoform: {
+          type: 'select', options: selects('konfirmasi')
+        }
+      },
+      tanggal: {
+        type: Number, autoform: {type: 'hidden'},
+        autoValue: () => _.now()
+      }
+    },
+    responRadiology: {
+      kode_berkas: {type: String},
+      diagnosa: {type: String, autoform: {type: 'textarea', rows: 10}},
+      pengarsipan: {type: Number, autoform: {
+        type: 'select', options: selects('pengarsipan')
+      }},
+      petugas: {
+        type: String, autoform: {type: 'hidden'},
+        autoValue: () => _.get(state.login, '_id')
+      }
+    },
+    responLaboratory: {
+      labor: {type: Array, fixed: true},
+      'labor.$': {type: Object},
+      'labor.$.idlabor': {
+        type: String, autoform: {type: 'hidden'},
+        autoValue: (name, doc) => doc[name]
+      },
+      'labor.$.item_labor': {
+        type: String, autoform: {type: 'readonly'}, exclude: true,
+        autoValue: (name, doc) => lookReferences(doc[
+          _.initial(name.split('.')).join('.') + '.idlabor'
+        ]).nama
+      },
+      'labor.$.tanggal': { // tanggal pengambilan sample
+        type: Number, autoform: {type: 'hidden'},
+        autoValue: () => _.now()
+      }
+    }
+  })
+]

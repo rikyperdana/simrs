@@ -25,15 +25,18 @@ io.on('connection', socket => [
   socket.on('datachange', (name, doc) =>
     socket.broadcast.emit('datachange', name, doc)
   ),
-  socket.on('bcrypt', (type, text, cb) =>
+  socket.on('bcrypt', (text, cb) =>
     bcrypt.hash(text, 10, (err, res) => cb(res))
   ),
   socket.on('login', (creds, cb) => dbCall(db =>
+    // cek ketersedian user yang dimaksud
     db.collection('users').findOne(
       {username: creds.username},
       (err, res) => bcrypt.compare(
+        // tes kebenaran password
         creds.password, res.password,
-        (err, result) => cb({res: res || err || false})
+        // kembalikan doc user yg ditemukan
+        (err, result) => cb({res: result && res})
       )
     )
   )), // alhamdulillah bisa pakai bcrypt
@@ -45,25 +48,20 @@ io.on('connection', socket => [
         .toArray((err, res) => cb(res))
       ,
       findOne: () => coll.findOne(
-        {_id: obj._id},
-        (err, res) => cb(res)
+        {_id: obj._id}, (err, res) => cb(res)
       ),
       insertOne: () => coll.insertOne(
-        obj.document,
-        (err, res) => cb(res)
+        obj.document, (err, res) => cb(res)
       ),
       insertMany: () => coll.insertMany(
-        obj.documents,
-        (err, res) => cb(res)
+        obj.documents, (err, res) => cb(res)
       ),
       updateOne: () => coll.updateOne(
-        {_id: obj._id},
-        {$set: obj.document},
+        {_id: obj._id}, {$set: obj.document},
         (err, res) => cb(res)
       ),
       deleteOne: () => coll.deleteOne(
-        {_id: obj._id},
-        (err, res) => cb(res)
+        {_id: obj._id}, (err, res) => cb(res)
       ),
       getDifference: () => withThis(
         {
@@ -74,7 +72,9 @@ io.on('connection', socket => [
           )
         },
         ({ids, latest}) => coll.find({$or: [
+          // cari yg belum tersedia pada client
           {_id: {$not: {$in: ids}}},
+          // cari yg lebih baru dari milik client
           {updated: {$gt: latest}}
         ]}).toArray((err, res) => cb(res))
       )

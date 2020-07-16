@@ -1,4 +1,4 @@
-/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment*/
+/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas*/
 
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -46,9 +46,12 @@ _.assign(comp, {
       {onupdate: () =>
         db.patients.toArray(array =>
           state.admissionList = _.compact(array.flatMap(i =>
+            // permintaan rawat inap bisa dari rawat jalan maupun IGD
             ([]).concat(i.rawatJalan || [], i.emergency || [])
             .flatMap(j => ands([
+              // cari pasien yang ditunjuk dokter untuk diinapkan
               _.get(j, 'soapDokter.keluar') === 3,
+              // dan belum ada rekaman admisi ke rawat inap
               (i.rawatInap || []).filter(k =>
                 k.idrawat === j.idrawat
               ).length === 0,
@@ -76,10 +79,11 @@ _.assign(comp, {
             ),
             m(autoForm({
               id: 'formBed', schema: schemas.beds,
-              action: (doc) => [
+              action: doc => [
                 updateBoth(
                   'patients', i.pasien._id, _.assign(i.pasien, {
                     rawatInap: (i.rawatInap || []).concat([{
+                      // buatkan record rawatInap dengan observasi kosong
                       tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
                       observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
                       cara_bayar: i.inap.cara_bayar, bed: doc
@@ -108,6 +112,7 @@ _.assign(comp, {
         db.patients.toArray(array => [
           state.inpatientList = array.filter(i =>
             i.rawatInap && i.rawatInap
+            // cari pasien yg belum keluar dari rawat inap
             .filter(j => !j.keluar).length > 0
           ), m.redraw()
         ]),
@@ -149,9 +154,13 @@ _.assign(comp, {
       m('tbody',
         (state.onePatient.rawatInap || []).map(i => m('tr',
           {ondblclick: () =>
+             // untuk melihat 1 rekaman observasi
             state.modalObservasi = _.includes([2, 3], state.login.peranan) && m('.box',
               m('h3', 'Riwayat Observasi'),
-              i.observasi.length ? m('p.is-italic.has-text-danger', 'klik-ganda pada salah satu observasi untuk melihat rincian') : '',
+              i.observasi.length && m(
+                'p.is-italic.has-text-danger',
+                'klik-ganda pada salah satu observasi untuk melihat rincian'
+              ),
               m('table.table',
                 m('thead', m('tr',
                   ['Waktu', 'Anamnesa', 'Petugas']
@@ -203,8 +212,8 @@ _.assign(comp, {
                 m('.button.is-success',
                   {onclick: () => [
                     _.assign(state, {
-                      route: 'formSoap', oneInap: i,
-                      modalObservasi: null
+                      // alihkan ke halaman formSoap di patient.js dengan membawa dokumen oneInap
+                      route: 'formSoap', oneInap: i, modalObservasi: null
                     }), m.redraw()
                   ]},
                   m('span.icon', m('i.fas.fa-user-md')),

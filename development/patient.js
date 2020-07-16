@@ -103,29 +103,29 @@ _.assign(comp, {
   ),
 
   formSoap: () => m('.content',
-    {onupdate: () =>
-      db.goods.toArray(array => [
-        state.goodsList = array,
-        state.drugList = array.filter(i =>
-          i.batch.reduce((j, k) =>
-            j + (k.stok.apotik || 0)
-          , 0) > (_.get(i, 'stok_minimum.apotik') || 0)
-        )
-     ])
-    },
-    m('h3', 'Form SOAP'),
-    m('div', {oncreate: () => [
-      db.references.filter(i =>
-        _.every([
+    {
+      onupdate: () => [
+        db.goods.toArray(array => [
+          state.goodsList = array,
+          state.drugList = array.filter(i =>
+            i.batch.reduce((j, k) =>
+              j + (k.stok.apotik || 0)
+            , 0) > (_.get(i, 'stok_minimum.apotik') || 0)
+          )
+        ]),
+        db.references.filter(i => _.every([
           i[0] === 'rawatJalan',
           i[1] === _.snakeCase(look(
             'klinik', state.login.poliklinik
           ))
-        ])
-      ).toArray(array =>
-        state.references = array
-      ), state.spm = _.now()
-    ]}),
+        ]))
+        .toArray(array => state.daftarTindakan = array),
+        db.references.filter(i => i[0] === 'radiologi')
+        .toArray(array => state.daftarRadio = array),
+        state.spm = _.now()
+      ]
+    },
+    m('h3', 'Form SOAP'),
     m(autoForm({
       id: 'soapMedis', autoReset: true,
       confirmMessage: 'Yakin untuk menyimpan SOAP?',
@@ -140,6 +140,7 @@ _.assign(comp, {
         state.oneRawat &&
         (state.oneRawat.klinik ? 'rawatJalan' : 'emergency'),
         facility => [
+          // jika berasal dari rawat jalan atau IGD
           facility && updateBoth('patients', state.onePatient._id, _.assign(
             state.onePatient, {[facility]: state.onePatient[facility].map(i =>
               i.idrawat === state.oneRawat.idrawat ?
@@ -149,6 +150,7 @@ _.assign(comp, {
               ])) : i
             )}
           )),
+          // jika berasal dari observasi rawat inap
           state.oneInap && updateBoth('patients', state.onePatient._id, _.assign(
             state.onePatient, {rawatInap:
               state.onePatient.rawatInap.map(i =>

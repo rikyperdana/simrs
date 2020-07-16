@@ -1,4 +1,4 @@
-/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment*/
+/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences*/
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -48,8 +48,9 @@ _.assign(comp, {
             state.clinicQueue = array.filter(i => withThis(
               _.last(i.rawatJalan),
               lastOne => lastOne && ands([
+                // cari pasien yang belum diurus dokter klinik ini
                 lastOne.klinik === state.login.poliklinik,
-                !ands([lastOne.soapPerawat, lastOne.soapDokter])
+                !lastOne.soapDokter
               ])
             ))
           )
@@ -79,7 +80,7 @@ _.assign(comp, {
       {onupdate: () => dbCall({
         method: 'find', collection: 'patients',
         _id: state.onePatient._id
-      }, (res) => db.patients.put(res))},
+      }, res => db.patients.put(res))},
       m('thead', m('tr',
         ['Tanggal berobat', 'Poliklinik', 'Cara bayar', 'Perawat', 'Dokter']
         .map(i => m('th', i)),
@@ -104,7 +105,22 @@ _.assign(comp, {
                   m('tr', m('th', 'Anamnesa Dokter'), m('td', i.soapDokter.anamnesa)),
                   _.map(i.soapDokter.diagnosa, (j, k) =>
                     m('tr', m('th', 'Diagnosa '+k), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
-                  )
+                  ),
+                  localStorage.openBeta && [
+                    (i.soapDokter.radio || []).map((j, k) => m('tr',
+                      m('th', 'Cek radiologi '+k),
+                      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
+                      j.diagnosa && m('td', m('.button.is-info', {
+                        "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
+                        onclick: () => makePdf.radio(state.onePatient.identitas, j)
+                      }, 'Cetak'))
+                    )),
+                    (i.soapDokter.labor || []).map((j, k) => m('tr',
+                      m('th', 'Cek labor '+k),
+                      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama),
+                      m('td', j.hasil)
+                    ))
+                  ]
                 ]
               ),
               m('p.buttons',
@@ -141,7 +157,7 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
           state.login.peranan === 4 && m('td', m('.button.is-danger', {
-            ondblclick: (e) => [
+            ondblclick: e => [
               e.stopPropagation(),
               updateBoth('patients', state.onePatient._id, _.assign(
                 state.onePatient, {rawatJalan:
@@ -155,6 +171,7 @@ _.assign(comp, {
         ))
       )
     ),
+    m('p.has-text-grey-light', 'Note: Jika pasien umum belum bayar maka tidak dapat diklik'),
     makeModal('modalVisit'),
     state.login.bidang === 1 && m('.button.is-success',
       {onclick: () => state.route = 'poliVisit'},

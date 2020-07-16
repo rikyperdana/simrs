@@ -2,7 +2,7 @@ var m, _, afState = {arrLen: {}, form: {}}
 
 function autoForm(opts){return {view: function(){
   function normal(name){return name.replace(/\d/g, '$')}
-  function ors(array){return array.filter(Boolean)[0]}
+  function ors(array){return array.find(Boolean)}
   function dateValue(timestamp, hour){
     var date = new Date(timestamp),
     dateStamp = [date.getFullYear(), date.getMonth()+1, date.getDate()].join('-'),
@@ -68,7 +68,8 @@ function autoForm(opts){return {view: function(){
       }
     },
     arrLen: function(name, type){return {onclick: function(){
-      afState.arrLen[name] = afState.arrLen[name] || 0
+      // seharusnya arrLen juga mempertimbangkan doc.length
+      afState.arrLen[name] = _.get(afState.arrLen, name) || 0
       var dec = afState.arrLen[name] > 0 ? -1 : 0
       afState.arrLen[name] += ({inc: 1, dec})[type]
     }}},
@@ -123,7 +124,8 @@ function autoForm(opts){return {view: function(){
         {
           name: !schema.exclude ? name : '',
           required: !schema.optional,
-          value: _.get(afState.form, [opts.id, name])
+          value: _.get(afState.form, [opts.id, name]),
+          onchange: schema.autoRedraw && function(){}
         },
         m('option', {value: ''}, '-'),
         schema.autoform.options(name, afState.form[opts.id])
@@ -156,12 +158,15 @@ function autoForm(opts){return {view: function(){
 
       schema.type === Array && m('.box',
         attr.label(name, schema),
-        m('tags',
+        !schema.fixed && m('tags',
           m('.tag.is-success', attr.arrLen(name, 'inc'), 'Add+'),
           m('.tag.is-warning', attr.arrLen(name, 'dec'), 'Rem-'),
           m('.tag', afState.arrLen[name]),
         ),
-        _.range(afState.arrLen[name]).map(function(i){
+        _.range(
+          _.get(opts.doc, name) && opts.doc[name].length,
+          afState.arrLen[name]
+        ).map(function(i){
           var childSchema = opts.schema[normal(name)+'.$']
           return inputTypes(name+'.'+i, childSchema)
           [_.get(childSchema, 'autoform.type') || 'standard']()

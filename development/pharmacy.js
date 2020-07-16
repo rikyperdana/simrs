@@ -81,28 +81,34 @@ _.assign(comp, {
         ]},
         (state.pharmacyList || []).map(i => m('tr',
           {ondblclick: () => withThis([], serahList => withThis(
-            {
+            { // urai jenis obat yang diminta oleh pasien
               updatedGoods: _.compact(i.obats.flatMap(a =>
+                // urai jenis obat yang tersedia di gudang
                 state.goodsList.flatMap(b =>
+                  // cari barang yang diminta oleh pasien
                   b._id === a.idbarang && _.assign(b, {batch:
+                    // urut batch berdasarkan kadaluarsa tercepat
                     b.batch.sort((p, q) =>
                       p.kadaluarsa - q.kadaluarsa
+                    // lakukan pengurangan barang secara berurutan
                     ).reduce((c, d) => withThis(
-                      _.min([d.stok.apotik, a.jumlah]),
-                      minim => ors([
-                        ands([a.jumlah, d.stok.apotik]) &&
-                        ands([
+                      // ambil angka terkecil diantara sisa jumlah permintaan dengan stok apotik batch tersebut
+                      _.min([d.stok.apotik, a.jumlah]), minim =>
+                        // selagi minim tidak 0, kurangi stok apotik batch ini
+                        minim ? ands([
+                          // kurangi jumlah permintaan sebanyak minim
                           _.forEach(_.range(minim), () => a.jumlah--),
+                          // simpan daftar batch berikut dengan jumlah pengurangannya
                           serahList.push(_.merge({}, a, {
                             nama_barang: b.nama, no_batch: d.no_batch,
                             serahkan: minim, jual: minim * d.harga.jual,
                           })),
                           c.concat([_.assign(d, {stok: _.assign(d.stok, {
+                            // kurangi stok diapotik sebanyak minim
                             apotik: d.stok.apotik - minim
                           })})])
-                        ]),
-                        c.concat([d])
-                      ])
+                        // jika minim 0 maka lewatkan (bisa jadi habis, belum amprah, atau sudah retur)
+                        ]) : c.concat([d])
                     ), [])
                   })
                 )
@@ -174,7 +180,7 @@ _.assign(comp, {
                     m('span', 'Cetak salinan resep')
                   ),
                   m('.button.is-primary',
-                    {ondblclick: () => [
+                    {onlick: () => [
                       updateBoth('patients', updatedPatient._id, updatedPatient),
                       updatedGoods.map(j => updateBoth('goods', j._id, j)),
                       state.modalSerahObat = null, m.redraw()

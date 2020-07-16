@@ -223,6 +223,7 @@ _.assign(comp, {
     m('h3', 'Form tambah batch'),
     m(autoForm({
       id: 'formBatch', schema: schemas.batch_obat,
+      confirmMessage: 'Yakin untuk menambahkan batch obat ini?',
       action: doc => [
         updateBoth('goods', state.oneGood._id, _.assign(state.oneGood, {
           batch: (state.oneGood.batch || []).concat([doc])

@@ -27,7 +27,8 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 
 ### Bagian App (jika dari NodeJS)
 1. `git clone https://github.com/rikyperdana/simrs`
-2. `node server.js`
+2. `npm install`
+3. `node server.js`
 
 ### Bagian DB
 1. Login MongoDB Atlas, create Free cluster, klik create cluster
@@ -40,10 +41,10 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
     `goods, patients, references, users, queue`
 8. Pada Glitch code editor, Buat file pada project bernama `.env`. Ketikkan
 ```
-MONGO="isikan dengan connection string, dan ganti <username> dan <password>"
+atlas="isikan dengan connection string, dan ganti <username> dan <password>"
 dbname="nama databasenya"
 ```
-Bila tidak ingin menggunakan Atlas, silahkan ganti nilai variabel `MONGO=""`
+Bila tidak ingin menggunakan Atlas, silahkan ganti nilai variabel `MONGO="alamat lokal"`
 dengan alamat server database local Anda
 
 ### Bagian Manajemen
@@ -58,7 +59,7 @@ dengan alamat server database local Anda
 1. `nodemon server.js`
 ### Production
 1. Pada .env berikan `production=true` (jika belum ada)
-2. `npm run bundle && npm run minify` (setiap kali pindah ke mode production)
+2. `npm run bundle` (setiap kali pindah ke mode production)
 3. `node server.js`
 
 ## Deskripsi Menu & Sub-menu
@@ -82,3 +83,4 @@ Pemetaan ketersediaan bed rawat inap dapat diubah pada file `public/inpatient.js
 ## Dependensi
 ## Permasalahan
 ## Pengembangan
+- Percantik dashboard dengan informasi statistik (jumlah pasien, rawatJalan, rawatInap, emergency)
