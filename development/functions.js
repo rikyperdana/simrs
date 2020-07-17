@@ -99,8 +99,8 @@ menus = {
   registration: {
     full: 'Pendaftaran', icon: 'address-book',
     children: {
-      icd: {full: 'Kodifikasi'},
-      queue: {full: 'Antrian'}
+      icd: {full: 'Kodifikasi', icon: 'code'},
+      queue: {full: 'Antrian', icon: 'stream'}
     }
   },
   emergency: {full: 'IGD', icon: 'heartbeat'},
@@ -108,15 +108,15 @@ menus = {
   inpatient: {
     full: 'Rawat Inap', icon: 'bed',
     children: {
-      beds: {full: 'Daftar Kamar'},
-      surgery: {full: 'Antrian Bedah'}
+      beds: {full: 'Daftar Kamar', icon: 'bed'},
+      surgery: {full: 'Antrian Bedah', icon: 'procedures'}
     }
   },
   cashier: {full: 'Kasir', icon: 'cash-register'},
   storage: {
     full: 'Storage', icon: 'cubes',
     children: {
-      transfer: {full: 'Amprah'}
+      transfer: {full: 'Amprah', icon: 'exchange-alt'}
     }
   },
   pharmacy: {full: 'Apotik', icon: 'pills'},

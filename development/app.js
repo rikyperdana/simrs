@@ -19,33 +19,42 @@ _.assign(comp, {
           val.children ? [
             m('a.navbar-link', _.startCase(val.full)),
             m('.navbar-dropdown', _.map(val.children, (i, j) =>
-              m('a.navbar-item', {onclick: e =>
-                [e.stopPropagation(), state.route = j]
-              }, i.full)
+              m('a.navbar-item',
+                {onclick: e => [e.stopPropagation(), state.route = j]},
+                m('span.icon', m('i.fas.fa-'+i.icon)),
+                m('span', i.full)
+               )
             ))
-          ] : _.startCase(val.full)
+          ] : m('span', _.startCase(val.full))
         )
       )),
       m('.navbar-end', m('.navbar-item.has-dropdown.is-hoverable',
         m('a.navbar-link', {
           onclick: () => [state.route = 'profile', m.redraw()]
         }, _.get(state.login, 'username')),
-        m('.navbar-dropdown',
+        m('.navbar-dropdown.is-right',
           m('a.navbar-item',
-            'Peranan: '+ look('peranan', _.get(state.login, 'peranan'))
+            m('span.icon', m('i.fas.fa-user-tag')),
+            m('span', 'Peranan: '+ look('peranan', _.get(state.login, 'peranan')))
           ),
           m('a.navbar-item',
-            'Bidang: '+look('bidang', _.get(state.login, 'bidang'))
+            m('span.icon', m('i.fas.fa-shapes')),
+            m('span', 'Bidang: '+look('bidang', _.get(state.login, 'bidang')))
           ),
           m('a.navbar-item',
-            'Poliklinik: '+
-            look('klinik', _.get(state.login, 'poliklinik'))
+            m('span.icon', m('i.fas.fa-clinic-medical')),
+            m('span', 'Poliklinik: '+look('klinik', _.get(state.login, 'poliklinik')))
           ),
-          m('a.navbar-item', {onclick: () => [
-            _.assign(state, {login: null, route: 'login', loading: false}),
-            localStorage.removeItem('login'),
-            m.redraw()
-          ]},'Logout')
+          m('hr.dropdown-divider'),
+          m('a.navbar-item',
+            {onclick: () => [
+              _.assign(state, {login: null, route: 'login', loading: false}),
+              localStorage.removeItem('login'),
+              m.redraw()
+            ]},
+            m('span.icon', m('i.fas.fa-sign-out-alt')),
+            m('span', 'Logout')
+          )
         )
       ))
     ),
@@ -61,6 +70,7 @@ _.assign(comp, {
     m('.buttons',
       m('.button.is-info', {
         class: state.loading && 'is-loading',
+        "data-tooltip": 'otomatis setiap beberapa menit / manual',
         onclick: () => [state.loading = true, getDifferences()]
       }, 'Sync'),
       state.lastSync && m('span',
@@ -128,10 +138,14 @@ _.assign(comp, {
   login: () => m('.content', m('.columns',
     m('.column'),
     m('.column',
+      !window.chrome && m('.notification.is-warning.is-light',
+        'Mohon gunakan Chrome versi terbaru'
+      ),
       state.error && m('.notification.is-danger.is-light', [
         m('button.delete', {onclick: () => state.error = false}),
         state.error
-      ]), _.range(3).map(() => m('br')),
+      ]),
+      _.range(3).map(() => m('br')),
       m('.level', m('.level-item.has-text-centered',
         m('span.icon.is-large.has-text-primary', m('i.fas.fa-8x.fa-stethoscope'))
       )), m('br'),
@@ -141,7 +155,7 @@ _.assign(comp, {
           value: 'Login',
           class: state.loading ? 'is-info is-loading' : 'is-info'
         },
-        action: (doc) => [
+        action: doc => [
           state.loading = true, m.redraw(),
           io().emit('login', doc, ({res}) => res ? [
             _.assign(state, {
@@ -161,7 +175,7 @@ _.assign(comp, {
   ))
 })
 
-io().on('connect', () => [
+io().on('connect', socket => [
   state.login = localStorage.login &&
     JSON.parse(localStorage.login || '{}'),
   m.mount(document.body, {view: () => m('.has-background-light',
@@ -169,6 +183,13 @@ io().on('connect', () => [
       {style: 'min-height:100vh'}, m('br'),
       state.username || _.get(state, 'login.username') ?
       comp[state.route]() : comp.login()
+    ),
+    m('footer.footer',
+      {style: 'padding:0px'},
+      m('.content', m('a', {
+        href: 'https://github.com/rikyperdana/simrs',
+        target: '_blank'
+      }, 'Versi 5.4'))
     )
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi

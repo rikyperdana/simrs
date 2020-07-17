@@ -75,6 +75,14 @@ _.assign(comp, {
         },
         m('span.icon', m('i.fas.fa-adjust')),
         m('span', 'Versi Beta')
+      ),
+      m('a.button.is-link',
+        {
+          href: 'https://www.youtube.com/watch?v=irSxnKSRIOI&list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ',
+          target: '_blank'
+        },
+        m('span.icon', m('i.fas.fa-chalkboard-teacher')),
+        m('span', 'Tutorial')
       )
     ),
     makeModal('modalProfile')

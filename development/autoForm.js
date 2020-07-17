@@ -74,7 +74,9 @@ function autoForm(opts){return {view: function(){
       afState.arrLen[name] += ({inc: 1, dec})[type]
     }}},
     label: function(name, schema){return m('label.label',
-      m('span', schema.label || _.startCase(name)),
+      m('span', schema.label || _.startCase(
+       name.split('.').map(i => +i+1 ? +i+1 : i).join('.')
+      )),
       m('span', m('b.has-text-danger', !schema.optional && ' *'))
     )}
   }
@@ -158,7 +160,7 @@ function autoForm(opts){return {view: function(){
 
       schema.type === Array && m('.box',
         attr.label(name, schema),
-        !schema.fixed && m('tags',
+        !schema.fixed && m('.tags',
           m('.tag.is-success', attr.arrLen(name, 'inc'), 'Add+'),
           m('.tag.is-warning', attr.arrLen(name, 'dec'), 'Rem-'),
           m('.tag', afState.arrLen[name]),
