@@ -62,6 +62,7 @@ _.assign(comp, {
   // referensi harus terbuka untuk seluruh pihak
   references: () => m('.content',
     m('h3', 'Daftar Tarif'),
+    m('p.help', '* Tersusun alfabetis'),
     m('table.table',
       {oncreate: () => db.references.toArray(array => [
         state.referenceList = _.sortBy(array, ['nama']),

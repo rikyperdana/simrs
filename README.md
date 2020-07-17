@@ -1,8 +1,9 @@
-# SIMRS.dev (SIMRS Open Source untuk seluruh Faskes)
+# SIMRS.dev
+> SIMRS Open Source Terintegrasi untuk seluruh Faskes
 
 Bismillahirrahmanirrahim,
 ## Pengenalan
-SIMRST adalah singkatan dari Sistem Informasi Rumah Sakit Terintegrasi, yang mendandakan bahwa sistem ini mencakup fungsi umum yang terdapat pada rumah sakit seperti Rawat Jalan, IGD, Rawat Inap, Apotik, Farmasi, Amprahan, dan Manajemen. Sistem ini menggunakan 1 database yang saling menghubungkan fungsi tersebut dengan otomatisasi sehingga memungkinkan rumah sakit untuk menjalankan sistem ini secar paperless maupun hybrid dengan dokumen fisiknya.
+SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang mendandakan bahwa sistem ini mencakup fungsi umum yang terdapat pada rumah sakit seperti Rawat Jalan, IGD, Rawat Inap, Apotik, Farmasi, Amprahan, dan Manajemen. Sistem ini menggunakan 1 database yang saling menghubungkan fungsi tersebut dengan otomatisasi sehingga memungkinkan rumah sakit untuk menjalankan sistem ini secar paperless maupun hybrid dengan dokumen fisiknya.
 
 Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 
