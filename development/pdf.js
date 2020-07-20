@@ -46,93 +46,47 @@ makePdf = {
     ]}).download('general_consent_'+identitas.no_mr)
   ,
 
-  bayar_pendaftaran: (identitas, rawat, rawatLength) =>
+  bayar_pendaftaran: (pasien, rawat, oldPatient) =>
     pdfMake.createPdf({content: [kop, {columns: [
       ['Tanggal', 'No. MR', 'Nama Pasien', 'Tarif', 'Petugas'],
       [
         hari(_.now()),
-        identitas.no_mr,
-        identitas.nama_lengkap,
+        pasien.identitas.no_mr,
+        pasien.identitas.nama_lengkap,
         'Total: '+rupiah(_.sum([
-          rawatLength === 1 ? tarifKartu : 0,
-          1000*+look('tarif_klinik', rawat.klinik)
+          oldPatient ? 0 : tarifKartu,
+          1000 * +look('tarif_klinik', rawat.klinik)
         ])),
         state.login.nama
       ].map(i => ': '+i)
-    ]}]}).download('bayar_pendaftaran_'+identitas.no_mr)
-  ,
+    ]}]}).download('bayar_pendaftaran_'+pasien.identitas.no_mr),
 
-  bayar_konsultasi: (identitas, rawat) => withThis(
-    {
-      tindakans: _.get(rawat, 'soapDokter.tindakan') &&
-      rawat.soapDokter.tindakan.map(i => withThis(
-        lookReferences(i.idtindakan),
-        item => [item.nama, +item.harga]
-      )),
-      obats: _.get(rawat, 'soapDokter.obat') &&
-      rawat.soapDokter.obat.map(i => withThis(
-        state.goodsList.find(j => j._id === i.idbarang),
-        item => [item.nama, i.harga]
-      )),
-      observasi: rawat.observasi && _.compact(
-        rawat.observasi.flatMap(i => [
-          i.tindakan && i.tindakan.flatMap(j => withThis(
-            lookReferences(j.idtindakan),
-            item => [item.nama, +item.harga]
-          )),
-          i.obat && i.obat.flatMap(j => withThis(
-            state.goodsList.find(k => k._id === j.idbarang),
-            item => [item.nama, j.harga]
-          ))
-        ])
-      )
-    },
-    ({tindakans, obats, observasi}) =>
-      pdfMake.createPdf({content: [
-        kop, '\n',
-        {columns: [
-          ['No. MR', 'Nama Pasien', 'Jenis Kelamin', 'Tanggal Lahir', 'Umur', 'Layanan'],
-          [
-            identitas.no_mr,
-            _.startCase(identitas.nama_lengkap),
-            look('kelamin', identitas.kelamin).label || '-',
-            hari(identitas.tanggal_lahir),
-            moment().diff(identitas.tanggal_lahir, 'years')+' tahun',
-            ors([
-              rawat.idinap && 'Rawat Inap',
-              rawat.klinik && look('klinik', rawat.klinik).label,
-              'Gawat Darurat'
-            ])
-          ]
-        ]},
-        {text: '\n\nRincian Pembayaran', alignment: 'center'},
-        {table: {widths: ['*', 'auto'], body: _.concat(
-          [['Uraian', 'Harga']],
-          !rawat.klinik && !rawat.idinap ? [['Layanan IGD', rupiah(tarifIGD)]] : [],
-          tindakans ? tindakans.map(i => [i[0], rupiah(i[1])]) : [],
-          obats ? obats.map(i => [i[0], rupiah(i[1])]) : [],
-          rawat.observasi ? [['Biaya inap', rupiah(tarifInap(
-            rawat.tanggal_masuk, rawat.keluar,
-            beds[rawat.bed.kelas].tarif
-          )
-          )]] : [],
-          observasi ? observasi.map(i => [i[0], rupiah(i[1])]) : []
-        )}},
-        '\nTotal Biaya '+rupiah(_.sum([
-          !rawat.klinik && !rawat.bed && tarifIGD,
-          tindakans && tindakans.reduce((res, inc) => res + inc[1], 0),
-          obats && obats.reduce((res, inc) => res + inc[1], 0),
-          rawat.observasi && _.sum([
-            tarifInap(
-              rawat.tanggal_masuk, rawat.keluar,
-              beds[rawat.bed.kelas].tarif
-            ),
-            _.sum(observasi.map(j => j[1]))
+  bayar_konsultasi: (pasien, rawat, bills) =>
+    pdfMake.createPdf({content: [
+      kop,
+      {columns: [
+        ['No. MR', 'Nama Pasien', 'Jenis Kelamin', 'Tanggal Lahir', 'Umur', 'Layanan'],
+        [
+          pasien.identitas.no_mr,
+          _.startCase(pasien.identitas.nama_lengkap),
+          look('kelamin', pasien.identitas.kelamin).label || '-',
+          hari(pasien.identitas.tanggal_lahir),
+          moment().diff(pasien.identitas.tanggal_lahir, 'years')+' tahun',
+          ors([
+            rawat.observasi && 'Rawat Inap',
+            rawat.klinik && look('klinik', rawat.klinik).label,
+            'Emergency'
           ])
-        ])),
-        {text: '\nP. Kuras, '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
-      ]}).download('bayar_konsultasi_'+identitas.no_mr)
-  ),
+        ]
+      ]},
+      {text: '\n\nRincian Pembayaran', alignment: 'center'},
+      {table: {widths: ['*', 'auto'], body: _.concat(
+        [['Uraian', 'Harga']],
+        [...bills].map(i => [i.item, rupiah(i.harga)])
+      )}},
+      '\nTotal Biaya '+rupiah(_.sum(bills.map(i => i.harga))),
+      {text: '\nP. Kuras, '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
+    ]}).download('bayar_konsultasi_'+pasien.identitas.no_mr),
 
   soap: (identitas, rawat) =>
     pdfMake.createPdf({content: [

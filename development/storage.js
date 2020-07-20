@@ -113,6 +113,7 @@ _.assign(comp, {
         {
           "data-tooltip": 'Kosongkan semua batch barang ini',
           ondblclick: () => [
+            confirm('Yakin untuk stok opname jenis barang ini?') &&
             updateBoth('goods', state.oneGood._id, _.assign(
               state.oneGood, {batch: []}
             )), state.route = 'storage', m.redraw()
@@ -120,6 +121,18 @@ _.assign(comp, {
         },
         m('span.icon', m('i.fas.fa-recycle')),
         m('span', 'Stok Opname')
+      ),
+      state.login.peranan === 4 && m('.button.is-danger',
+        {
+          "data-tooltip": 'Menghapus barang dapat merusak riwayat transaksi yang berhubungan dengan barang ini',
+          ondblclick: () => [
+            confirm('Yakin untuk menghapus jenis barang?') &&
+            console.log('deleteBoth', state.oneGood._id),
+            state.route = 'storage', m.redraw()
+          ]
+        },
+        m('span.icon', m('i.fas.fa-trash-alt')),
+        m('span', 'Hapus barang')
       )
     ),
     m('p'), m('h4', 'Daftar batch barang ini'),

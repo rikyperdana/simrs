@@ -1,5 +1,7 @@
 /*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment*/
 
+// TODO: Gimana kalau dengan BHP ya? Karena dia dipakai dulu baru ditagih
+
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
   m('p', 'Hanya untuk user apotik') : m('.content',
@@ -69,7 +71,10 @@ _.assign(comp, {
                   obats => withThis(
                     obats && obats.filter(c => !c.diserah),
                     ungiven => ungiven && ungiven.length !== 0 &&
-                      _.merge({}, a, b, {obats: ungiven})
+                    {pasien: a, rawat: b, obats: ungiven.map(
+                      // buatkan token untuk pengurangan jumlah
+                      c => _.assign(c, {sisa: c.jumlah})
+                    )}
                   )
                 ))
               )
@@ -82,77 +87,66 @@ _.assign(comp, {
         (state.pharmacyList || []).map(i => m('tr',
           {ondblclick: () => withThis([], serahList => withThis(
             { // urai jenis obat yang diminta oleh pasien
-              updatedGoods: _.compact(i.obats.flatMap(a =>
+              updatedGoods: i.obats.flatMap(
                 // urai jenis obat yang tersedia di gudang
-                state.goodsList.flatMap(b =>
+                a => _.compact(state.goodsList.map(
                   // cari barang yang diminta oleh pasien
-                  b._id === a.idbarang && _.assign(b, {batch:
+                  b => b._id === a.idbarang && _.assign(b, {
                     // urut batch berdasarkan kadaluarsa tercepat
-                    b.batch.sort((p, q) =>
-                      p.kadaluarsa - q.kadaluarsa
+                    batch: b.batch.sort(
+                      (p, q) => p.kadaluarsa - q.kadaluarsa
                     // lakukan pengurangan barang secara berurutan
                     ).reduce((c, d) => withThis(
                       // ambil angka terkecil diantara sisa jumlah permintaan dengan stok apotik batch tersebut
-                      _.min([d.stok.apotik, a.jumlah]), minim =>
-                        // selagi minim tidak 0, kurangi stok apotik batch ini
-                        minim ? ands([
-                          // kurangi jumlah permintaan sebanyak minim
-                          _.forEach(_.range(minim), () => a.jumlah--),
-                          // simpan daftar batch berikut dengan jumlah pengurangannya
-                          serahList.push(_.merge({}, a, {
-                            nama_barang: b.nama, no_batch: d.no_batch,
-                            serahkan: minim, jual: minim * d.harga.jual,
-                          })),
-                          c.concat([_.assign(d, {stok: _.assign(d.stok, {
-                            // kurangi stok diapotik sebanyak minim
-                            apotik: d.stok.apotik - minim
-                          })})])
-                        // jika minim 0 maka lewatkan (bisa jadi habis, belum amprah, atau sudah retur)
-                        ]) : c.concat([d])
+                      _.min([d.stok.apotik, a.sisa]),
+                      // selagi minim tidak 0, kurangi stok apotik batch ini
+                      minim => minim ? ands([
+                          // kurangi sisa permintaan sebanyak minim
+                        _.assign(a, {sisa: a.sisa - minim}),
+                        // simpan daftar batch berikut dengan jumlah pengurangannya
+                        serahList.push(_.merge({}, a, {
+                          nama_barang: b.nama, no_batch: d.no_batch,
+                          serahkan: minim, jual: minim * d.harga.jual
+                        })),
+                        c.concat([_.assign(d, {stok: _.assign(
+                          // kurangi stok diapotik sebanyak minim
+                          d.stok, {apotik: d.stok.apotik - minim}
+                        )})])
+                      // jika minim 0 maka lewatkan (bisa jadi habis, belum amprah, atau sudah retur)
+                      ]) : c.concat([d])
                     ), [])
                   })
-                )
-              )),
-              updatedPatient: {
-                identitas: i.identitas, _id: i._id,
-                rawatJalan: (i.rawatJalan || []).map(a =>
-                  ands([a.idrawat === i.idrawat, i.klinik]) ?
-                  _.assign(a, {soapDokter: _.assign(a.soapDokter, {obat:
-                    (a.soapDokter.obat || []).map(b =>
-                      _.assign(b, {diserah: true, harga: _.sum(
-                        serahList.filter(c =>
-                          c.idbarang === b.idbarang
+                ))
+              ),
+              updatedPatient: _.assign(i.pasien, {
+                rawatJalan: (i.pasien.rawatJalan || []).map(
+                  a => ands([
+                    a.idrawat === i.rawat.idrawat
+                  ]) ? _.assign(a, {soapDokter: _.assign(a.soapDokter,
+                    {obat: (a.soapDokter.obat || []).map(
+                      b => _.assign(b, {diserah: true, harga: _.sum(
+                        serahList.filter(
+                          c => c.idbarang === b.idbarang
                         ).map(c => c.jual)
                       )})
-                    )
-                  })}) : a
+                    )}
+                  )}) : a
                 ),
-                emergency: (i.emergency || []).map(a =>
-                  ands([a.idrawat === i.idrawat, !i.klinik, !i.idinap]) ?
-                  _.assign(a, {soapDokter: _.assign(a.soapDokter, {obat:
-                    a.soapDokter.obat.map(b =>
-                      _.assign(b, {diserah: true, harga: _.sum(
-                        serahList.filter(c =>
-                          c.idbarang === b.idbarang
+                emergency: (i.pasien.emergency || []).map(
+                  a => ands([
+                    a.idrawat === i.rawat.idrawat
+                  ]) ? _.assign(a, {soapDokter: _.assign(a.soapDokter,
+                    {obat: (a.soapDokter.obat || []).map(
+                      b => _.assign(b, {diserah: true, harga: _.sum(
+                        serahList.filter(
+                          c => c.idbarang === b.idbarang
                         ).map(c => c.jual)
                       )})
-                    )
-                  })}) : a
-                ),
-                rawatInap: (i.rawatInap || []).map(a =>
-                  a.idinap === i.idinap ?
-                  _.assign(a, {observasi: a.observasi.map(b =>
-                    b.idobservasi === i.idobservasi ?
-                    _.assign(b, {obat: b.obat.map(c =>
-                      _.assign(c, {diserah: true, harga: _.sum(
-                        serahList.filter(d =>
-                          d.idbarang === c.idbarang
-                        ).map(d => d.jual)
-                      )})
-                    )}) : b
+                    )}
                   )}) : a
                 )
-              }
+                // TODO: buatkan juga untuk rawatInap
+              })
             },
             ({updatedGoods, updatedPatient}) =>
               state.modalSerahObat = m('.box',
@@ -180,9 +174,9 @@ _.assign(comp, {
                     m('span', 'Cetak salinan resep')
                   ),
                   m('.button.is-primary',
-                    {onlick: () => [
-                      updateBoth('patients', updatedPatient._id, updatedPatient),
-                      updatedGoods.map(j => updateBoth('goods', j._id, j)),
+                    {ondblclick: () => [
+                      console.log('patients', updatedPatient._id, updatedPatient),
+                      updatedGoods.map(j => console.log('goods', j._id, j)),
                       state.modalSerahObat = null, m.redraw()
                     ]},
                     m('span.icon', m('i.fas.fa-check')),
@@ -192,11 +186,11 @@ _.assign(comp, {
               )
           ))},
           [
-            i.identitas.no_mr, i.identitas.nama_lengkap,
-            hari(i.tanggal), look('cara_bayar', i.cara_bayar),
+            i.pasien.identitas.no_mr, i.pasien.identitas.nama_lengkap,
+            hari(i.rawat.tanggal), look('cara_bayar', i.rawat.cara_bayar),
             ors([
-              i.klinik && look('klinik', i.klinik),
-              i.kode_bed && 'Rawat Inap',
+              i.rawat.klinik && look('klinik', i.rawat.klinik),
+              i.rawat.kode_bed && 'Rawat Inap',
               'IGD'
             ])
           ].map(j => m('td', j))
