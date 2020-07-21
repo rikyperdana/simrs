@@ -1,49 +1,11 @@
-/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment*/
+/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment reports*/
 
 // TODO: Gimana kalau dengan BHP ya? Karena dia dipakai dulu baru ditagih
 
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
   m('p', 'Hanya untuk user apotik') : m('.content',
-    state.login.peranan === 4 &&
-    makeReport('Pengeluaran Apotik', e => withThis(
-      {
-        start: +moment(e.target[0].value),
-        end: +moment(e.target[1].value)
-      },
-      date => [
-        e.preventDefault(),
-        db.patients.toArray(array => makePdf.report(
-          'Laporan Pengeluaran Obat',
-          [['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Dokter', 'Nama Obat', 'Jumlah']]
-          .concat(array.flatMap(pasien =>
-            _.compact(([]).concat(
-              pasien.rawatJalan || [],
-              pasien.emergency || [],
-              (pasien.rawatInap || []).flatMap(i =>
-                i.observasi && i.observasi
-                .filter(j => j.soapDokter)
-              )
-            ).flatMap(rawat =>
-              _.get(rawat, 'soapDokter.obat') &&
-              rawat.soapDokter.obat.map(i => [
-                hari(rawat.tanggal),
-                pasien.identitas.no_mr,
-                pasien.identitas.nama_lengkap,
-                ors([
-                  rawat.klinik && look('klinik', rawat.klinik),
-                  rawat.idinap && 'Rawat Inap',
-                  'Gawat Darurat'
-                ]),
-                lookUser(rawat.soapDokter.dokter),
-                lookGoods(i.idbarang).nama,
-                i.jumlah
-              ])
-            ))
-          ))
-        ))
-      ]
-    )),
+    state.login.peranan === 4 && reports.pharmacy(),
     m('h3', 'Apotik'),
     m('table.table',
       m('thead', m('tr',
