@@ -126,6 +126,17 @@ var schemas = {
         help: 'Hanya untuk penjadwalan kedepan'
       }
     },
+    bhp: {type: Array, optional: true},
+    'bhp.$': {type: Object},
+    'bhp.$.idbarang': {
+      type: String, label: 'Nama Barang',
+      autoform: {type: 'select', options: () =>
+        state.bhpList.map(i =>
+          ({value: i._id, label: i.nama})
+        )
+      }
+    },
+    'bhp.$.jumlah': {type: Number},
     obat: {type: Array, optional: true},
     'obat.$': {type: Object},
     'obat.$.idbarang': {
@@ -298,6 +309,12 @@ var schemas = {
     }},
     nomor: {type: Number},
   },
+  overcharge: {
+    charges: {type: Array, optional: true},
+    'charges.$': {type: Object},
+    'charges.$.item': {type: String},
+    'charges.$.harga': {type: Number}
+  }
 }
 
 localStorage.openBeta && [

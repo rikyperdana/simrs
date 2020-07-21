@@ -1,4 +1,4 @@
-/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment*/
+/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports*/
 
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?
@@ -12,39 +12,7 @@ _.assign(comp, {
         )
       )
     },
-    // state.login.peranan === 4 &&
-    makeReport('Kunjungan IGD', e => withThis(
-      {
-        start: +moment(e.target[0].value),
-        end: +moment(e.target[1].value)
-      },
-      date => [
-        e.preventDefault(),
-        db.patients.toArray(array => makePdf.report(
-          'Kunjungan IGD',
-          [['Tanggal', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter']]
-          .concat(
-            array.flatMap(pasien =>
-              pasien.rawatJalan &&
-              pasien.rawatJalan.map(rawat =>
-                _.every([
-                  rawat.soapDokter,
-                  rawat.tanggal > date.start && rawat.tanggal < date.end
-                ]) && [
-                  hari(rawat.tanggal),
-                  pasien.identitas.no_mr.toString(),
-                  pasien.identitas.nama_lengkap,
-                  lookUser(rawat.soapPerawat.perawat),
-                  lookUser(rawat.soapDokter.dokter)
-                ]
-              )
-            )
-            .sort((a, b) => a.tanggal - b.tanggal)
-            .filter(i => i)
-          )
-        ))
-      ]
-    )),
+    reports.igd(),
     m('h3', 'Unit Gawat Darurat'),
     m('table.table',
       m('thead', m('tr',

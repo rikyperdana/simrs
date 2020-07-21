@@ -17,7 +17,10 @@ dbCall = action => mongoDB.MongoClient.connect(
   process.env.atlas || process.env.MONGO,
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
-    : action(client.db(process.env.dbname))
+  : [
+    action(client.db(process.env.dbname)),
+    client.close()
+  ]
 ),
 
 io = require('socket.io')(app)

@@ -1,4 +1,4 @@
-/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState*/
+/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands*/
 
 _.assign(comp, {
   storage: () => !ors([
@@ -77,9 +77,7 @@ _.assign(comp, {
 
   oneGood: () =>  m('.content',
     {oncreate: () => [
-      db.users.toArray(array =>
-        state.userList = array
-      ),
+      db.users.toArray(array => state.userList = array),
       dbCall({
         method: 'findOne', collection: 'goods',
         _id: state.oneGood._id
@@ -127,8 +125,10 @@ _.assign(comp, {
           "data-tooltip": 'Menghapus barang dapat merusak riwayat transaksi yang berhubungan dengan barang ini',
           ondblclick: () => [
             confirm('Yakin untuk menghapus jenis barang?') &&
-            console.log('deleteBoth', state.oneGood._id),
-            state.route = 'storage', m.redraw()
+            console.log('deleteBoth',
+              'patients', state.oneGood._id,
+              res => res && [state.route = 'storage', m.redraw()]
+            )
           ]
         },
         m('span.icon', m('i.fas.fa-trash-alt')),
@@ -154,7 +154,7 @@ _.assign(comp, {
               ['Harga jual', rupiah(i.harga.jual)],
               ['Stok Gudang', i.stok.gudang],
               ['Stok Apotik', _.get(i, 'stok.apotik')],
-              ['Jumlah Diretur', _.get(i, 'stok.return')],
+              ['Jumlah Diretur', _.get(i, 'stok.retur')],
               ['Nama supplier', _.get(i, 'sumber.supplier')],
               ['Anggaran', _.get(i, 'sumber.anggaran')],
               ['No. SPK', _.get(i, 'sumber.no_spk')],
@@ -164,7 +164,7 @@ _.assign(comp, {
               [m('th', k[0]), m('td', k[1])]
             )))),
             state.login.peranan === 4 && m('p.buttons',
-              m('.button.is-warning',
+              !_.get(i, 'stok.retur') && m('.button.is-warning',
                 {
                   "data-tooltip": 'Pindahkan semua stok barang ini ke Retur',
                   ondblclick: () => [
@@ -207,27 +207,32 @@ _.assign(comp, {
                 ]))))
               ),
             ), m('br'),
-            ors([
-              _.includes([4], state.login.bidang),
-              _.includes([2, 3], state.login.peranan)
-            ]) && [
-              m('h4', 'Form amprah batch'),
-              m(autoForm({
-                id: 'formAmprah', schema: schemas.amprah,
-                action: doc => [
-                  updateBoth('goods', state.oneGood._id,
-                    _.assign(state.oneGood, {batch:
-                      state.oneGood.batch.map(j =>
-                        j.idbatch === state.oneBatch.idbatch ?
-                        _.assign(state.oneBatch, {amprah:
-                          (state.oneBatch.amprah || []).concat([doc])
-                        }) : j
-                      )
-                    })
-                  ), state.modalBatch = null, m.redraw()
-                ]
-              }))
-            ]
+            ands([
+              ors([
+                _.includes([4], state.login.bidang),
+                _.includes([2, 3], state.login.peranan)
+              ]),
+              // tutup form amprah kalau di gudang 0
+              i.stok.gudang > 1,
+              [
+                m('h4', 'Form amprah batch'),
+                m(autoForm({
+                  id: 'formAmprah', schema: schemas.amprah,
+                  action: doc => [
+                    updateBoth('goods', state.oneGood._id,
+                      _.assign(state.oneGood, {batch:
+                        state.oneGood.batch.map(j =>
+                          j.idbatch === state.oneBatch.idbatch ?
+                          _.assign(state.oneBatch, {amprah:
+                            (state.oneBatch.amprah || []).concat([doc])
+                          }) : j
+                        )
+                      })
+                    ), state.modalBatch = null, m.redraw()
+                  ]
+                }))
+              ]
+            ]),
           )})
         },
         tds([

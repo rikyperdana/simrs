@@ -1,41 +1,9 @@
-/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences*/
+/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences reports*/
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-    // state.login.peranan === 4 &&
-    makeReport('Kunjungan Poliklinik', e => withThis(
-      ({
-        start: +moment(e.target[0].value),
-        end: +moment(e.target[1].value)
-      }),
-      date => [
-        e.preventDefault(),
-        db.patients.toArray(array => makePdf.report(
-          'Kunjungan Poliklinik',
-          [['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter']]
-          .concat(_.compact(
-            array.flatMap(pasien =>
-              pasien.rawatJalan &&
-              pasien.rawatJalan.map(rawat =>
-                _.every([
-                  rawat.soapDokter,
-                  rawat.tanggal > date.start &&
-                  rawat.tanggal < date.end
-                ]) && [
-                  hari(rawat.tanggal),
-                  look('klinik', rawat.klinik),
-                  pasien.identitas.no_mr.toString(),
-                  pasien.identitas.nama_lengkap,
-                  lookUser(rawat.soapPerawat.perawat),
-                  lookUser(rawat.soapDokter.dokter)
-                ]
-              )
-            ).sort((a, b) => a.tanggal - b.tanggal)
-          ))
-        ))
-      ]
-    )),
+    reports.outpatient(),
     m('h3', 'Antrian pasien poliklinik '+look('klinik', state.login.poliklinik)),
     m('table.table',
       m('thead', m('tr',

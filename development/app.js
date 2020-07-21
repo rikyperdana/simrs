@@ -186,7 +186,7 @@ io().on('connect', socket => [
     ),
     m('footer.footer',
       {style: 'padding:0px'},
-      m('.content', m('a', {
+      m('.content', m('a.help', {
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank'
       }, 'Versi 5.4'))

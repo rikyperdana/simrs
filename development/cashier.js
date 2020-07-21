@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports*/
+/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas*/
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -7,8 +7,8 @@ _.assign(comp, {
     m('h3', 'Loket Pembayaran'),
     m('table.table',
       m('thead', m('tr',
-        ['no_mr', 'nama_lengkap', 'tanggal', 'layanan']
-        .map(i => m('th', _.startCase(i)))
+        ['No. MR', 'Nama Lengkap', 'Tanggal', 'Layanan', 'Tambahan']
+        .map(i => m('th', i))
       )),
       m('tbody',
         {onupdate: () => [
@@ -60,10 +60,13 @@ _.assign(comp, {
                   ].length === 1, !j.bayar_pendaftaran,
                   ['Daftar pasien baru', tarifKartu]
                 ]) || [] : [],
-                ors([!j.bayar_pendaftaran, j.bed && j.keluar]) ?
                 ors([ // tarif layanan rawat (jalan/inap/igd)
+                  !j.bayar_pendaftaran,
+                  !j.bayar_konsultasi,
+                  j.bed && j.keluar
+                ]) ? ors([
                   j.klinik && [
-                    'Adm + Konsultasi Poli '+look('klinik', j.klinik),
+                    'Konsultasi Poli '+look('klinik', j.klinik),
                     1000*+look('tarif_klinik', j.klinik)
                   ],
                   j.bed && [
@@ -91,57 +94,80 @@ _.assign(comp, {
                     j.observasi ? j.observasi.flatMap(k => k.obat) : []
                   ].map(k => k.idbarang ? [
                     state.goodsList.find(l => l._id === k.idbarang).nama,
-                    k.harga
-                  ] : [])
+                    k.harga // harga yg sudah dihitungkan ke pasien
+                  ] : []),
+                  ...[ //daftar bhp terpakai saat rawatan
+                    ...(_.get(j, 'soapDokter.bhp') || []),
+                    j.observasi ? j.observasi.flatMap(k => k.bhp) : []
+                  ].map(k => k.idbarang ? withThis(
+                    state.goodsList.find(l => l._id === k.idbarang),
+                    barang => [
+                      barang.nama, // carikan harga batch tertinggi di apotik
+                      barang.batch.filter(l => l.stok.apotik)
+                      .sort((a, b) => b.harga.jual - a.harga.jual)[0].harga.jual
+                    ]
+                  ) : [])
                 ] : []
               ].filter(k => k.length).map(k => ({item: k[0], harga: k[1]})),
               bills => state.modalCashier = m('.box',
                 m('h3', 'Konfirmasi Pembayaran'),
-                m('p', m('b', [i.identitas.nama_lengkap, i.identitas.no_mr].join('/'))),
+                m('p', m('b', [i.identitas.nama_lengkap, i.identitas.no_mr].join(' / '))),
                 m('table.table',
-                  bills.map(k => m('tr',
+                  [...bills, ...(j.charges || [])].map(k => m('tr',
                     m('th', k.item), m('td', rupiah(k.harga))
                   )),
-                  m('tr', m('th', 'Total'), m('td', rupiah(_.sum(bills.map(k => k.harga)))))
-                 ),
-                m('.button.is-success',
-                  {ondblclick: () => [
-                    updateBoth('patients', i._id, _.assign(i, {
-                      rawatJalan: (i.rawatJalan || []).map(
-                        k => k.idrawat === j.idrawat ?
-                        _.assign(k, ors([
-                          k.soapDokter && {bayar_konsultasi: true},
-                          {bayar_pendaftaran: true},
-                        ])) : k
-                      ),
-                      emergency: (i.emergency || []).map(
-                        k => k.idrawat === j.idrawat ?
-                        _.assign(k, {
-                          bayar_pendaftaran: true,
-                          bayar_konsultasi: true
-                        }) : k
-                      ),
-                      rawatInap: (i.emergency || []).map(
-                        k => k.idrawat === j.idrawat ?
-                        _.assign(k, {
-                          bayar_pendaftaran: true,
-                          bayar_konsultasi: true
-                        }) : k
-                      ),
-                    })),
-                    ors([
-                      ors([j.soapDokter, j.observasi])
-                      && makePdf.bayar_konsultasi(i, j, bills),
-                      makePdf.bayar_pendaftaran(i, j, [
-                        ...(i.rawatJalan || []),
-                        ...(i.emergency || [])
-                      ].length)
-                    ]),
-                    _.assign(state, {modalCashier: null, cashierList: null}),
-                    m.redraw()
-                  ]},
-                  m('span.icon', m('i.fas.fa-check')),
-                  m('span', 'Sudah bayar')
+                  m('tr', m('th', 'Total'), m('td', rupiah(_.sum(
+                    [...bills, ...(j.charges || [])].map(k => k.harga)
+                  ))))
+                ),
+                m('.buttons',
+                  m('.button.is-success',
+                    {ondblclick: () => [
+                      updateBoth('patients', i._id, _.assign(i, {
+                        rawatJalan: (i.rawatJalan || []).map(
+                          k => k.idrawat === j.idrawat ?
+                          _.assign(k, ors([
+                            k.soapDokter && {bayar_konsultasi: true},
+                            {bayar_pendaftaran: true},
+                          ])) : k
+                        ),
+                        emergency: (i.emergency || []).map(
+                          k => k.idrawat === j.idrawat ?
+                          _.assign(k, {
+                            bayar_pendaftaran: true,
+                            bayar_konsultasi: true
+                          }) : k
+                        ),
+                        rawatInap: (i.emergency || []).map(
+                          k => k.idrawat === j.idrawat ?
+                          _.assign(k, {
+                            bayar_pendaftaran: true,
+                            bayar_konsultasi: true
+                          }) : k
+                        ),
+                      })),
+                      [
+                        ors([j.soapDokter, j.observasi])
+                        && makePdf.bayar_konsultasi(i, j, [...bills, ...(j.charges || [])]),
+                        makePdf.bayar_pendaftaran(i, j, [
+                          ...(i.rawatJalan || []),
+                          ...(i.emergency || [])
+                        ].length)
+                      ],
+                      _.assign(state, {modalCashier: null, cashierList: null}),
+                      m.redraw()
+                    ]},
+                    m('span.icon', m('i.fas.fa-check')),
+                    m('span', 'Sudah bayar')
+                  ),
+                  ors([j.soapDokter, j.observasi]) && m('.button.is-warning',
+                    {onclick: () => _.assign(state, {
+                      modalCashier: null, route: 'overcharge',
+                      onePatient: i, oneRawat: j
+                    })},
+                    m('span.icon', m('i.fas.fa-plus')),
+                    m('span', j.charges ? 'Ganti tambahan biaya' : 'Tambahan biaya')
+                  )
                 )
               )
             )},
@@ -153,7 +179,8 @@ _.assign(comp, {
                 j.klinik && look('klinik', j.klinik),
                 j.bed && 'Rawat Inap',
                 'IGD'
-              ])
+              ]),
+              j.charges ? (j.charges.length + ' item') : ''
             ])
           )
         )
@@ -161,4 +188,27 @@ _.assign(comp, {
     ),
     makeModal('modalCashier')
   )),
+  overcharge: () => m('.content', m(autoForm({
+    id: 'overcharge', schema: schemas.overcharge,
+    action: doc => updateBoth(
+      'patients', state.onePatient._id, _.assign(state.onePatient, {
+        rawatJalan: (state.onePatient.rawatJalan || []).map(
+          i => i.idrawat === state.oneRawat.idrawat ?
+          _.assign(i, doc) : i
+        ),
+        emergency: (state.onePatient.emergency || []).map(
+          i => i.idrawat === state.oneRawat.idrawat ?
+          _.assign(i, doc) : i
+        ),
+        rawatInap: (state.onePatient.rawatInap || []).map(
+          i => i.idinap === state.oneRawat.idinap ?
+          _.assign(i, doc) : i
+        )
+      }),
+      res => res && [
+        state.route = 'cashier',
+        m.redraw()
+      ]
+    )
+  })))
 })

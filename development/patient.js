@@ -105,14 +105,17 @@ _.assign(comp, {
   formSoap: () => m('.content',
     {
       onupdate: () => [
-        db.goods.toArray(array => [
-          state.goodsList = array,
-          state.drugList = array.filter(i =>
-            i.batch.reduce((j, k) =>
-              j + (k.stok.apotik || 0)
-            , 0) > (_.get(i, 'stok_minimum.apotik') || 0)
-          )
-        ]),
+        db.goods.toArray(array => _.assign(state, {
+          goodsList: array,
+          drugList: array.filter(i => ands([
+            i.jenis === 1,
+            i.batch.filter(j => ands([
+              j.stok.apotik,
+              j.kadaluarsa > _.now()
+            ])).length
+          ])),
+          bhpList: array.filter(i => i.jenis === 2),
+        })),
         db.references.filter(i => _.every([
           i[0] === 'rawatJalan',
           i[1] === _.snakeCase(look(

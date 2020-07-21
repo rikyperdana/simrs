@@ -1,46 +1,9 @@
-/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas*/
+/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas reports*/
 
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-
-    // state.login.peranan === 4 &&
-    makeReport('Kunjungan Rawat Inap', e => withThis(
-      {
-        start: +moment(e.target[0].value),
-        end: +moment(e.target[1].value)
-      },
-      date => [
-        e.preventDefault(),
-        db.patients.toArray(array => makePdf.report(
-          'Kunjungan Rawat Inap',
-          [['Tanggal', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter']]
-          .concat(_.compact(
-            array.flatMap(pasien =>
-              pasien.rawatInap &&
-              pasien.rawatInap.map(rawat =>
-                _.every([
-                  rawat.keluar,
-                  rawat.tanggal_masuk > date.start &&
-                  rawat.tanggal_masuk < date.end
-                ]) && [
-                  hari(rawat.tanggal_masuk),
-                  pasien.identitas.no_mr.toString(),
-                  pasien.identitas.nama_lengkap,
-                  rawat.observasi.map(i =>
-                    lookUser(i.perawat)
-                  ).join(', '),
-                  rawat.observasi.map(i =>
-                    lookUser(i.dokter)
-                  ).join(', ')
-                ]
-              )
-            ).sort((a, b) => a.tanggal - b.tanggal)
-          ))
-        ))
-      ]
-    )),
-
+    reports.inpatient(),
     m('h3', 'Daftar Admisi Rawat Inap'),
     m('table.table',
       {onupdate: () =>
