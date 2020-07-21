@@ -60,10 +60,13 @@ _.assign(comp, {
                   ].length === 1, !j.bayar_pendaftaran,
                   ['Daftar pasien baru', tarifKartu]
                 ]) || [] : [],
-                ors([!j.bayar_pendaftaran, j.bed && j.keluar]) ?
                 ors([ // tarif layanan rawat (jalan/inap/igd)
+                  !j.bayar_pendaftaran,
+                  !j.bayar_konsultasi,
+                  j.bed && j.keluar
+                ]) ? ors([
                   j.klinik && [
-                    'Adm + Konsultasi Poli '+look('klinik', j.klinik),
+                    'Konsultasi Poli '+look('klinik', j.klinik),
                     1000*+look('tarif_klinik', j.klinik)
                   ],
                   j.bed && [
@@ -93,7 +96,7 @@ _.assign(comp, {
                     state.goodsList.find(l => l._id === k.idbarang).nama,
                     k.harga // harga yg sudah dihitungkan ke pasien
                   ] : []),
-                  ...[
+                  ...[ //daftar bhp terpakai saat rawatan
                     ...(_.get(j, 'soapDokter.bhp') || []),
                     j.observasi ? j.observasi.flatMap(k => k.bhp) : []
                   ].map(k => k.idbarang ? withThis(
@@ -108,7 +111,7 @@ _.assign(comp, {
               ].filter(k => k.length).map(k => ({item: k[0], harga: k[1]})),
               bills => state.modalCashier = m('.box',
                 m('h3', 'Konfirmasi Pembayaran'),
-                m('p', m('b', [i.identitas.nama_lengkap, i.identitas.no_mr].join('/'))),
+                m('p', m('b', [i.identitas.nama_lengkap, i.identitas.no_mr].join(' / '))),
                 m('table.table',
                   [...bills, ...(j.charges || [])].map(k => m('tr',
                     m('th', k.item), m('td', rupiah(k.harga))
@@ -143,27 +146,27 @@ _.assign(comp, {
                           }) : k
                         ),
                       })),
-                      ors([
+                      [
                         ors([j.soapDokter, j.observasi])
                         && makePdf.bayar_konsultasi(i, j, [...bills, ...(j.charges || [])]),
                         makePdf.bayar_pendaftaran(i, j, [
                           ...(i.rawatJalan || []),
                           ...(i.emergency || [])
                         ].length)
-                      ]),
+                      ],
                       _.assign(state, {modalCashier: null, cashierList: null}),
                       m.redraw()
                     ]},
                     m('span.icon', m('i.fas.fa-check')),
                     m('span', 'Sudah bayar')
                   ),
-                  m('.button.is-warning',
+                  ors([j.soapDokter, j.observasi]) && m('.button.is-warning',
                     {onclick: () => _.assign(state, {
                       modalCashier: null, route: 'overcharge',
                       onePatient: i, oneRawat: j
                     })},
                     m('span.icon', m('i.fas.fa-plus')),
-                    m('span', 'Tambahan biaya')
+                    m('span', j.charges ? 'Ganti tambahan biaya' : 'Tambahan biaya')
                   )
                 )
               )
@@ -191,6 +194,14 @@ _.assign(comp, {
       'patients', state.onePatient._id, _.assign(state.onePatient, {
         rawatJalan: (state.onePatient.rawatJalan || []).map(
           i => i.idrawat === state.oneRawat.idrawat ?
+          _.assign(i, doc) : i
+        ),
+        emergency: (state.onePatient.emergency || []).map(
+          i => i.idrawat === state.oneRawat.idrawat ?
+          _.assign(i, doc) : i
+        ),
+        rawatInap: (state.onePatient.rawatInap || []).map(
+          i => i.idinap === state.oneRawat.idinap ?
           _.assign(i, doc) : i
         )
       }),

@@ -77,9 +77,7 @@ _.assign(comp, {
 
   oneGood: () =>  m('.content',
     {oncreate: () => [
-      db.users.toArray(array =>
-        state.userList = array
-      ),
+      db.users.toArray(array => state.userList = array),
       dbCall({
         method: 'findOne', collection: 'goods',
         _id: state.oneGood._id
@@ -127,8 +125,10 @@ _.assign(comp, {
           "data-tooltip": 'Menghapus barang dapat merusak riwayat transaksi yang berhubungan dengan barang ini',
           ondblclick: () => [
             confirm('Yakin untuk menghapus jenis barang?') &&
-            console.log('deleteBoth', state.oneGood._id),
-            state.route = 'storage', m.redraw()
+            console.log('deleteBoth',
+              'patients', state.oneGood._id,
+              res => res && [state.route = 'storage', m.redraw()]
+            )
           ]
         },
         m('span.icon', m('i.fas.fa-trash-alt')),

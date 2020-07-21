@@ -62,6 +62,10 @@ updateBoth = (collName, _id, doc, cb) => withThis(
   ]
 ),
 
+deleteBoth = (collName, _id, cb) => dbCall({
+  method: 'deleteOne', collection: collName, _id
+}, res => ands([res, cb]) && cb(res)),
+
 makeModal = name => m('.modal',
   {class: state[name] && 'is-active'},
   m('.modal-background'),
