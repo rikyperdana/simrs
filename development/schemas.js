@@ -101,6 +101,7 @@ var schemas = {
     'fisik.tinggi': {type: Number, optional: true},
     'fisik.berat': {type: Number, optional: true},
     'fisik.lila': {type: Number, optional: true},
+    tracer: {type: String, optional: true, label: 'File Tracer'},
     perawat: {
       type: String, autoform: {type: 'hidden'},
       autoValue: () => _.get(state.login, '_id')
@@ -166,6 +167,7 @@ var schemas = {
     keluar: {type: Number, autoform: {
       type: 'select', options: selects('keluar')
     }},
+    tracer: {type: String, optional: true, label: 'File Tracer'},
     spm: {
       type: Number, autoform: {type: 'hidden'},
       autoValue: () => _.now() - state.spm

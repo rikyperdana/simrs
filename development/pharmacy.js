@@ -1,7 +1,5 @@
 /*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment reports*/
 
-// TODO: Gimana kalau dengan BHP ya? Karena dia dipakai dulu baru ditagih
-
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
   m('p', 'Hanya untuk user apotik') : m('.content',
@@ -29,7 +27,11 @@ _.assign(comp, {
                     )
                   ) : []
                 ).flatMap(b => withThis(
-                  _.get(b, 'soapDokter.obat'),
+                  ands([
+                    !_.get(b, 'soapDokter.batal') ? true
+                    : !_.includes(b.soapDokter.batal, 'obat'),
+                    _.get(b, 'soapDokter.obat')
+                  ]),
                   obats => withThis(
                     obats && obats.filter(c => !c.diserah),
                     ungiven => ungiven && ungiven.length !== 0 &&
@@ -42,9 +44,7 @@ _.assign(comp, {
               )
             ), m.redraw()
           ]),
-          db.goods.toArray(array =>
-            state.goodsList = array
-          )
+          db.goods.toArray(array => state.goodsList = array)
         ]},
         (state.pharmacyList || []).map(i => m('tr',
           {ondblclick: () => withThis([], serahList => withThis(
@@ -82,9 +82,8 @@ _.assign(comp, {
               ),
               updatedPatient: _.assign(i.pasien, {
                 rawatJalan: (i.pasien.rawatJalan || []).map(
-                  a => ands([
-                    a.idrawat === i.rawat.idrawat
-                  ]) ? _.assign(a, {soapDokter: _.assign(a.soapDokter,
+                  a => a.idrawat === i.rawat.idrawat ?
+                   _.assign(a, {soapDokter: _.assign(a.soapDokter,
                     {obat: (a.soapDokter.obat || []).map(
                       b => _.assign(b, {diserah: true, harga: _.sum(
                         serahList.filter(
@@ -95,9 +94,8 @@ _.assign(comp, {
                   )}) : a
                 ),
                 emergency: (i.pasien.emergency || []).map(
-                  a => ands([
-                    a.idrawat === i.rawat.idrawat
-                  ]) ? _.assign(a, {soapDokter: _.assign(a.soapDokter,
+                  a => a.idrawat === i.rawat.idrawat ?
+                   _.assign(a, {soapDokter: _.assign(a.soapDokter,
                     {obat: (a.soapDokter.obat || []).map(
                       b => _.assign(b, {diserah: true, harga: _.sum(
                         serahList.filter(
@@ -106,8 +104,21 @@ _.assign(comp, {
                       )})
                     )}
                   )}) : a
+                ),
+                // TODO URGENT: buatkan juga untuk rawatInap
+                rawatInap: (i.pasien.rawatInap || []).map(
+                  a => a.idinap === i.rawat.idinap ?
+                  _.assign(a, {observasi: a.observasi.map(
+                    b => b.idobservasi === i.rawat.idobservasi ?
+                    _.assign(b, {obat: b.obat.map(
+                      c => _.assign(c, {diserah: true, harga: _.sum(
+                        serahList.filter(
+                          d => d.idbarang === c.idbarang
+                        ).map(d => d.jual)
+                      )})
+                    )}) : b
+                  )}) : a
                 )
-                // TODO: buatkan juga untuk rawatInap
               })
             },
             ({updatedGoods, updatedPatient}) =>
@@ -137,22 +148,50 @@ _.assign(comp, {
                   ),
                   m('.button.is-primary',
                     {ondblclick: () => [
-                      console.log('patients', updatedPatient._id, updatedPatient),
-                      updatedGoods.map(j => console.log('goods', j._id, j)),
+                      updateBoth('patients', updatedPatient._id, updatedPatient),
+                      updatedGoods.map(j => updateBoth('goods', j._id, j)),
                       state.modalSerahObat = null, m.redraw()
                     ]},
                     m('span.icon', m('i.fas.fa-check')),
                     m('span', 'Selesai')
+                  ),
+                  m('.button.is-danger',
+                    {ondblclick: () => updateBoth(
+                      'patients', i.pasien._id, _.assign(i.pasien, {
+                        rawatJalan: (i.pasien.rawatJalan || []).map(
+                          j => j.idrawat === i.rawat.idrawat ?
+                          _.assign(j, {soapDokter: _.merge(
+                            j.soapDokter, {batal: ['obat']}
+                          )}) : j
+                        ),
+                        emergency: (i.pasien.emergency || []).map(
+                          j => j.idrawat === i.rawat.idrawat ?
+                          _.assign(j, {soapDokter: _.merge(
+                            j.soapDokter, {batal: ['obat']}
+                          )}) : j
+                        ),
+                        rawatInap: (i.pasien.rawatInap || []).map(
+                          j => j.idinap === i.rawat.idinap ?
+                          // pembatalannya level observasi
+                          _.assign(j, {observasi: j.observasi.map(
+                            k => k.idobservasi === i.rawat.idobservasi ?
+                            _.merge(k, {batal: ['obat']}) : k
+                          )}) : j
+                        )
+                      }, res => res && [state.modalSerahObat = null, m.redraw()])
+                    )},
+                    m('span.icon', m('i.fas.fa-times')),
+                    m('span', 'Batal serah')
                   )
                 )
               )
           ))},
           [
             i.pasien.identitas.no_mr, i.pasien.identitas.nama_lengkap,
-            hari(i.rawat.tanggal), look('cara_bayar', i.rawat.cara_bayar),
+            hari(i.rawat.tanggal, true), look('cara_bayar', i.rawat.cara_bayar),
             ors([
               i.rawat.klinik && look('klinik', i.rawat.klinik),
-              i.rawat.kode_bed && 'Rawat Inap',
+              i.rawat.bed && 'Rawat Inap',
               'IGD'
             ])
           ].map(j => m('td', j))
