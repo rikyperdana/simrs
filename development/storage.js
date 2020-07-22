@@ -1,4 +1,4 @@
-/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands*/
+/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands deleteBoth*/
 
 _.assign(comp, {
   storage: () => !ors([
@@ -125,7 +125,7 @@ _.assign(comp, {
           "data-tooltip": 'Menghapus barang dapat merusak riwayat transaksi yang berhubungan dengan barang ini',
           ondblclick: () => [
             confirm('Yakin untuk menghapus jenis barang?') &&
-            console.log('deleteBoth',
+            deleteBoth(
               'patients', state.oneGood._id,
               res => res && [state.route = 'storage', m.redraw()]
             )

@@ -139,7 +139,7 @@ _.assign(comp, {
         ))
       )
     ),
-    m('p.has-text-grey-light', 'Note: Jika pasien umum belum bayar maka tidak dapat diklik'),
+    m('p.help.has-text-grey-light', 'Note: Jika pasien umum belum bayar maka tidak dapat diklik'),
     makeModal('modalVisit'),
     state.login.bidang === 1 && m('.button.is-success',
       {onclick: () => state.route = 'poliVisit'},

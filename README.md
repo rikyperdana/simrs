@@ -42,7 +42,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
     `goods, patients, references, users, queue`
 8. Pada Glitch code editor, Buat file pada project bernama `.env`. Ketikkan
 ```
-atlas="isikan dengan connection string, dan ganti <username> dan <password>"
+MONGO="isikan dengan connection string, dan ganti <username> dan <password>"
 dbname="nama databasenya"
 ```
 Bila tidak ingin menggunakan Atlas, silahkan ganti nilai variabel `MONGO="alamat lokal"`

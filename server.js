@@ -14,13 +14,10 @@ app = express()
 .listen(process.env.PORT || 3000),
 
 dbCall = action => mongoDB.MongoClient.connect(
-  process.env.atlas || process.env.MONGO,
+  process.env.MONGO,
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
-  : [
-    action(client.db(process.env.dbname)),
-    client.close()
-  ]
+  : action(client.db(process.env.dbname))
 ),
 
 io = require('socket.io')(app)

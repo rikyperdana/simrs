@@ -81,28 +81,28 @@ _.assign(comp, {
         ]),
       },
       m('thead', m('tr',
-        ['No. MR', 'Nama Pasien', 'Kelas/Kamar/Nomor']
+        ['No. MR', 'Nama Pasien', 'Kelas / Kamar / Nomor']
         .map(i => m('th', i))
       )),
       m('tbody',
         state.inpatientList &&
-        state.inpatientList.map(i => m('tr',
-          {ondblclick: () => _.assign(state, {
-            route: 'onePatient', onePatient: i,
-            onePatientTab: 'inpatient'
-          })},
-          tds([
-            i.identitas.no_mr,
-            i.identitas.nama_lengkap,
-            withThis(
-              _.get(_.last(i.rawatInap), 'bed'),
-              bed => [
+        state.inpatientList.map(i => withThis(
+          _.get(_.last(i.rawatInap), 'bed'),
+          bed => bed && m('tr',
+            {ondblclick: () => _.assign(state, {
+              route: 'onePatient', onePatient: i,
+              onePatientTab: 'inpatient'
+            })},
+            tds([
+              i.identitas.no_mr,
+              i.identitas.nama_lengkap,
+              [
                 _.upperCase(bed.kelas),
                 _.startCase(bed.kamar),
                 bed.nomor
-              ].join('/')
-            )
-          ])
+              ].join(' / ')
+            ])
+          )
         ))
       )
     )
@@ -111,7 +111,7 @@ _.assign(comp, {
   inpatientHistory: () => m('.content',
     m('table.table',
       m('thead', m('tr',
-        ['Tanggal masuk', 'Kelas/Kamar/Nomor']
+        ['Tanggal masuk', 'Kelas / Kamar / Nomor']
         .map(i => m('th', i))
       )),
       m('tbody',
@@ -120,8 +120,8 @@ _.assign(comp, {
              // untuk melihat 1 rekaman observasi
             state.modalObservasi = _.includes([2, 3], state.login.peranan) && m('.box',
               m('h3', 'Riwayat Observasi'),
-              i.observasi.length && m(
-                'p.is-italic.has-text-danger',
+              Boolean(i.observasi.length) && m(
+                'p.help.is-italic.has-text-info',
                 'klik-ganda pada salah satu observasi untuk melihat rincian'
               ),
               m('table.table',
