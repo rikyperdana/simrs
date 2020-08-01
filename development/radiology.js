@@ -95,6 +95,16 @@ _.assign(comp, {
                       )}) : j
                     ),
                     // TODO: update yg dari rawatInap
+                    rawatInap: (i.pasien.rawatInap || []).map(
+                      j => j.idinap === i.inap.idinap ?
+                      _.assign(j, {observasi: j.observasi.map(
+                        k => k.idobservasi === i.observasi.idobservasi ?
+                        _.assign(k, {radio: k.radio.map(
+                          l => l.radio === i.radio.idradio ?
+                          _.assign(l, doc) : l
+                        )}) : k
+                      )}) : j
+                    )
                   })
                 ),
                 i.radio.diagnosa && // kalau sudah ada diagnosa baru cetak

@@ -29,6 +29,7 @@ function autoForm(opts){return {view: function(){
   var attr = {
     form: {
       id: opts.id,
+      oncreate: opts.oncreate,
       onchange: function(e){
         e.redraw = false
         afState.form[opts.id] = afState.form[opts.id] || {}

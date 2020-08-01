@@ -1,7 +1,6 @@
 /*global _ state*/
 
-var
-selects = name => _.reduce(
+var selects = name => _.reduce(
   {
     alias: ['tn', 'ny', 'nn', 'an', 'by'],
     kelamin: ['laki-laki', 'perempuan'],
