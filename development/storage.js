@@ -52,6 +52,7 @@ _.assign(comp, {
         ))
       )))
     ),
+    state.login.bidang === 3 &&
     m('.button.is-primary',
       {onclick: () => state.route = 'formGood'},
       m('span.icon', m('i.fas.fa-plus')),
@@ -96,7 +97,7 @@ _.assign(comp, {
     ], 3).map(i => m('tr', i.map(j =>
       [m('th', j[0]), m('td', j[1])]
     )))),
-    m('p.buttons',
+    state.login.bidang === 3 && m('.buttons',
       m('.button.is-primary',
         {onclick: () => state.route = 'formBatch'},
         m('span.icon', m('i.fas.fa-plus-circle')),
@@ -163,7 +164,10 @@ _.assign(comp, {
             ], 2).map(j => m('tr', j.map(k =>
               [m('th', k[0]), m('td', k[1])]
             )))),
-            state.login.peranan === 4 && m('p.buttons',
+            ands([
+              state.login.peranan === 4,
+              state.login.bidang === 3
+            ]) && m('p.buttons',
               !_.get(i, 'stok.retur') && m('.button.is-warning',
                 {
                   "data-tooltip": 'Pindahkan semua stok barang ini ke Retur',

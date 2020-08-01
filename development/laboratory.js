@@ -1,12 +1,5 @@
 /*global m _ comp state tds db hari ors look lookUser makeModal lookReferences withThis updateBoth autoForm schemas selects*/
 
-/*
-  TODOS:
-  - integrasi soapView soapPdf (ok)
-  - integrasi cashier
-  - intermediat konfirmasi (ok)
-*/
-
 _.assign(comp, {
   laboratory: () => m('.content',
     m('h1', 'Laboratorium'),
@@ -15,15 +8,24 @@ _.assign(comp, {
         db.references.toArray(array => state.references = array),
         db.patients.filter(i =>
           // TODO: lakukan juga untuk rawatInap
-          [...(i.rawatJalan || []), ...(i.emergency || [])]
-          .filter(j =>
+          [
+            ...(i.rawatJalan || []), ...(i.emergency || []),
+            ...(i.rawatInap ? i.rawatInap.flatMap(
+              j => j.observasi.map(k => ({soapDokter: k}))
+            ) : [])
+          ].filter(j =>
             _.get(j, 'soapDokter.labor') &&
             // cari pada array labor yang salah satunya belum ada hasil
             j.soapDokter.labor.filter(k => k.hasil).length <
             j.soapDokter.labor.length
           ).length
         ).toArray(arr => state.laboratoryList = arr.flatMap(i =>
-          [...(i.rawatJalan || []), ...(i.emergency || [])]
+          [
+            ...(i.rawatJalan || []), ...(i.emergency || []),
+            ...(i.rawatInap ? i.rawatInap.flatMap(
+              j => j.observasi.map(k => ({soapDokter: k}))
+            ) : [])
+          ]
           .filter(j =>
             _.get(j, 'soapDokter.labor') &&
             j.soapDokter.labor.filter(k => k.hasil).length <

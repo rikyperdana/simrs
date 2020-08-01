@@ -6,6 +6,7 @@ mongoDB = require('mongodb'),
 io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
+
 app = express()
 .use(express.static(
   process.env.production ?
