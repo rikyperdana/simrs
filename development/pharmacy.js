@@ -1,7 +1,5 @@
 /*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment reports autoForm schemas randomId tds rupiah*/
 
-// TODO: Izinkan apotik lakukan penjualan bebas
-
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
   m('p', 'Hanya untuk user apotik') : m('.content',
@@ -207,7 +205,7 @@ _.assign(comp, {
     m('.button.is-primary',
       {
         'data-tooltip': 'Untuk menjual obat secara manual',
-        ondblclick: () => [_.assign(state, {route: 'pharmacySale'}), m.redraw()]
+        onclick: () => [_.assign(state, {route: 'pharmacySale'}), m.redraw()]
       },
       m('span.icon', m('i.fas.fa-cart-arrow-down')),
       m('span', 'Penjualan Bebas')

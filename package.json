@@ -1,6 +1,6 @@
 {
   "name": "simrs",
-  "version": "0.6.3",
+  "version": "0.6.5",
   "license": "MIT",
   "description": "Integrated Hospital Software",
   "repository": {
@@ -24,7 +24,7 @@
     "bundle": "node bundler.js"
   },
   "keywords": [
-    "hospital"
+    "hospital", "simrs"
   ],
   "author": "Riky Perdana",
   "devDependencies": {

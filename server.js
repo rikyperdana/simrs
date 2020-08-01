@@ -82,5 +82,3 @@ io.on('connection', socket => [
     }[obj.method]())
   )))
 ])
-
-var bpjs = require('./bpjs')

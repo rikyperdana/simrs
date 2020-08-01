@@ -1,12 +1,5 @@
 /*global m _ comp state tds db hari ors look lookUser makeModal lookReferences withThis updateBoth autoForm schemas selects*/
 
-/*
-  TODOS:
-  - integrasi soapView soapPdf (ok)
-  - integrasi cashier (ok)
-  - intermediat konfirmasi (ok)
-*/
-
 _.assign(comp, {
   laboratory: () => m('.content',
     m('h1', 'Laboratorium'),
