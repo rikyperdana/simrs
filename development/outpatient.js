@@ -1,4 +1,4 @@
-/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences reports*/
+/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences reports makeIconLabel*/
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -102,17 +102,16 @@ _.assign(comp, {
                     {onclick: () =>_.assign(state, {
                       route: 'formSoap', oneRawat: i, modalVisit: null
                     })},
-                    m('span.icon', m('i.fas.fa-user-md')),
-                    m('span',
+                    makeIconLabel(
+                      'user-md',
                       state.login.peranan === 3 ?
                       'Soap Dokter' : 'Soap Perawat'
                     )
-                  ),
+                  )
                 ]),
                 m('.button.is-info',
                   {onclick: () => makePdf.soap(state.onePatient.identitas, i)},
-                  m('span.icon', m('i.fas.fa-print')),
-                  m('span', 'Cetak SOAP')
+                  makeIconLabel('print', 'Cetak SOAP')
                 )
               )
             )
@@ -143,8 +142,7 @@ _.assign(comp, {
     makeModal('modalVisit'),
     state.login.bidang === 1 && m('.button.is-success',
       {onclick: () => state.route = 'poliVisit'},
-      m('span.icon', m('i.fas.fa-file-invoice')),
-      m('span', 'Kunjungi Rawat Jalan')
+      makeIconLabel('file-invoice', 'Kunjungi Rawat Jalan')
     )
   )
 })

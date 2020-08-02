@@ -1,8 +1,8 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor*/
+/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor makeIconLabel*/
 
 var {laboratory, radiology} = betaMenus
 _.assign(comp, {
-  navbar: () => m('nav.navbar.is-primary',
+  navbar: () => m('nav.navbar.is-primary.is-fixed-top',
     m('.navbar-brand', m('a.navbar-item', {
       onclick: () => state.route = 'dashboard'
     }, "SIMRS.dev")),
@@ -21,8 +21,7 @@ _.assign(comp, {
             m('.navbar-dropdown', _.map(val.children, (i, j) =>
               m('a.navbar-item',
                 {onclick: e => [e.stopPropagation(), state.route = j]},
-                m('span.icon', m('i.fas.fa-'+i.icon)),
-                m('span', i.full)
+                makeIconLabel(i.icon, i.full)
                )
             ))
           ] : m('span', _.startCase(val.full))
@@ -34,16 +33,13 @@ _.assign(comp, {
         }, _.get(state.login, 'username')),
         m('.navbar-dropdown.is-right',
           m('a.navbar-item',
-            m('span.icon', m('i.fas.fa-user-tag')),
-            m('span', 'Peranan: '+ look('peranan', _.get(state.login, 'peranan')))
+            makeIconLabel('user-tag', 'Peranan: '+ look('peranan', _.get(state.login, 'peranan')))
           ),
           m('a.navbar-item',
-            m('span.icon', m('i.fas.fa-shapes')),
-            m('span', 'Bidang: '+look('bidang', _.get(state.login, 'bidang')))
+            makeIconLabel('shapes', 'Bidang: '+look('bidang', _.get(state.login, 'bidang')))
           ),
           m('a.navbar-item',
-            m('span.icon', m('i.fas.fa-clinic-medical')),
-            m('span', 'Poliklinik: '+look('klinik', _.get(state.login, 'poliklinik')))
+            makeIconLabel('clinic-medical', 'Poliklinik: '+look('klinik', _.get(state.login, 'poliklinik')))
           ),
           m('hr.dropdown-divider'),
           m('a.navbar-item',
@@ -52,8 +48,7 @@ _.assign(comp, {
               localStorage.removeItem('login'),
               m.redraw()
             ]},
-            m('span.icon', m('i.fas.fa-sign-out-alt')),
-            m('span', 'Logout')
+            makeIconLabel('sign-out-alt', 'Logout')
           )
         )
       ))
@@ -106,8 +101,7 @@ _.assign(comp, {
           {class: key === state.dashboardTab && 'is-active'},
           m('a',
             {onclick: () => [state.dashboardTab = key, m.redraw()]},
-            m('span.icon', m('i.fas.fa-'+val[1])),
-            m('span', val[0])
+            makeIconLabel(val[1], val[0])
           )
         ))
       )),
@@ -189,7 +183,7 @@ io().on('connect', socket => [
       m('.content', m('a.help', {
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank'
-      }, 'Versi 5.4'))
+      }, 'Versi 6.5'))
     )
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi

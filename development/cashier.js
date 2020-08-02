@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas*/
+/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -157,16 +157,14 @@ _.assign(comp, {
                       _.assign(state, {modalCashier: null, cashierList: null}),
                       m.redraw()
                     ]},
-                    m('span.icon', m('i.fas.fa-check')),
-                    m('span', 'Sudah bayar')
+                    makeIconLabel('check', 'Sudah bayar')
                   ),
                   ors([j.soapDokter, j.observasi]) && m('.button.is-warning',
                     {onclick: () => _.assign(state, {
                       modalCashier: null, route: 'overcharge',
                       onePatient: i, oneRawat: j
                     })},
-                    m('span.icon', m('i.fas.fa-plus')),
-                    m('span', j.charges ? 'Ganti tambahan biaya' : 'Tambahan biaya')
+                    makeIconLabel('plus', j.charges ? 'Ganti tambahan biaya' : 'Tambahan biaya')
                   )
                 )
               )

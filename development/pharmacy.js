@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment reports autoForm schemas randomId tds rupiah*/
+/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment reports autoForm schemas randomId tds rupiah makeIconLabel*/
 
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
@@ -143,10 +143,9 @@ _.assign(comp, {
                 m('p.buttons',
                   m('.button.is-info',
                     {onclick: () => makePdf.resep(
-                      updatedPatient.identitas, serahList
+                      serahList, updatedPatient.identitas.no_mr
                     )},
-                    m('span.icon', m('i.fas.fa-print')),
-                    m('span', 'Cetak salinan resep')
+                    makeIconLabel('print', 'Cetak salinan resep')
                   ),
                   m('.button.is-primary',
                     {ondblclick: () => [
@@ -154,8 +153,7 @@ _.assign(comp, {
                       updatedGoods.map(j => updateBoth('goods', j._id, j)),
                       state.modalSerahObat = null, m.redraw()
                     ]},
-                    m('span.icon', m('i.fas.fa-check')),
-                    m('span', 'Selesai')
+                    makeIconLabel('check', 'Selesai')
                   ),
                   m('.button.is-danger',
                     {ondblclick: () => updateBoth(
@@ -182,8 +180,7 @@ _.assign(comp, {
                         )
                       }, res => res && [state.modalSerahObat = null, m.redraw()])
                     )},
-                    m('span.icon', m('i.fas.fa-times')),
-                    m('span', 'Batal serah')
+                    makeIconLabel('times', 'Batal serah')
                   )
                 )
               )
@@ -207,8 +204,7 @@ _.assign(comp, {
         'data-tooltip': 'Untuk menjual obat secara manual',
         onclick: () => [_.assign(state, {route: 'pharmacySale'}), m.redraw()]
       },
-      m('span.icon', m('i.fas.fa-cart-arrow-down')),
-      m('span', 'Penjualan Bebas')
+      makeIconLabel('cart-arrow-down', 'Penjualan Bebas')
     )
   ),
   pharmacySale: () => m('.content',
@@ -239,72 +235,75 @@ _.assign(comp, {
           ]) && {[k]: v}).filter(Boolean)
           .reduce((res, inc) => _.merge(res, inc), {})
         ),
-      action: doc =>
-        withThis(
-          {serahList: [], updatedGoods: []},
-          ({serahList, updatedGoods}) => 
-          [
-            updatedGoods.push((doc.obat || [])
-            .flatMap(i => state.goodsList.flatMap(
-              j => j._id === i.idbarang &&
-              _.assign(j, {batch: j.batch
-                .filter(k => ands([
-                  k.stok.apotik,
-                  k.kadaluarsa > _.now()
-                ]))
-                .sort((a, b) => a.kadaluarsa - b.kadaluarsa)
-                .reduce((res, inc) => [
-                  ...res, i.jumlah ? withThis(
-                    _.min([inc.stok.apotik, i.jumlah]),
-                    minim => minim ? ands([
-                      serahList.push({
-                        nama: j.nama, no_batch: inc.no_batch,
-                        jumlah: minim, harga: inc.harga.jual * minim
+      action: doc => withThis(
+        {serahList: [], updatedGoods: []},
+        ({serahList, updatedGoods}) => [
+          updatedGoods.push([
+            ...(doc.obat || []), ...(doc.bhp || []),
+          ].flatMap(i => state.goodsList.flatMap(
+            j => j._id === i.idbarang &&
+            _.assign(j, {batch: j.batch
+              .filter(k => ands([
+                k.stok.apotik,
+                k.kadaluarsa > _.now()
+              ]))
+              .sort((a, b) => a.kadaluarsa - b.kadaluarsa)
+              .reduce((res, inc) => [
+                ...res, i.jumlah ? withThis(
+                  _.min([inc.stok.apotik, i.jumlah]),
+                  minim => minim ? ands([
+                    serahList.push({
+                      nama: j.nama, no_batch: inc.no_batch,
+                      jumlah: minim, harga: inc.harga.jual * minim
+                    }),
+                    _.assign(i, {jumlah: i.jumlah - minim}),
+                    _.assign(inc, {
+                      stok: _.assign(inc.stok, {
+                        apotik: inc.stok.apotik - minim
                       }),
-                      _.assign(i, {jumlah: i.jumlah - minim}),
-                      _.assign(inc, {
-                        stok: _.assign(inc.stok, {
-                          apotik: inc.stok.apotik - minim
-                        }),
-                        penjualan: [...(inc.penjualan || []), {
-                          idpenjualan: doc.idpenjualan,
-                          jumlah: minim, tanggal: _.now()
-                        }]
-                      })
-                    ]) : inc
-                  ) : inc
-                ], []
-              )})
-            ).filter(Boolean))),
-            state.modalPenjualanBebas = m('.box',
-              m('h3', 'Konfirmasi Penjualan'),
-              m('table.table',
-                m('thead', m('tr', ['Nama Obat', 'No. Batch', 'Jumlah', 'Harga'].map(i => m('th', i)))),
-                m('tbody', [...serahList].map(i => m('tr', tds([
-                  i.nama, i.no_batch, i.jumlah+' unit', rupiah(i.harga)
-                ])))),
-                m('tr', tds([m('b', 'Total'), '', '', rupiah(_.sum(serahList.map(i => i.harga)))]))
+                      penjualan: [...(inc.penjualan || []), {
+                        idpenjualan: doc.idpenjualan,
+                        jumlah: minim, tanggal: _.now(),
+                        user: state.login._id
+                      }]
+                    })
+                  ]) : inc
+                ) : inc
+              ], []
+            )})
+          ).filter(Boolean))),
+          state.modalPenjualanBebas = m('.box',
+            m('h3', 'Konfirmasi Penjualan'),
+            m('table.table',
+              m('thead', m('tr', ['Nama Obat', 'No. Batch', 'Jumlah', 'Harga'].map(i => m('th', i)))),
+              m('tbody', [...serahList].map(i => m('tr', tds([
+                i.nama, i.no_batch, i.jumlah+' unit', rupiah(i.harga)
+              ])))),
+              m('tr', tds([m('b', 'Total'), '', '', rupiah(_.sum(serahList.map(i => i.harga)))]))
+            ),
+            m('.buttons',
+              /*
+                pasien datang pesan obat ke apotik, apoteker isi form obat & cetak resep,
+                pasien bayar ke kasir, pasien tunjukkan bukti bayar ke apotik
+                apoteker isi/ubah form obat, selesaikan mutasi barang
+                TODO: sesuaikan keys serahList ini dengan serahList apotik
+              */
+              m('.button.is-info',
+                {onclick: () => makePdf.resep(serahList.map(i => _.assign(i, {
+                  nama_barang: i.nama, serahkan: i.jumlah
+                })), 'bebas')},
+                makeIconLabel('print', 'Cetak salinan resep')
               ),
-              m('.buttons',
-                /*
-                  pasien datang pesan obat ke apotik, apoteker isi form obat & cetak resep,
-                  pasien bayar ke kasir, pasien tunjukkan bukti bayar ke apotik
-                  apoteker isi/ubah form obat, selesaikan mutasi barang
-                */
-                m('.button.is-info',
-                  {onclick: () => ''},
-                  m('span.icon', m('i.fas.fa-print')),
-                  m('span', 'Cetak salinan resep')
-                ),
-                m('.button.is-primary',
-                  {ondblclick: () => console.log(updatedGoods[0])},
-                  m('span.icon', m('i.fas.fa-check')),
-                  m('span', 'Serahkan')
-                )
+              m('.button.is-primary',
+                {ondblclick: () => updatedGoods[0].map(
+                  i => updateBoth('goods', i._id, i)
+                )},
+                makeIconLabel('check', 'Serahkan')
               )
             )
-          ]
-        )
+          )
+        ]
+      )
     })),
     makeModal('modalPenjualanBebas')
   )

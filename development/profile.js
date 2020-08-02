@@ -1,4 +1,4 @@
-/*global m _ comp state look makeModal autoForm updateBoth io*/
+/*global m _ comp state look makeModal autoForm updateBoth io makeIconLabel*/
 
 _.assign(comp, {
   profile: () => m('.content',
@@ -54,16 +54,14 @@ _.assign(comp, {
             ]
           }))
         )},
-        m('span.icon', m('i.fas.fa-edit')),
-        m('span', 'Update akun')
+        makeIconLabel('edit', 'Update akun')
       ),
       m('a.button.is-info',
         {
           href: 'https://wa.me/628117696000?text=simrs.dev',
           target: '_blank'
         },
-        m('span.icon', m('i.fas.fa-envelope-open-text')),
-        m('span', 'Kritik/Saran')
+        makeIconLabel('envelope-open-text', 'Kritik/Saran')
        ),
       m('a.button.is-danger',
         {
@@ -73,16 +71,14 @@ _.assign(comp, {
             localStorage.removeItem('openBeta')
             : localStorage.setItem('openBeta', true)
         },
-        m('span.icon', m('i.fas.fa-adjust')),
-        m('span', 'Versi Beta')
+        makeIconLabel('adjust', 'Versi Beta')
       ),
       m('a.button.is-link',
         {
           href: 'https://www.youtube.com/watch?v=irSxnKSRIOI&list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ',
           target: '_blank'
         },
-        m('span.icon', m('i.fas.fa-chalkboard-teacher')),
-        m('span', 'Tutorial')
+        makeIconLabel('chalkboard-teacher', 'Tutorial')
       )
     ),
     makeModal('modalProfile')

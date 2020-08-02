@@ -1,4 +1,4 @@
-/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay moment*/
+/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay moment makeIconLabel*/
 
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
@@ -33,8 +33,7 @@ _.assign(comp, {
     ),
     m('.button.is-primary',
       {onclick: () => state.route = 'newPatient'},
-      m('span.icon', m('i.fas.fa-user-plus')),
-      m('span', 'Pasien baru')
+      makeIconLabel('user-plus', 'Pasien baru')
     )
   ),
 

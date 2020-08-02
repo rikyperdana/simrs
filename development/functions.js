@@ -66,6 +66,11 @@ deleteBoth = (collName, _id, cb) => dbCall({
   method: 'deleteOne', collection: collName, _id
 }, res => ands([res, cb]) && cb(res)),
 
+makeIconLabel = (icon, label) => [
+  m('span.icon', m('i.fas.fa-'+icon)),
+  m('span', label)
+],
+
 makeModal = name => m('.modal',
   {class: state[name] && 'is-active'},
   m('.modal-background'),

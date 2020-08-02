@@ -1,4 +1,4 @@
-/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports*/
+/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel*/
 
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?
@@ -74,17 +74,16 @@ _.assign(comp, {
                     {onclick: () => _.assign(state, {
                       route: 'formSoap', oneRawat: i, modalVisit: null
                     })},
-                    m('span.icon', m('i.fas.fa-user-md')),
-                    m('span',
+                    makeIconLabel(
+                      'user-md',
                       state.login.peranan === 3 ?
                       'Soap Dokter' : 'Soap Perawat'
                     )
-                  ),
+                  )
                 ]),
                 m('.button.is-info',
                   {onclick: () => makePdf.soap(state.onePatient.identitas, i)},
-                  m('span.icon', m('i.fas.fa-print')),
-                  m('span', 'Cetak SOAP')
+                  makeIconLabel('print', 'Cetak SOAP')
                 )
               )
             )
@@ -100,8 +99,7 @@ _.assign(comp, {
     ),
     state.login.bidang === 1 && m('.button.is-success',
       {onclick: () => state.route = 'igdVisit'},
-      m('span.icon', m('i.fas.fa-file-invoice')),
-      m('span', 'Kunjungi IGD')
+      makeIconLabel('file-invoice', 'Kunjungi IGD')
     ),
     makeModal('modalVisit')
   ),
