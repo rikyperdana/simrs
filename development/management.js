@@ -1,4 +1,4 @@
-/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io menus betaMenus*/
+/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io menus betaMenus makeIconLabel*/
 
 _.assign(comp, {
   users: () => state.login.bidang !== 5 ?
@@ -18,8 +18,7 @@ _.assign(comp, {
           }))
         )
       },
-      m('span.icon', m('i.fas.fa-user-plus')),
-      m('span', 'Tambah akun')
+      makeIconLabel('user-plus', 'Tambah akun')
     ),
     makeModal('modalAccount'),
     m('table.table',

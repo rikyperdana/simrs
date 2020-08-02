@@ -1,4 +1,4 @@
-/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withThis makeModal*/
+/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withThis makeModal makeIconLabel*/
 
 _.assign(comp, {
   onePatient: () => withThis(
@@ -65,8 +65,7 @@ _.assign(comp, {
         ]
         .map(i => m('.button.is-'+i.color,
           {onclick: i.click},
-          m('span.icon', m('i.fas.fa-'+i.icon)),
-          m('span', i.label)
+          makeIconLabel(i.icon, i.label)
         ))
       ),
       makeModal('modalRekapSoap'),
@@ -87,8 +86,7 @@ _.assign(comp, {
           ]) && 'is-active'},
           m('a',
             {onclick: () => [state.onePatientTab = key, m.redraw()]},
-            m('span.icon', m('i.fas.fa-'+val[1])),
-            m('span', val[0])
+            makeIconLabel(val[1], val[0])
           )
         ))
       )),

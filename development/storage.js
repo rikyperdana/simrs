@@ -1,4 +1,4 @@
-/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands deleteBoth*/
+/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands deleteBoth makeIconLabel*/
 
 _.assign(comp, {
   storage: () => !ors([
@@ -55,8 +55,7 @@ _.assign(comp, {
     state.login.bidang === 3 &&
     m('.button.is-primary',
       {onclick: () => state.route = 'formGood'},
-      m('span.icon', m('i.fas.fa-plus')),
-      m('span', 'Tambah barang')
+      makeIconLabel('plus', 'Tambah barang')
     )
   ),
 

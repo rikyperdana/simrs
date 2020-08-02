@@ -174,21 +174,22 @@ makePdf = {
         ]
       ]
     ]}).download('soap_'+identitas.no_mr),
-
-  resep: (identitas, drugs) =>
+  
+  resep: (drugs, no_mr) =>
     pdfMake.createPdf({content: [
       kop,
       {text: 'Salinan Resep\n\n', alignment: 'center', bold: true},
       {table: {
-        widths: ['*', 'auto', 'auto', 'auto', 'auto'],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: ([]).concat(
-          [['Nama Obat', 'Jumlah', 'Kali', 'Dosis', 'Puyer']],
-          drugs.map(i => [
+          [['Nama Obat', 'Jumlah', 'Kali', 'Dosis', 'Puyer', 'Harga']],
+          [...drugs].map(i => [
             i.nama_barang, i.serahkan+' unit',
             _.get(i, 'aturan.kali') || '-',
             _.get(i, 'aturan.dosis') || '-',
-            i.puyer || '-'
-          ])
+            i.puyer || '-', rupiah(i.harga || i.jual)
+          ]),
+          [['Total', '', '', '', '', rupiah(_.sum(drugs.map(i => i.harga || i.jual)))]]
         )
       }},
       {alignment: 'justify', columns: [
@@ -199,11 +200,9 @@ makePdf = {
       {text: '\nInstruksi penyerahan obat'},
       {table: {body: ([]).concat(
         [['Nama Barang', 'No. Batch', 'Jumlah']],
-        drugs.map(i =>
-          [i.nama_barang, i.no_batch, i.serahkan]
-        )
+        drugs.map(i => [i.nama_barang, i.no_batch, i.serahkan])
       )}}
-    ]}).download('salinan_resep_'+identitas.no_mr),
+    ]}).download('salinan_resep_'+no_mr),
 
   report: (title, rows) =>
     pdfMake.createPdf({content: [

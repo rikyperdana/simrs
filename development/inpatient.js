@@ -1,4 +1,4 @@
-/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas reports*/
+/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas reports makeIconLabel ors*/
 
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -160,8 +160,7 @@ _.assign(comp, {
                           state.onePatient.identitas,
                           j.perawat ? {soapPerawat: j} : {soapDokter: j}
                         )},
-                        m('span.icon', m('i.fas.fa-print')),
-                        m('span', 'Cetak SOAP')
+                        makeIconLabel('print', 'Cetak SOAP')
                       )
                     ), m.redraw()
                   ]},
@@ -179,8 +178,7 @@ _.assign(comp, {
                       route: 'formSoap', oneInap: i, modalObservasi: null
                     }), m.redraw()
                   ]},
-                  m('span.icon', m('i.fas.fa-user-md')),
-                  m('span', 'Tambah observasi')
+                  makeIconLabel('user-md', 'Tambah observasi')
                 ),
                 m('.button.is-danger',
                   {ondblclick: () => [
@@ -195,8 +193,7 @@ _.assign(comp, {
                     state.modalObservasi = null,
                     m.redraw()
                   ]},
-                  m('span.icon', m('i.fas.fa-door-open')),
-                  m('span', 'Pulangkan pasien')
+                  makeIconLabel('door-open', 'Pulangkan pasien')
                 )
               )
             )
@@ -216,12 +213,23 @@ _.assign(comp, {
     makeModal('modalObservasi')
   ),
 
-  beds: () => !_.includes([2, 3], state.login.peranan) ?
-  m('p', 'Hanya untuk tenaga medis') : m('.content',
+  beds: () => !ors([
+    _.includes([2, 3], state.login.peranan),
+    _.includes([1], state.login.bidang)
+  ]) ? m('p', 'Hanya untuk tenaga medis') : m('.content',
     m('h3', 'Daftar Kamar'),
     m('table.table',
+      {onupdate: () =>
+        db.patients.toArray(array => [
+          state.inpatientList = array.filter(i =>
+            i.rawatInap && i.rawatInap
+            // cari pasien yg belum keluar dari rawat inap
+            .filter(j => !j.keluar).length > 0
+          ), m.redraw()
+        ]),
+      },
       m('tr', ['Kelas', 'Kamar', 'No. Bed', 'Penginap'].map(i => m('th', i))),
-      state.inpatientList ? _.flattenDepth(
+      state.inpatientList && _.flattenDepth(
         _.map(beds, (i, j) => _.map(
           i.kamar, (k, l) => _.range(k).map(m => [
             j, l, m+1, _.get(state.inpatientList.find(
@@ -237,7 +245,7 @@ _.assign(comp, {
         )), 2
       ).map(p => m('tr', p.map(
         q => m('td', _.upperCase(q))
-      ))) : m('tr', m('p', 'Buka halaman rawat inap terlebih dahulu'))
+      )))
     )
   ),
 })
