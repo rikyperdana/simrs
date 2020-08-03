@@ -154,7 +154,7 @@ getDifference = name =>
       clientColl: array.map(i =>
         _.pick(i, ['_id', 'updated'])
       )
-    }, res => [
+    }, res => res && [
       db[name].bulkPut(res),
       state.lastSync = +moment(),
       state.loading = false,
