@@ -45,7 +45,7 @@ _.assign(comp, {
               action: doc => [
                 updateBoth(
                   'patients', i.pasien._id, _.assign(i.pasien, {
-                    rawatInap: (i.rawatInap || []).concat([{
+                    rawatInap: (i.pasien.rawatInap || []).concat([{
                       // buatkan record rawatInap dengan observasi kosong
                       tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
                       observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
@@ -53,7 +53,7 @@ _.assign(comp, {
                     }])
                   })
                 ),
-                state.admissionModal = null,
+                _.assign(state, {admissionList: null, admissionModal: null}),
                 m.redraw()
               ]
             }))

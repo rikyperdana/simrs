@@ -1,5 +1,7 @@
 /*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel*/
 
+// TODO: sediakan juga hapus item riwayat rawat IGD
+
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
