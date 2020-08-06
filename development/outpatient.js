@@ -134,7 +134,7 @@ _.assign(comp, {
                 }
               ))
             ]
-          }, 'Hapus'))
+          }, makeIconLabel('trash-alt', 'Hapus')))
         ))
       )
     ),

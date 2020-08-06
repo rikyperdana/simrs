@@ -223,18 +223,17 @@ _.assign(comp, {
           ])),
           bhpList: array.filter(i => i.jenis === 2),
         })),
-      schema:
-        _.merge(
-          {idpenjualan: {
-            type: String,
-            autoform: {type: 'hidden'},
-            autoValue: () => randomId()
-          }},
-          _.map(schemas.soapDokter, (v, k) => ors([
-            _.includes(k, 'obat'), _.includes(k, 'bhp')
-          ]) && {[k]: v}).filter(Boolean)
-          .reduce((res, inc) => _.merge(res, inc), {})
-        ),
+      schema: _.merge(
+        {idpenjualan: {
+          type: String,
+          autoform: {type: 'hidden'},
+          autoValue: () => randomId()
+        }},
+        _.map(schemas.soapDokter, (v, k) => ors([
+          _.includes(k, 'obat'), _.includes(k, 'bhp')
+        ]) && {[k]: v}).filter(Boolean)
+        .reduce((res, inc) => _.merge(res, inc), {})
+      ),
       action: doc => withThis(
         {serahList: [], updatedGoods: []},
         ({serahList, updatedGoods}) => [

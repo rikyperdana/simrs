@@ -6,8 +6,7 @@ _.assign(comp, {
     m('table.table',
       {onupdate: () => [
         db.references.toArray(array => state.references = array),
-        db.patients.filter(i =>
-          // TODO: lakukan juga untuk rawatInap
+        db.patients.filter(i => // logicnya berbeda dengan radiologi
           [
             ...(i.rawatJalan || []), ...(i.emergency || []),
             ...(i.rawatInap ? i.rawatInap.flatMap(
@@ -22,43 +21,57 @@ _.assign(comp, {
         ).toArray(arr => state.laboratoryList = arr.flatMap(i =>
           [
             ...(i.rawatJalan || []), ...(i.emergency || []),
-            ...(i.rawatInap ? i.rawatInap.flatMap(
-              j => j.observasi.map(k => ({soapDokter: k}))
-            ) : [])
+            ...(i.rawatInap ? i.rawatInap.flatMap(j => j.observasi.flatMap(
+              k => ({inap: j, observasi: k})
+            )) : [])
           ]
-          .filter(j =>
+          .filter(j => ors([
             _.get(j, 'soapDokter.labor') &&
-            j.soapDokter.labor.filter(k => k.hasil).length <
-            j.soapDokter.labor.length
-          ).map(j => ({pasien: i, rawat: j}))
+            j.soapDokter.labor.filter(k => k.hasil).length < j.soapDokter.labor.length,
+            _.get(j, 'observasi.labor') &&
+            j.observasi.labor.filter(k => k.hasil).length < j.observasi.labor.length
+          ])).map(j => ors([
+            j.soapDokter && {pasien: i, rawat: j},
+            j.observasi && _.merge(j, {pasien: i})
+          ]))
         ))
       ]},
       m('thead', m('tr',
         ['Waktu Permintaan', 'No. MR', 'Nama Pasien', 'Instalasi', 'Dokter', 'Diproses']
         .map(i => m('th', i))
       )),
-      // berbeda dengan radiologi, 1 baris mewakili 1 kali rawat
+      // berbeda dengan radiologi, 1 baris mewakili 1 kali rawat/observasi
       m('tbody',
         (state.laboratoryList || []).map(i => m('tr',
           {ondblclick: () => _.assign(state, {
-            route: 'responLaboratory', responLaboratory: _.assign(
-              i, {labor: _.get(i, 'rawat.soapDokter.labor')}
-            )
+            route: 'responLaboratory',
+            responLaboratory: _.assign(i, {labor: ors([
+              _.get(i, 'rawat.soapDokter.labor'),
+              _.get(i, 'observasi.labor')
+            ])})
           }) && m.redraw()},
           tds([
-            hari(i.rawat.tanggal),
+            hari(ors([
+              _.get(i, 'rawat.tanggal'),
+              _.get(i, 'observasi.tanggal')
+            ]), true),
             i.pasien.identitas.no_mr,
             i.pasien.identitas.nama_lengkap,
             ors([
-              i.rawat.klinik && look('klinik', i.rawat.klinik),
+              _.get(i, 'rawat.klinik') && look('klinik', i.rawat.klinik),
               i.observasi && 'Rawat Inap',
               'Emergency'
             ]),
-            lookUser(i.rawat.soapDokter.dokter),
-            withThis(
+            lookUser(ors([
+              _.get(i, 'rawat.soapDokter.dokter'),
+              _.get(i, 'observasi.dokter')
+            ])),
+            hari(ors([
+              _.get(i, 'rawat.soapDokter.labor') &&
               i.rawat.soapDokter.labor.find(j => j.tanggal),
-              tanggal => hari(tanggal, true)
-            )
+              _.get(i, 'observasi.labor') &&
+              i.observasi.labor.find(j => j.tanggal)
+            ]), true)
           ])
         ))
       )
@@ -87,7 +100,7 @@ _.assign(comp, {
           'patients', state.responLaboratory.pasien._id,
           _.assign(state.responLaboratory.pasien, {
             rawatJalan: (state.responLaboratory.pasien.rawatJalan || []).map(
-              i => i.idrawat === state.responLaboratory.rawat.idrawat ?
+              i => i.idrawat === _.get(state, 'responLaboratory.rawat.idrawat') ?
               _.assign(i, {soapDokter: _.assign(
                 state.responLaboratory.rawat.soapDokter,
                 {labor: state.responLaboratory.rawat.soapDokter.labor.map(
@@ -99,7 +112,7 @@ _.assign(comp, {
               )}) : i
             ),
             emergency: (state.responLaboratory.pasien.emergency || []).map(
-              i => i.idrawat === state.responLaboratory.rawat.idrawat ?
+              i => i.idrawat === _.get(state, 'responLaboratory.rawat.idrawat') ?
               _.assign(i, {soapDokter: _.assign(
                 state.responLaboratory.rawat.soapDokter,
                 {labor: state.responLaboratory.rawat.soapDokter.labor.map(
@@ -110,6 +123,17 @@ _.assign(comp, {
                 )}
               )}) : i
             ),
+            rawatInap: (state.responLaboratory.pasien.rawatInap || []).map(
+              i => i.idinap === _.get(state, 'responLaboratory.inap.idinap') ?
+              _.assign(i, {observasi: state.responLaboratory.inap.observasi.map(
+                j => j.idobservasi === state.responLaboratory.observasi.idobservasi ?
+                _.assign(j, {labor: state.responLaboratory.observasi.labor.map(
+                  k => _.assign(k, doc.labor.find(
+                    l => l.idlabor === k.idlabor
+                  ) || {})
+                )}) : j
+              )}) : i
+            )
           })
         ),
         _.assign(state, {route: 'laboratory', laboratoryList: []}),
