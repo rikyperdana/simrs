@@ -17,6 +17,9 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 |Frontend|Mithril JS 2.0.4|
 |CSS|Bulma 0.7.5|
 
+## Screenshots
+![dashboard](https://user-images.githubusercontent.com/11875540/89487820-a0d98200-d7d0-11ea-8017-f24d64aef486.png "Dashboard")
+
 ## Persiapan Pra-install
 1. Paham tentang [MongoDB](https://docs.mongodb.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 2. Paham tentang paradigma Functional Javascript, [MithrilJS](https://mithril.js.org/), [Lodash](https://lodash.com/docs/4.17.15), [Bulma](https://bulma.io/), dan [DexieJS](https://dexie.org/)
