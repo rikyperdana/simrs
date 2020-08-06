@@ -24,10 +24,10 @@ startOfTheDay = timestamp => +moment(
   moment(timestamp).format('YYYY-MM-DD')
 ),
 
-rupiah = (num) =>
+rupiah = num =>
   'Rp '+numeral(num || 0).format('0,0'),
 
-tds = (array) =>
+tds = array =>
   array.map(i => m('td', i)),
 
 paginate = (array, name, length) => array.slice(

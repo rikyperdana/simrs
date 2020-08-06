@@ -1,6 +1,7 @@
 {
   "name": "simrs",
   "license": "MIT",
+  "version": "0.6.5",
   "description": "Integrated Hospital Software",
   "repository": {
     "type": "git",

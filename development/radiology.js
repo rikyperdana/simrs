@@ -1,11 +1,5 @@
 /*global m _ comp db state tds lookUser look makeModal autoForm schemas moment lookReferences hari ors makePdf updateBoth*/
 
-/*
-  TODOS:
-  - integrasi soapView soapPdf (ok)
-  - integrasi cashier
-  - intermediat konfirmasi (ok)
-*/
 _.assign(comp, {
   // Note: Selagi masih beta radiologi tidak integrated dengan kasir dan pdf
   radiology: () => m('.content',
@@ -15,7 +9,7 @@ _.assign(comp, {
       {onupdate: () => [
         // siapkan daftar referensi untuk dilookup
         db.references.toArray(array => state.references = array),
-        db.patients.filter(i => ors([
+        db.patients.filter(i => ors([ // logicnya berbeda dengan labor
           [...(i.rawatJalan || []), ...(i.emergency || [])]
           .filter(j =>
             _.get(j, 'soapDokter.radio') &&
@@ -24,24 +18,22 @@ _.assign(comp, {
           ).length,
           i.rawatInap && i.rawatInap.filter(j =>
             j.observasi && j.observasi.filter(k =>
-              _.get(k, 'soapDokter.radio') &&
-              // saring observasi yang request radiologinya belum didiagnosa
-              k.soapDokter.radio.filter(l => !l.diagnosa).length
+              k.radio && k.radio.filter(l => !l.diagnosa).length
             ).length
           ).length
-        ])).toArray(datas => [
+        ])).toArray(datas => datas && [
           state.radiologyList = datas.flatMap(i => [
-            ...[...(i.rawatJalan || []), ...(i.emergency || [])].flatMap(j =>
-              j.soapDokter && j.soapDokter.radio &&
-              j.soapDokter.radio.map(k => ({
+            ...[...(i.rawatJalan || []), ...(i.emergency || [])]
+            .flatMap(j =>
+              _.get(j, 'soapDokter.radio') &&
+              j.soapDokter.radio.flatMap(k => ({
                 // tiap elemen mewakili 1 item request radio
                 pasien: i, rawat: j, radio: k
               }))
             ),
             ...((i.rawatInap || []).flatMap(j =>
-              j.observasi && j.observasi.map(k =>
-                _.get(k, 'soapDokter.radio') &&
-                k.soapDokter.radio.map(l => ({
+              j.observasi && j.observasi.flatMap(k =>
+                k.radio && k.radio.flatMap(l => ({
                   pasien: i, inap: j, observasi: k, radio: l
                 }))
               )
@@ -60,8 +52,7 @@ _.assign(comp, {
           // form untuk petugas radiologi merespon request
           {ondblclick: () => state.modalRadiologi = m('.box',
             m('h3', 'Form Radiologi'),
-            i.radio.konfirmasi === 1 &&
-              m('p', 'Catatan dokter: '+(i.radio.catatan || '-')),
+            m('p', 'Catatan dokter: '+(i.radio.catatan || '-')),
             m(autoForm({
               id: 'responRadiology',
               schema: i.radio.konfirmasi === 1 ?
@@ -73,7 +64,7 @@ _.assign(comp, {
                   // update info pasien berdasarkan layanan rawatnya
                   'patients', i.pasien._id, _.assign(i.pasien, {
                     rawatJalan: (i.pasien.rawatJalan || []).map(j =>
-                      j.idrawat === i.rawat.idrawat ?
+                      j.idrawat === _.get(i, 'rawat.idrawat') ?
                       _.assign(j, {soapDokter: _.assign(
                         j.soapDokter, {radio:
                           j.soapDokter.radio.map(k =>
@@ -84,7 +75,7 @@ _.assign(comp, {
                       )}) : j
                     ),
                     emergency: (i.pasien.emergency || []).map(j =>
-                      j.idrawat === i.rawat.idrawat ?
+                      j.idrawat === _.get(i, 'rawat.idrawat') ?
                       _.assign(j, {soapDokter: _.assign(
                         j.soapDokter, {radio:
                           j.soapDokter.radio.map(k =>
@@ -96,11 +87,11 @@ _.assign(comp, {
                     ),
                     // TODO: update yg dari rawatInap
                     rawatInap: (i.pasien.rawatInap || []).map(
-                      j => j.idinap === i.inap.idinap ?
+                      j => j.idinap === _.get(i, 'inap.idinap') ?
                       _.assign(j, {observasi: j.observasi.map(
                         k => k.idobservasi === i.observasi.idobservasi ?
                         _.assign(k, {radio: k.radio.map(
-                          l => l.radio === i.radio.idradio ?
+                          l => l.idradio === i.radio.idradio ?
                           _.assign(l, doc) : l
                         )}) : k
                       )}) : j
@@ -109,22 +100,26 @@ _.assign(comp, {
                 ),
                 i.radio.diagnosa && // kalau sudah ada diagnosa baru cetak
                   makePdf.radio(i.pasien.identitas, _.merge(i.radio, doc)),
-                state.modalRadiologi = null, m.redraw()
+                _.assign(state, {modalRadiologi: null, radiologyList: null}),
+                m.redraw()
               ]
             }))
           )},
           // baris tabel yang ditampilkan
           tds([
-            hari(i.rawat.tanggal, true),
-            i.pasien.identitas.no_mr,
-            i.pasien.identitas.nama_lengkap,
+            hari(ors([
+              _.get(i, 'rawat.tanggal'),
+              _.get(i, 'observasi.tanggal')
+            ]), true),
+            _.get(i, 'pasien.identitas.no_mr'),
+            _.get(i, 'pasien.identitas.nama_lengkap'),
             ors([
               i.inap && 'Rawat Inap',
-              i.rawat.klinik && look('klinik', i.rawat.klinik),
+              _.get(i, 'rawat.klinik') && look('klinik', i.rawat.klinik),
               'Emergency'
             ]),
             ors([
-              i.inap && lookUser(_.get(i, 'observasi.soapDokter.dokter')),
+              i.inap && lookUser(_.get(i, 'observasi.dokter')),
               lookUser(_.get(i, 'rawat.soapDokter.dokter')),  
             ]),
             _.startCase(i.radio.grup),

@@ -107,17 +107,17 @@ _.assign(comp, {
                   {updated: _.now(), _id: randomId()},
                   {identitas: _.merge(
                     {
-                      keluarga: {ayah: i.ayah, ibu: i.ibu, pasangan: i.pasangan},
-                      kontak: i.kontak, nama_lengkap: _.startCase(i.nama_lengkap),
-                      tanggal_input: +moment(i.tanggal_input),
-                      tanggal_lahir: +moment(i.tanggal_lahir),
-                      tempat_lahir: i.tempat_lahir, tempat_tinggal: i.tempat_tinggal,
+                      keluarga: {ayah: i.ayah || '', ibu: i.ibu || '', pasangan: i.pasangan || ''},
+                      kontak: i.kontak || '', nama_lengkap: _.startCase(i.nama_lengkap),
+                      tanggal_input: i.tanggal_input ? +moment(i.tanggal_input) : '',
+                      tanggal_lahir: i.tanggal_lahir ? +moment(i.tanggal_lahir) : '',
+                      tempat_lahir: i.tempat_lahir || '', tempat_tinggal: i.tempat_tinggal || '',
                       bayar_kartu: true
                     },
                     _.fromPairs(
                       ['agama', 'alias', 'darah', 'kelamin', 'ktp',
                        'nikah', 'no_mr', 'pekerjaan', 'pendidikan']
-                      .map(j => +i[j] && [j, +i[j]])
+                      .map(j => +i[j] ? [j, +i[j]] : ['', ''])
                     )
                   )}
                 ))

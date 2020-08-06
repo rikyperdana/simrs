@@ -6,14 +6,15 @@ _.assign(comp, {
     m('h3', 'Pencarian Pasien'),
     m('.control.is-expanded', m('input.input.is-fullwidth', {
       type: 'text', placeholder: 'Cari dengan nama lengkap atau No. MR',
-      onkeypress: e =>
+      onkeypress: e => [
+        e.target.value.length > 3 &&
         db.patients.filter(i => _.includes(
           _.lowerCase(i.identitas.nama_lengkap)+i.identitas.no_mr,
           e.target.value
         )).toArray(array => [
-          state.searchPatients = array,
-          m.redraw()
+          state.searchPatients = array
         ])
+      ]
     })),
     m('table.table',
       m('thead', m('tr',
@@ -31,8 +32,11 @@ _.assign(comp, {
         ])
       )))
     ),
+    state.searchPatients &&
     m('.button.is-primary',
-      {onclick: () => state.route = 'newPatient'},
+      {onclick: () => _.assign(state, {
+        route: 'newPatient', searchPatients: null
+      })},
       makeIconLabel('user-plus', 'Pasien baru')
     )
   ),

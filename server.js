@@ -77,7 +77,7 @@ io.on('connection', socket => [
           {_id: {$not: {$in: ids}}},
           // cari yg lebih baru dari milik client
           {updated: {$gt: latest}}
-        ]}).toArray((err, res) => res && cb(res))
+        ]}).toArray((err, res) => cb(res))
       )
     }[obj.method]())
   )))

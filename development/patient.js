@@ -73,7 +73,7 @@ _.assign(comp, {
         {style: 'margin-left: 0%'},
         _.map({
           outpatient: ['Riwayat Rawat Jalan', 'walking'],
-          emergency: ['Riwayat UGD', 'ambulance'],
+          emergency: ['Riwayat IGD', 'ambulance'],
           inpatient: ['Riwayat Rawat Inap', 'bed']
         }, (val, key) => m('li',
           {class: ors([

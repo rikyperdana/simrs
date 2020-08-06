@@ -1,7 +1,5 @@
 /*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel*/
 
-// TODO: sediakan juga hapus item riwayat rawat IGD
-
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
@@ -40,7 +38,8 @@ _.assign(comp, {
     m('table.table',
       m('thead', m('tr',
         ['Tanggal berobat', 'Cara bayar', 'Perawat', 'Dokter']
-        .map(i => m('th', i))
+        .map(i => m('th', i)),
+        state.login.peranan === 4 && m('th', 'Hapus')
       )),
       m('tbody',
         (_.get(state, 'onePatient.emergency') || [])
@@ -96,6 +95,18 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapPerawat.perawat')),
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
+          state.login.peranan === 4 && m('td', m('.button.is-danger', {
+            ondblclick: e => [
+              e.stopPropagation(),
+              updateBoth('patients', state.onePatient._id, _.assign(
+                state.onePatient, {emergency:
+                  state.onePatient.emergency.filter(j =>
+                    j.idrawat !== i.idrawat
+                  )
+                }
+              ))
+            ]
+          }, makeIconLabel('trash-alt', 'Hapus')))
         ))
       )
     ),
