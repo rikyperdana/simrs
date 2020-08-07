@@ -250,9 +250,10 @@ _.assign(comp, {
   ),
 })
 
+// URGENT TODO: perbaharui semua kamar di server bpjs
 var beds = {
   vip: {tarif: 350, kamar: {tulip: 1, bougenvil: 1, sakura: 1}},
-  kl3: {tarif: 200, kamar: {kenanga: 2, cempaka: 2, claudia: 2, ferbia: 2, yasmin: 2, edelwise: 2}},
-  kl2: {tarif: 150, kamar: {seroja: 4, mawar: 2, dahlia: 2, lili: 2, zahara: 2, matahari: 4}},
-  kl1: {tarif: 100, kamar: {anggrek: 4, teratai: 8, kertas: 4, melati: 4}}
+  kl1: {tarif: 200, kamar: {kenanga: 2, cempaka: 2, claudia: 2, ferbia: 2, yasmin: 2, edelwise: 2}},
+  kl2: {tarif: 150, kamar: {seroja: 3, mawar: 2, dahlia: 2, lili: 2, zahara: 2, matahari: 4}},
+  kl3: {tarif: 100, kamar: {anggrek: 4, teratai: 7, kertas: 3, melati: 5}}
 }
