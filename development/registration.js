@@ -3,23 +3,26 @@
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
   m('p', 'Hanya untuk user pendaftaran') : m('.content',
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('h3', 'Pencarian Pasien'),
     m('.control.is-expanded', m('input.input.is-fullwidth', {
       type: 'text', placeholder: 'Cari dengan nama lengkap atau No. MR',
       onkeypress: e => [
-        state.loading = true,
         ands([
           e.key === 'Enter',
           e.target.value.length > 3
-        ]) && db.patients.filter(i => _.includes(
-          _.lowerCase(i.identitas.nama_lengkap)+i.identitas.no_mr,
-          e.target.value
-        )).toArray(array => [
-          _.assign(state, {
-            searchPatients: array,
-            loading: false
-          }), m.redraw()
-        ])
+        ]) && [
+          state.loading = true, m.redraw(),
+          db.patients.filter(i => _.includes(
+            _.lowerCase(i.identitas.nama_lengkap)+i.identitas.no_mr,
+            e.target.value
+          )).toArray(array => [
+            _.assign(state, {
+              searchPatients: array,
+              loading: false
+            }), m.redraw()
+          ])
+        ]
       ]
     })),
     m('table.table',
