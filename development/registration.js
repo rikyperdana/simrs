@@ -7,12 +7,18 @@ _.assign(comp, {
     m('.control.is-expanded', m('input.input.is-fullwidth', {
       type: 'text', placeholder: 'Cari dengan nama lengkap atau No. MR',
       onkeypress: e => [
-        e.target.value.length > 3 &&
-        db.patients.filter(i => _.includes(
+        state.loading = true,
+        ands([
+          e.key === 'Enter',
+          e.target.value.length > 3
+        ]) && db.patients.filter(i => _.includes(
           _.lowerCase(i.identitas.nama_lengkap)+i.identitas.no_mr,
           e.target.value
         )).toArray(array => [
-          state.searchPatients = array
+          _.assign(state, {
+            searchPatients: array,
+            loading: false
+          }), m.redraw()
         ])
       ]
     })),
