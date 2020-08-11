@@ -10,7 +10,6 @@ concat(
     'transfer', 'pharmacy', 'cashier', 'management',
     'queue', 'surgery', 'profile', 'radiology',
     'laboratory', 'laundry', 'gizi', 'reports', 'app'
-    // libatkan fitur beta hanya kalau sudah stabil
   ].map(i => ['./development/', i, '.js'].join(''))
 ).then(result => fs.writeFile(
   // keluarkan hasil bundlenya

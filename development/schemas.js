@@ -225,13 +225,14 @@ var schemas = {
     'kriteria.fornas': {type: Number, autoform: {
       type: 'select', options: selects('boolean')
     }},
+    kode_rak: {type: String, optional: true},
     petugas: {
       type: String, autoform: {type: 'hidden'},
       autoValue: () => _.get(state.login, '_id')
     }
   },
 
-  batch_obat: {
+  batch: {
     idbatch: {
       type: String, autoform: {type: 'hidden'},
       autoValue: () => randomId()

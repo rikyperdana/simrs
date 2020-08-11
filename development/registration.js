@@ -3,7 +3,6 @@
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
   m('p', 'Hanya untuk user pendaftaran') : m('.content',
-    state.loading && m('progress.progress.is-small.is-primary'),
     m('h3', 'Pencarian Pasien'),
     m('.control.is-expanded', m('input.input.is-fullwidth', {
       type: 'text', placeholder: 'Cari dengan nama lengkap atau No. MR',
@@ -25,6 +24,7 @@ _.assign(comp, {
         ]
       ]
     })),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('table.table',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']

@@ -1,5 +1,7 @@
 /*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
+// TODO: buat laporan penerimaan BPJS & asuransi lainnya
+
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
   m('p', 'Hanya untuk user bidang kasir') : m('.content',
