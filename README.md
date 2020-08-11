@@ -54,11 +54,10 @@ Bila tidak ingin menggunakan Atlas, silahkan ganti nilai variabel `MONGO="alamat
 dengan alamat server database local Anda
 
 ### Bagian Manajemen
-1. Pada file management.js line 4, ganti state.login.bidang !== 5 dengan false untuk membuka akses sementara
-2. Pada halaman aplikasi, buka menu manajemen pengguna, dan mulai tambahkan beberapa user lainnya seperti yg ditunjukkan pada video tutorial khusus manajemen user (link di bawah)
-3. Batasi kembali akses menu manajemen dengan mengganti false pada line 4 dengan state.login.bidang !== 5
-4. Unduh dan ganti isi [Daftar tarif tindakan](https://docs.google.com/spreadsheets/d/1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ/edit?usp=sharing), simpan sebagai .csv dan unggah melalui tombol Import
-5. Selamat mengikuti video tutorial pada playlist youtube berikut ini [Playlist Tutorial Pemakaian SIMRST Open Source](https://www.youtube.com/playlist?list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ)
+1. Login dengan username 'admin' password 'admin'
+2. Segera buat akun admin baru dan non-aktifkan akun admin bawaan
+3. Unduh dan ganti isi [Daftar tarif tindakan](https://docs.google.com/spreadsheets/d/1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ/edit?usp=sharing), simpan sebagai .csv dan unggah melalui tombol Import
+4. Selamat mengikuti video tutorial pada playlist youtube berikut ini [Playlist Tutorial Pemakaian SIMRST Open Source](https://www.youtube.com/playlist?list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ)
 
 ## Cara Menjalankan
 ### Development

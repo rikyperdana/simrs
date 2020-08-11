@@ -86,13 +86,15 @@ _.assign(comp, {
     m('h3', 'Rincian barang'),
     m('table.table', _.chunk([
       ['Nama barang', state.oneGood.nama],
-      ['Kandungan', state.oneGood.kandungan],
+      ['Jenis barang', look('jenis_barang', state.oneGood.jenis)],
+      ['Kode Rak', state.oneGood.kode_rak],
       ['Antibiotik', look('boolean', _.get(state.oneGood, 'kriteria.antibiotik'))],
       ['Narkotika', look('boolean', _.get(state.oneGood, 'kriteria.narkotika'))],
       ['Psikotropika', look('boolean', _.get(state.oneGood, 'kriteria.psikotropika'))],
       ['Fornas', look('boolean', _.get(state.oneGood, 'kriteria.fornas'))],
       ['Min. Gudang', state.oneGood.stok_minimum.gudang],
-      ['Min. Apotik', state.oneGood.stok_minimum.apotik]
+      ['Min. Apotik', state.oneGood.stok_minimum.apotik],
+      ['Kandungan', state.oneGood.kandungan]
     ], 3).map(i => m('tr', i.map(j =>
       [m('th', j[0]), m('td', j[1])]
     )))),
@@ -249,7 +251,7 @@ _.assign(comp, {
   formBatch: () => m('.content',
     m('h3', 'Form tambah batch'),
     m(autoForm({
-      id: 'formBatch', schema: schemas.batch_obat,
+      id: 'formBatch', schema: schemas.batch,
       confirmMessage: 'Yakin untuk menambahkan batch obat ini?',
       action: doc => [
         updateBoth('goods', state.oneGood._id, _.assign(state.oneGood, {

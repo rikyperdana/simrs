@@ -32,7 +32,10 @@ io.on('connection', socket => [
   socket.on('login', (creds, cb) => dbCall(db =>
     // cek ketersedian user yang dimaksud
     db.collection('users').findOne(
-      {username: creds.username},
+      { // hanya user aktif yang boleh login
+        username: creds.username,
+        keaktifan: 1
+      },
       (err, res) => res && bcrypt.compare(
         // tes kebenaran password
         creds.password, res.password,
@@ -43,7 +46,7 @@ io.on('connection', socket => [
   )), // alhamdulillah bisa pakai bcrypt
   socket.on('dbCall', (obj, cb) => dbCall(db => withThis(
     db.collection(obj.collection),
-    coll => ({
+    coll => [console.log(obj.method, Date())] && ({
       find: () =>
         coll.find(obj.projection, obj.options)
         .toArray((err, res) => cb(res))
@@ -82,3 +85,16 @@ io.on('connection', socket => [
     }[obj.method]())
   )))
 ])
+
+dbCall(db => withThis(
+  db.collection('users'),
+  users => users.findOne({}, (err, res) =>
+    !res && users.insertOne({
+      _id: '050zjiki5pqoi0f2ua0xdm',
+      username: 'admin', nama: 'admin',
+      bidang: 5, peranan: 4, keaktifan: 1,
+      password: '$2b$10$xZ22.NIdyoSP65nPTRUf2uN9.Dd4gkCbChwD5fOCjTm4kSPHylS4a',
+      updated: 1590416308426
+    })
+  )
+))
