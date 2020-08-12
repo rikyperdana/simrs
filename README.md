@@ -4,7 +4,7 @@
 Bismillahirrahmanirrahim,
 
 ## Pengenalan
-SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang mendandakan bahwa sistem ini mencakup fungsi umum yang terdapat pada rumah sakit seperti Rawat Jalan, IGD, Rawat Inap, Apotik, Farmasi, Amprahan, dan Manajemen. Sistem ini menggunakan 1 database yang saling menghubungkan fungsi tersebut dengan otomatisasi sehingga memungkinkan rumah sakit untuk menjalankan sistem ini secara paperless maupun hybrid dengan dokumen fisiknya.
+SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang menandakan bahwa sistem ini mencakup fungsi umum yang terdapat pada rumah sakit seperti Rawat Jalan, IGD, Rawat Inap, Apotik, Farmasi, Amprahan, Manajemen, dsb. Sistem ini menggunakan 1 database yang saling menghubungkan fungsi tersebut dengan otomatisasi sehingga memungkinkan rumah sakit untuk menjalankan sistem ini secara paperless maupun hybrid dengan dokumen fisiknya.
 
 ## Screenshots
 ![dashboard](https://user-images.githubusercontent.com/11875540/89487820-a0d98200-d7d0-11ea-8017-f24d64aef486.png "Dashboard")
@@ -106,6 +106,19 @@ Buka halaman Wiki > [Code Structure](https://github.com/rikyperdana/simrs/wiki/C
 ## Pengujian Sistem
 Buka halaman Wiki > [Testing Guide](https://github.com/rikyperdana/simrs/wiki/Testing-Guide)
 
+## Integrasi/Bridging BPJS
+Buka halaman project [WSBPJS](https://github.com/rikyperdana/wsbpjs)
+
+## Lisensi
+Aplikasi SIMRS.dev ini dirancang terbuka untuk umum. Boleh digunakan secara bebas untuk tujuan edukasi.
+Harus mendapatkan izin hak guna komersil/produksi bagi Rumah Sakit yang ingin menggunakan.
+Pengurusan izin hak guna dapat direquest ke Prog. Studi Manajemen, FEB, Universitas Muhammadiyah Riau.
+Kampus Utama. Jalan Tuanku Tambusai, Kota Pekanbaru, Provinsi Riau. Surel: umri@umri.ac.id.
+Aplikasi ini telah dilindungi Hak Cipta yang terdaftar di Kemenkumham sejak Feb 2019.
+
+Setiap clone dari aplikasi ini tercatat pada server pengelola, harap bekerjasama.
+Kode unik registrasi hak cipta: EC00201930994.
+Lampiran [Hak Cipta](https://drive.google.com/file/d/1WvzHdWEZrsszxUD1txK-30fEtaVax8g0/view?usp=sharing)
+
 ## Permasalahan
 ## Pengembangan
-- Percantik dashboard dengan informasi statistik (jumlah pasien, rawatJalan, rawatInap, emergency)
