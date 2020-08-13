@@ -204,15 +204,19 @@ makePdf = {
       )}}
     ]}).download('salinan_resep_'+no_mr),
 
-  report: (title, rows) =>
-    pdfMake.createPdf({content: [
-      kop,
-      {text: title, alignment: 'center', bold: true},
-      {table: {
-        widths: _.range(rows[0].length).map(i => '*'),
-        body: rows
-      }}
-    ]}).download('laporan_'+title),
+  report: (title, rows, info) =>
+    pdfMake.createPdf({
+      pageOrientation: 'landscape',
+      content: [
+        kop,
+        {text: title, alignment: 'center', bold: true},
+        info && {text: info+'\n\n', alignment: 'center', bold: true},
+        {table: {
+          widths: _.range(rows[0].length).map(i => '*'),
+          body: rows
+        }}
+      ]
+    }).download('laporan_'+title),
 
   regQueue: (last) =>
     pdfMake.createPdf({

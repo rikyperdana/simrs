@@ -86,6 +86,7 @@ io.on('connection', socket => [
   )))
 ])
 
+// buat user admin pertama jika masih kosong
 dbCall(db => withThis(
   db.collection('users'),
   users => users.findOne({}, (err, res) =>

@@ -80,7 +80,7 @@ makeModal = name => m('.modal',
   })
 ), // BUG: yg di dalam modal tidak mempan m.redraw()
 
-makeReport = (name, action) => m('.box',
+makeReport = (name, action, selections) => m('.box',
   m('h4', 'Unduh Laporan '+name),
   m('form.field-body', {onsubmit: action},
     m('.field', m('.control.is-expanded',
@@ -88,6 +88,12 @@ makeReport = (name, action) => m('.box',
     )),
     m('.field', m('.control.is-expanded',
       m('input.input', {type: 'date', name: 'end'})
+    )),
+    selections &&
+    m('.field', m('.control.is-expanded',
+      m('.select.is-fullwidth', m('select', selections.map(
+        i => m('option', {value: i.value}, i.label)
+      )))
     )),
     m('input.button.is-primary',
       {type: 'submit', value: 'Unduh'}
