@@ -23,7 +23,12 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 
 ## Persiapan Pra-install
 1. Paham tentang [MongoDB](https://docs.mongodb.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Paham tentang paradigma Functional Javascript, [MithrilJS](https://mithril.js.org/), [Lodash](https://lodash.com/docs/4.17.15), [Bulma](https://bulma.io/), dan [DexieJS](https://dexie.org/)
+2. Paham tentang paradigma
+[Functional](https://eloquentjavascript.net/1st_edition/chapter6.html)
+[Javascript ES6](http://es6-features.org/#DefaultParameterValues),
+[MithrilJS](https://mithril.js.org/), [Lodash](https://lodash.com/docs/4.17.15),
+[Bulma](https://bulma.io/), dan
+[DexieJS](https://dexie.org/)
 3. Paham tentang ragam prosedur operasional Rumah Sakit Umum
 
 ## Cara Install
@@ -45,7 +50,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 6. Pada halaman MongoDB Atlas Cluster, create database "simrs" (atau nama lainnya).
 7. Masih pada halaman Cluster, tambahkan dibawah db tersebut 5 collection
     `goods, patients, references, users, queue`
-8. Pada Glitch code editor, Buat file pada project bernama `.env`. Ketikkan
+8. Pada Glitch code editor, Buat file pada project (jika belum ada) bernama `.env`. Ketikkan
 ```
 MONGO="isikan dengan connection string, dan ganti <username> dan <password>"
 dbname="nama databasenya"

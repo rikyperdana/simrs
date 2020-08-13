@@ -1,18 +1,29 @@
-/*global _ m makeReport withThis moment db makePdf hari look rupiah tarifIGD lookReferences ors lookUser lookGoods*/
+/*global _ m makeReport withThis moment db makePdf hari look rupiah tarifIGD lookReferences ors lookUser lookGoods selects ands beds tarifInap*/
 
 var reports = {
   cashier: () => makeReport(
-    'Penerimaan Kasir (Poli & IGD)', e => withThis(
-      ({start: +moment(e.target[0].value), end: +moment(e.target[1].value)}),
-      date => [
+    'Penerimaan Kasir (Poli & IGD)',
+    e => withThis(
+      {
+        start: +moment(e.target[0].value),
+        end: +moment(e.target[1].value),
+        selection: e.target[2].value
+      },
+      obj => [
         e.preventDefault(),
         db.patients.toArray(array => makePdf.report(
           'Penerimaan Kasir (Poli & IGD)',
-          [['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Konsultasi', 'Obat', 'Tindakan', 'Jumlah']].concat(
+          [['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Layanan', 'Tarif', 'Obat', 'Tindakan', 'Jumlah']]
+          .concat(
             _.flattenDeep(array.map(
               i => ([]).concat(i.rawatJalan || [],i.emergency || [])
-              .map(j => j.bayar_konsultasi && {pasien: i, rawat: j})
-              .filter(Boolean)
+              .map(j => ands([
+                j.cara_bayar === +obj.selection,
+                (j.tanggal || j.tanggal_masuk) > obj.start,
+                (j.tanggal || j.tanggal_masuk) < obj.end,
+                +obj.selection === 1 ? j.bayar_konsultasi : true,
+                {pasien: i, rawat: j}
+              ])).filter(Boolean)
             ).filter(l => l.length))
             .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [
@@ -21,14 +32,24 @@ var reports = {
               look('klinik', i.rawat.klinik),
               String(i.pasien.identitas.no_mr),
               i.pasien.identitas.nama_lengkap,
-              rupiah(
-                !i.rawat.klinik ? tarifIGD :
-                +look('tarif_klinik', i.rawat.klinik)*1000
-              ),
-              rupiah(i.rawat.soapDokter.obat ? _.sum(
+              ors([ // pilihan layanan
+                i.rawat.klinik && look('klinik', i.rawat.klinik),
+                i.rawat.bed && 'Rawat Inap', 'IGD'
+              ]),
+              rupiah(ors([ // tarif layanan tersebut
+                i.rawat.klinik &&
+                +look('tarif_klinik', i.rawat.klinik)*1000,
+                i.rawat.bed &&
+                tarifInap(
+                  i.rawat.tanggal_masuk, i.rawat.keluar,
+                  beds[_.get(i.rawat.bed, 'kelas')].tarif
+                ),
+                tarifIGD
+              ])),
+              rupiah(_.get(i, 'rawat.soapDokter.obat') ? _.sum(
                 i.rawat.soapDokter.obat.map(j => j.harga)
               ) : 0),
-              rupiah(i.rawat.soapDokter.tindakan ? _.sum(
+              rupiah(_.get(i, 'rawat.soapDokter.tindakan') ? _.sum(
                 i.rawat.soapDokter.tindakan.map(
                   j => +lookReferences(j.idtindakan).harga
                 )
@@ -36,20 +57,24 @@ var reports = {
               rupiah(_.sum([
                 !i.rawat.klinik ? tarifIGD :
                 +look('tarif_klinik', i.rawat.klinik)*1000,
-                i.rawat.soapDokter.obat ? _.sum(
+                _.get(i, 'rawat.soapDokter.obat') ? _.sum(
                   i.rawat.soapDokter.obat.map(j => j.harga)
                 ) : 0,
-                i.rawat.soapDokter.tindakan ? _.sum(
+                _.get(i, 'rawat.soapDokter.tindakan') ? _.sum(
                   i.rawat.soapDokter.tindakan.map(
                     j => +lookReferences(j.idtindakan).harga
                   )
                 ) : 0
               ]))
             ])
-          )
+          ),
+          'Cara Bayar: '+look('cara_bayar', +obj.selection)
         ))
       ]
-    )),
+    ),
+    selects('cara_bayar')()
+  ),
+
   pharmacy: () => makeReport('Pengeluaran Apotik', e => withThis(
     {start: +moment(e.target[0].value), end: +moment(e.target[1].value)},
     date => [
