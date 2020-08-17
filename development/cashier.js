@@ -1,6 +1,6 @@
 /*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
-// TODO: buat laporan penerimaan BPJS & asuransi lainnya
+// TODO: pikirkan ulang tentang obj kasir dalam rawat
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -22,12 +22,12 @@ _.assign(comp, {
             ).filter(j =>
               // cari pasien yang masih berhutang biaya
               j.cara_bayar === 1 && ors([
-                // yang belum bayar pendaftaran
-                !j.bayar_pendaftaran,
+                // yang belum bayar pendaftaran klinik
+                j.klinik && !j.bayar_pendaftaran,
+                // sudah keluar klinik / igd tapi belum bayar
+                j.soapDokter && !j.bayar_konsultasi,
                 // sudah keluar inap tapi belum bayar
                 ands([j.bed, j.keluar, !j.bayar_konsultasi]),
-                // sudah keluar klinik tapi belum bayar
-                !j.bayar_konsultasi && j.soapDokter
               ])
             ).length
           ).toArray(array => state.cashierList = array),
@@ -42,15 +42,11 @@ _.assign(comp, {
             i.rawatInap ? i.rawatInap : []
           ).map(j => ors([
             j.cara_bayar === 1 && ors([
-              !j.bayar_pendaftaran, // belum bayar pendaftaran
-              ands([!j.bayar_konsultasi, j.soapDokter]) &&
-              ors([ // sudah keluar klinik dan masih ada biaya tindakan &/ obat
-                _.get(j, 'soapDokter.tindakan'),
-                _.get(j, 'soapDokter.obat')
-              ])
+              // samakan dengan logika filter diatas
+              j.klinik && !j.bayar_pendaftaran,
+              j.soapDokter && !j.bayar_konsultasi,
+              ands([j.bed, j.keluar, !j.bayar_konsultasi])
             ]),
-            // sudah keluar inap tapi belum bayar
-            ands([j.bed, j.keluar, !j.bayar_konsultasi])
           ]) && m('tr',
             {ondblclick: () => withThis(
               [
@@ -129,22 +125,30 @@ _.assign(comp, {
                         rawatJalan: (i.rawatJalan || []).map(
                           k => k.idrawat === j.idrawat ?
                           _.assign(k, ors([
-                            k.soapDokter && {bayar_konsultasi: true},
-                            {bayar_pendaftaran: true},
+                            k.soapDokter && {
+                              bayar_konsultasi: true,
+                              kasir: state.login._id
+                            },
+                            {
+                              bayar_pendaftaran: true,
+                              kasir: state.login._id
+                            },
                           ])) : k
                         ),
                         emergency: (i.emergency || []).map(
                           k => k.idrawat === j.idrawat ?
                           _.assign(k, {
                             bayar_pendaftaran: true,
-                            bayar_konsultasi: true
+                            bayar_konsultasi: true,
+                            kasir: state.login._id
                           }) : k
                         ),
                         rawatInap: (i.emergency || []).map(
                           k => k.idrawat === j.idrawat ?
                           _.assign(k, {
                             bayar_pendaftaran: true,
-                            bayar_konsultasi: true
+                            bayar_konsultasi: true,
+                            kasir: state.login._id
                           }) : k
                         ),
                       })),
@@ -188,6 +192,7 @@ _.assign(comp, {
     ),
     makeModal('modalCashier')
   )),
+
   overcharge: () => m('.content', m(autoForm({
     id: 'overcharge', schema: schemas.overcharge,
     action: doc => updateBoth(

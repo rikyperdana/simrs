@@ -115,7 +115,7 @@ Buka halaman Wiki > [Testing Guide](https://github.com/rikyperdana/simrs/wiki/Te
 Buka halaman project [WSBPJS](https://github.com/rikyperdana/wsbpjs)
 
 ## Lisensi
-Aplikasi SIMRS.dev ini dirancang terbuka untuk umum. Boleh digunakan secara bebas untuk tujuan edukasi.
+Aplikasi SIMRS.dev ini dirancang terbuka untuk umum. Boleh digunakan secara bebas untuk tujuan edukasi perguruan tinggi.
 Harus mendapatkan izin hak guna komersil/produksi bagi Rumah Sakit yang ingin menggunakan.
 Pengurusan izin hak guna dapat direquest ke Prog. Studi Manajemen, FEB, Universitas Muhammadiyah Riau.
 Kampus Utama. Jalan Tuanku Tambusai, Kota Pekanbaru, Provinsi Riau. Surel: umri@umri.ac.id.

@@ -13,7 +13,7 @@ var reports = {
         e.preventDefault(),
         db.patients.toArray(array => makePdf.report(
           'Penerimaan Kasir (Poli & IGD)',
-          [['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Layanan', 'Tarif', 'Obat', 'Tindakan', 'Jumlah']]
+          [['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Tarif', 'Obat', 'Tindakan', 'Jumlah', 'Kasir']]
           .concat(
             _.flattenDeep(array.map(
               i => ([]).concat(i.rawatJalan || [],i.emergency || [])
@@ -28,8 +28,6 @@ var reports = {
             .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [
               hari(i.rawat.tanggal),
-              !i.rawat.klinik ? 'IGD' :
-              look('klinik', i.rawat.klinik),
               String(i.pasien.identitas.no_mr),
               i.pasien.identitas.nama_lengkap,
               ors([ // pilihan layanan
@@ -65,7 +63,8 @@ var reports = {
                     j => +lookReferences(j.idtindakan).harga
                   )
                 ) : 0
-              ]))
+              ])),
+              lookUser(i.rawat.kasir)
             ])
           ),
           'Cara Bayar: '+look('cara_bayar', +obj.selection)
