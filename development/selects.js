@@ -45,5 +45,5 @@ lookReferences = _id =>
   .filter(i => i._id === _id)[0],
 
 lookUser = _id =>
-  _id && state.userList
+  !_id ? '-' : state.userList
   .filter(i => i._id === _id)[0].nama
