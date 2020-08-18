@@ -40,31 +40,35 @@ dbCall = (body, action) =>
 
 insertBoth = (collName, doc, cb) => withThis(
   _.merge(doc, {_id: randomId(), updated: _.now()}),
-  obj => [
+  obj => dbCall({
+    method: 'insertOne', collection: collName, document: obj
+  }, res => res && [
+    ands([res, cb]) && cb(res),
     db[collName].put(obj),
-    dbCall({
-      method: 'insertOne', collection: collName, document: obj
-    }, res => ands([res, cb]) && cb(res)),
     io().emit('datachange', collName, doc)
-  ]
+  ])
 ),
 
 updateBoth = (collName, _id, doc, cb) => withThis(
   _.merge(doc, {_id: _id, updated: _.now()}),
-  obj => [
+  // pastikan di server terupdate dulu, baru client
+  obj => dbCall({
+    method: 'updateOne', collection: collName,
+    document: obj, _id: _id
+  }, res => res && [
+    ands([res, cb]) && cb(res),
     db[collName].put(obj)
     .then(res => ands([res, cb]) && cb(res)),
-    dbCall({
-      method: 'updateOne', collection: collName,
-      document: obj, _id: _id
-    }, res => ands([res, cb]) && cb(res)),
     io().emit('datachange', collName, doc)
-  ]
+  ])
 ),
 
 deleteBoth = (collName, _id, cb) => dbCall({
   method: 'deleteOne', collection: collName, _id
-}, res => ands([res, cb]) && cb(res)),
+}, res => res && [
+  ands([res, cb]) && cb(res),
+  db[collName].delete(_id)
+]),
 
 makeIconLabel = (icon, label) => [
   m('span.icon', m('i.fas.fa-'+icon)),

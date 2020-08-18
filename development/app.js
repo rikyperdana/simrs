@@ -183,7 +183,7 @@ io().on('connect', socket => [
       m('.content', m('a.help', {
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank'
-      }, 'Versi 0.8.2'))
+      }, 'Versi 0.9.0'))
     )
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi
