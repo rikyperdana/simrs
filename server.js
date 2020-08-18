@@ -27,7 +27,7 @@ io.on('connection', socket => [
     socket.broadcast.emit('datachange', name, doc)
   ),
   socket.on('bcrypt', (text, cb) =>
-    bcrypt.hash(text, 10, (err, res) => cb(res))
+    bcrypt.hash(text, 10, (err, res) => res && cb(res))
   ),
   socket.on('login', (creds, cb) => dbCall(db =>
     // cek ketersedian user yang dimaksud
@@ -40,7 +40,7 @@ io.on('connection', socket => [
         // tes kebenaran password
         creds.password, res.password,
         // kembalikan doc user yg ditemukan
-        (err, result) => cb({res: result && res})
+        (err, result) => result && cb({res: result && res})
       )
     )
   )), // alhamdulillah bisa pakai bcrypt
@@ -49,23 +49,23 @@ io.on('connection', socket => [
     coll => [console.log(obj.method, Date())] && ({
       find: () =>
         coll.find(obj.projection, obj.options)
-        .toArray((err, res) => cb(res))
+        .toArray((err, res) => res && cb(res))
       ,
       findOne: () => coll.findOne(
-        {_id: obj._id}, (err, res) => cb(res)
+        {_id: obj._id}, (err, res) => res && cb(res)
       ),
       insertOne: () => coll.insertOne(
-        obj.document, (err, res) => cb(res)
+        obj.document, (err, res) => res && cb(res)
       ),
       insertMany: () => coll.insertMany(
-        obj.documents, (err, res) => cb(res)
+        obj.documents, (err, res) => res && cb(res)
       ),
       updateOne: () => coll.updateOne(
         {_id: obj._id}, {$set: obj.document},
-        (err, res) => cb(res)
+        (err, res) => res && cb(res)
       ),
       deleteOne: () => coll.deleteOne(
-        {_id: obj._id}, (err, res) => cb(res)
+        {_id: obj._id}, (err, res) => res && cb(res)
       ),
       getDifference: () => withThis(
         {
@@ -80,7 +80,7 @@ io.on('connection', socket => [
           {_id: {$not: {$in: ids}}},
           // cari yg lebih baru dari milik client
           {updated: {$gt: latest}}
-        ]}).toArray((err, res) => cb(res))
+        ]}).toArray((err, res) => res && cb(res))
       )
     }[obj.method]())
   )))

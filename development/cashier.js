@@ -53,8 +53,7 @@ _.assign(comp, {
                 !j.bed ? ands([
                   [ // cek apakah ini pasien baru
                     ...(i.rawatJalan || []),
-                    ...(i.emergency || []),
-                    ...(i.rawatInap || []),
+                    ...(i.emergency || [])
                   ].length === 1, !j.bayar_pendaftaran,
                   ['Daftar pasien baru', tarifKartu]
                 ]) || [] : [],
