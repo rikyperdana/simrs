@@ -11,14 +11,13 @@ app = express()
 .use(express.static(
   process.env.production ?
   'production' : 'development'
-))
-.listen(process.env.PORT || 3000)
+)).listen(process.env.PORT || 3000)
 
 mongoDB.MongoClient.connect(
   process.env.MONGO,
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
-  : io = require('socket.io')(app).on('connection', socket => [
+  : io(app).on('connection', socket => [
     socket.on('datachange', (name, doc) =>
       socket.broadcast.emit('datachange', name, doc)
     ),
@@ -36,13 +35,13 @@ mongoDB.MongoClient.connect(
           // tes kebenaran password
           creds.password, res.password,
           // kembalikan doc user yg ditemukan
-          (err, result) => result && cb({res: result && res})
+          (err, result) => result && cb({res})
         )
       )
     )),
     socket.on('dbCall', (obj, cb) => withThis(
       client.db(process.env.dbname).collection(obj.collection),
-      coll => [console.log(obj.method, Date())] && ({
+      coll => ({
         find: () =>
           coll.find(obj.projection, obj.options)
           .toArray((err, res) => res && cb(res))
@@ -73,7 +72,7 @@ mongoDB.MongoClient.connect(
           },
           ({ids, latest}) => coll.find({$or: [
             // cari yg belum tersedia pada client
-            {_id: {$not: {$in: ids}}},
+            {_id: {$nin: ids}},
             // cari yg lebih baru dari milik client
             {updated: {$gt: latest}}
           ]}).toArray((err, res) => res && cb(res))
