@@ -125,5 +125,8 @@ Setiap clone dari aplikasi ini tercatat pada server pengelola, harap bekerjasama
 Kode unik registrasi hak cipta: EC00201930994.
 Lampiran [Hak Cipta](https://drive.google.com/file/d/1WvzHdWEZrsszxUD1txK-30fEtaVax8g0/view?usp=sharing)
 
-## Permasalahan
+## Keterbatasan
+- Sistem ini dirancang hanya mendukung pencatatan stok untuk 1 Gudang dan 1 Apotik
+
 ## Pengembangan
+- Informasi statistik untuk masing-masing modul

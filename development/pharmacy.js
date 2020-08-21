@@ -107,7 +107,6 @@ _.assign(comp, {
                     )}
                   )}) : a
                 ),
-                // TODO URGENT: buatkan juga untuk rawatInap
                 rawatInap: (i.pasien.rawatInap || []).map(
                   a => a.idinap === i.rawat.idinap ?
                   _.assign(a, {observasi: a.observasi.map(

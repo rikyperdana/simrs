@@ -1,5 +1,7 @@
 /*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds tarifIGD tarifKartu localStorage*/
 
+// TODO: cetak pdf labor belum ada
+
 var kop = {text: 'RUMAH SAKIT MEDICARE\nJL. Dt. Laksamana No. 1, Pangkalan Kuras, Pelalawan, Provinsi Riau.\n\n', alignment: 'center', bold: true},
 makePdf = {
   card: identitas =>
@@ -242,4 +244,12 @@ makePdf = {
         {text: 'Pangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\n'+lookUser(radiologi.petugas), alignment: 'center'}
       ]}
     ]}).download('hasil_radiologi_'+identitas.no_mr+'_'+radiologi.kode_berkas),
+
+  labor: (identitas, labors) =>
+    pdfMake.createPdf({content: [
+      kop, {
+        text: 'Hasil Diagnosa Radiologist',
+        fontSize: 15, bold: true, alignment: 'center'
+      }, '\n\n',
+    ]})
 }

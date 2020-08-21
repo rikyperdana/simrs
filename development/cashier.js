@@ -74,28 +74,28 @@ _.assign(comp, {
                   ],
                   ['Rawat IGD', tarifIGD]
                 ]) || [] : [],
-                ...ors([
+                ...ors([ // tampilkan jika salah 1 kondisi ini terpenuhi
                   j.klinik && !j.bayar_konsultasi, // daftar berobat ke klinik
                   j.bed && !j.bayar_konsultasi, // sudah pulang inap dan belum bayar
                   j.soapDokter && !j.bayar_konsultasi // keluar klinik dan belum bayar
                 ]) ? [
                   ...[ // daftar tindakan
                     ...(_.get(j, 'soapDokter.tindakan') || []),
-                    j.observasi ? j.observasi.flatMap(k => k.tindakan) : []
+                    ...(j.observasi ? j.observasi.flatMap(k => k.tindakan) : [])
                   ].map(k => k.idtindakan ? [
                     lookReferences(k.idtindakan).nama,
                     +lookReferences(k.idtindakan).harga
                   ] : []),
                   ...[ // daftar obat
                     ...(_.get(j, 'soapDokter.obat') || []),
-                    j.observasi ? j.observasi.flatMap(k => k.obat) : []
+                    ...(j.observasi ? j.observasi.flatMap(k => k.obat) : [])
                   ].map(k => k.idbarang ? [
                     state.goodsList.find(l => l._id === k.idbarang).nama,
                     k.harga // harga yg sudah dihitungkan ke pasien
                   ] : []),
                   ...[ //daftar bhp terpakai saat rawatan
                     ...(_.get(j, 'soapDokter.bhp') || []),
-                    j.observasi ? j.observasi.flatMap(k => k.bhp) : []
+                    ...(j.observasi ? j.observasi.flatMap(k => k.bhp) : [])
                   ].map(k => k.idbarang ? withThis(
                     state.goodsList.find(l => l._id === k.idbarang),
                     barang => [
@@ -142,14 +142,14 @@ _.assign(comp, {
                             kasir: state.login._id
                           }) : k
                         ),
-                        rawatInap: (i.emergency || []).map(
-                          k => k.idrawat === j.idrawat ?
+                        rawatInap: (i.rawatInap || []).map(
+                          k => k.idinap === j.idinap ?
                           _.assign(k, {
                             bayar_pendaftaran: true,
                             bayar_konsultasi: true,
                             kasir: state.login._id
                           }) : k
-                        ),
+                        )
                       })),
                       [
                         ors([j.soapDokter, j.observasi])
