@@ -54,7 +54,9 @@ _.assign(comp, {
     ),
     state.login.bidang === 3 &&
     m('.button.is-primary',
-      {onclick: () => state.route = 'formGood'},
+      {onclick: () => _.assign(state, {
+        route: 'formGood', oneGood: null
+      })},
       makeIconLabel('plus', 'Tambah barang')
     )
   ),
@@ -66,9 +68,11 @@ _.assign(comp, {
       confirmMessage: 'Yakin untuk menyimpan JENIS barang baru?',
       doc: state.oneGood,
       action: doc => withThis(
-        _.merge(doc, {_id: randomId()}, state.oneGood),
+        _.assign(state.oneGood, {_id: randomId()}, doc),
         obj => [
-          insertBoth('goods', obj),
+          state.oneGood ?
+          updateBoth('goods', state.oneGood._id, obj)
+          : insertBoth('goods', obj),
           _.assign(state, {route: 'oneGood', oneGood: obj})
         ]
       )
@@ -128,7 +132,7 @@ _.assign(comp, {
           ondblclick: () => [
             confirm('Yakin untuk menghapus jenis barang?') &&
             deleteBoth(
-              'patients', state.oneGood._id,
+              'goods', state.oneGood._id,
               res => res && [state.route = 'storage', m.redraw()]
             )
           ]
