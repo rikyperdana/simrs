@@ -75,9 +75,9 @@ _.assign(comp, {
                   ['Rawat IGD', tarifIGD]
                 ]) || [] : [],
                 ...ors([ // tampilkan jika salah 1 kondisi ini terpenuhi
-                  j.klinik && !j.bayar_konsultasi, // daftar berobat ke klinik
-                  j.bed && !j.bayar_konsultasi, // sudah pulang inap dan belum bayar
-                  j.soapDokter && !j.bayar_konsultasi // keluar klinik dan belum bayar
+                  ands([j.klinik, j.soapDokter, !j.bayar_konsultasi]), // keluar klinik dan belum bayar
+                  ands([j.bed, j.keluar, !j.bayar_konsultasi]), // sudah pulang inap dan belum bayar
+                  ands([j.soapDokter, !j.bayar_konsultasi]) // keluar IGD dan belum bayar
                 ]) ? [
                   ...[ // daftar tindakan
                     ...(_.get(j, 'soapDokter.tindakan') || []),
@@ -101,7 +101,8 @@ _.assign(comp, {
                     barang => [
                       barang.nama, // carikan harga batch tertinggi di apotik
                       barang.batch.filter(l => l.stok.apotik)
-                      .sort((a, b) => b.harga.jual - a.harga.jual)[0].harga.jual
+                      .sort((a, b) => b.harga.jual - a.harga.jual)
+                      [0].harga.jual
                     ]
                   ) : [])
                 ] : []
@@ -121,6 +122,7 @@ _.assign(comp, {
                   m('.button.is-success',
                     {ondblclick: () => [
                       updateBoth('patients', i._id, _.assign(i, {
+                        // rajal bisa pembayaran awal dan akhir
                         rawatJalan: (i.rawatJalan || []).map(
                           k => k.idrawat === j.idrawat ?
                           _.assign(k, ors([
@@ -134,6 +136,7 @@ _.assign(comp, {
                             },
                           ])) : k
                         ),
+                        // hanya bayar setelah keluar IGD
                         emergency: (i.emergency || []).map(
                           k => k.idrawat === j.idrawat ?
                           _.assign(k, {
@@ -142,6 +145,7 @@ _.assign(comp, {
                             kasir: state.login._id
                           }) : k
                         ),
+                        // hanya bayar setelah pulang inap
                         rawatInap: (i.rawatInap || []).map(
                           k => k.idinap === j.idinap ?
                           _.assign(k, {

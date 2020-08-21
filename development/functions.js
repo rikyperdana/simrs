@@ -54,7 +54,7 @@ updateBoth = (collName, _id, doc, cb) => withThis(
   // pastikan di server terupdate dulu, baru client
   obj => dbCall({
     method: 'updateOne', collection: collName,
-    document: obj, _id: _id
+    document: obj, _id
   }, res => res && [
     cb && cb(res),
     db[collName].put(obj),
