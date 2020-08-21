@@ -68,7 +68,9 @@ _.assign(comp, {
       confirmMessage: 'Yakin untuk menyimpan JENIS barang baru?',
       doc: state.oneGood,
       action: doc => withThis(
-        _.assign(state.oneGood, {_id: randomId()}, doc),
+        _.assign(state.oneGood || {}, doc, {
+          _id: state.oneGood._id || randomId()
+        }),
         obj => [
           state.oneGood ?
           updateBoth('goods', state.oneGood._id, obj)
@@ -113,33 +115,35 @@ _.assign(comp, {
         m('span.icon', m('i.fas.fa-edit')),
         m('span', 'Edit obat')
       ),
-      state.login.peranan === 4 && m('.button.is-danger',
-        {
-          "data-tooltip": 'Kosongkan semua batch barang ini',
-          ondblclick: () => [
-            confirm('Yakin untuk stok opname jenis barang ini?') &&
-            updateBoth('goods', state.oneGood._id, _.assign(
-              state.oneGood, {batch: []}
-            )), state.route = 'storage', m.redraw()
-          ]
-        },
-        m('span.icon', m('i.fas.fa-recycle')),
-        m('span', 'Stok Opname')
-      ),
-      state.login.peranan === 4 && m('.button.is-danger',
-        {
-          "data-tooltip": 'Menghapus barang dapat merusak riwayat transaksi yang berhubungan dengan barang ini',
-          ondblclick: () => [
-            confirm('Yakin untuk menghapus jenis barang?') &&
-            deleteBoth(
-              'goods', state.oneGood._id,
-              res => res && [state.route = 'storage', m.redraw()]
-            )
-          ]
-        },
-        m('span.icon', m('i.fas.fa-trash-alt')),
-        m('span', 'Hapus barang')
-      )
+      state.login.peranan === 4 && [
+        m('.button.is-danger',
+          {
+            "data-tooltip": 'Kosongkan semua batch barang ini',
+            ondblclick: () => [
+              confirm('Yakin untuk stok opname jenis barang ini?') &&
+              updateBoth('goods', state.oneGood._id, _.assign(
+                state.oneGood, {batch: []}
+              )), state.route = 'storage', m.redraw()
+            ]
+          },
+          m('span.icon', m('i.fas.fa-recycle')),
+          m('span', 'Stok Opname')
+        ),
+        m('.button.is-danger',
+          {
+            "data-tooltip": 'Menghapus barang dapat merusak riwayat transaksi yang berhubungan dengan barang ini',
+            ondblclick: () => [
+              confirm('Yakin untuk menghapus jenis barang?') &&
+              deleteBoth(
+                'goods', state.oneGood._id,
+                res => res && [state.route = 'storage', m.redraw()]
+              )
+            ]
+          },
+          m('span.icon', m('i.fas.fa-trash-alt')),
+          m('span', 'Hapus barang')
+        )
+      ]
     ),
     m('p'), m('h4', 'Daftar batch barang ini'),
     m('table.table',
