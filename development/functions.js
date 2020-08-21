@@ -50,7 +50,7 @@ insertBoth = (collName, doc, cb) => withThis(
 ),
 
 updateBoth = (collName, _id, doc, cb) => withThis(
-  _.merge(doc, {_id: _id, updated: _.now()}),
+  _.merge(doc, {_id, updated: _.now()}),
   // pastikan di server terupdate dulu, baru client
   obj => dbCall({
     method: 'updateOne', collection: collName,
