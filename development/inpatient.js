@@ -3,7 +3,7 @@
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-    reports.inpatient(),
+    state.login.peranan === 4 && reports.inpatient(),
     m('h3', 'Daftar Admisi Rawat Inap'),
     m('table.table',
       {onupdate: () =>
@@ -151,6 +151,25 @@ _.assign(comp, {
                           ).join(', ')
                         )),
                         j.planning && m('tr', m('th', 'Planning'), m('td', j.planning)),
+                        // TODO: tambahkan rincian labor & radio
+                        localStorage.openBeta && [
+                          // kalau radiologi dibuat per item
+                          j.radio && j.radio.map(k => m('tr',
+                            m('th', 'Rad: '+lookReferences(k.idradio).nama),
+                            m('td', m('.button.is-info',
+                              {onclick: () => makePdf.radio(state.onePatient.identitas, k)},
+                              makeIconLabel('print', 'Cetak')
+                            ))
+                          )),
+                          // TODO: kalau labor dibuat semua sekaligus
+                          j.labor && m('tr',
+                            m('th', 'Laboratorium'),
+                            m('td', m('.button.is-info',
+                              {onclick: () => ''},
+                              makeIconLabel('print', 'Cetak')
+                            ))
+                          )
+                        ],
                         m('tr', m('th', 'Tenaga medis'), m('td',
                           lookUser(j.dokter || j.perawat)
                         ))
@@ -250,7 +269,6 @@ _.assign(comp, {
   ),
 })
 
-// URGENT TODO: perbaharui semua kamar di server bpjs
 var beds = {
   vip: {tarif: 350, kamar: {tulip: 1, bougenvil: 1, sakura: 1}},
   kl1: {tarif: 200, kamar: {kenanga: 2, cempaka: 2, claudia: 2, ferbia: 2, yasmin: 2, edelwise: 2}},

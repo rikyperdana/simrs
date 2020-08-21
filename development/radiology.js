@@ -26,14 +26,18 @@ _.assign(comp, {
             ...[...(i.rawatJalan || []), ...(i.emergency || [])]
             .flatMap(j =>
               _.get(j, 'soapDokter.radio') &&
-              j.soapDokter.radio.flatMap(k => ({
+              j.soapDokter.radio
+              .filter(k => !k.diagnosa)
+              .flatMap(k => ({
                 // tiap elemen mewakili 1 item request radio
                 pasien: i, rawat: j, radio: k
               }))
             ),
             ...((i.rawatInap || []).flatMap(j =>
               j.observasi && j.observasi.flatMap(k =>
-                k.radio && k.radio.flatMap(l => ({
+                k.radio && k.radio
+                .filter(l => !l.diagnosa)
+                .flatMap(l => ({
                   pasien: i, inap: j, observasi: k, radio: l
                 }))
               )
@@ -85,7 +89,6 @@ _.assign(comp, {
                         }
                       )}) : j
                     ),
-                    // TODO: update yg dari rawatInap
                     rawatInap: (i.pasien.rawatInap || []).map(
                       j => j.idinap === _.get(i, 'inap.idinap') ?
                       _.assign(j, {observasi: j.observasi.map(
