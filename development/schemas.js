@@ -1,5 +1,7 @@
 /*global ors _ state selects randomId beds ands withThis lookReferences*/
 
+// TODO: pikirkan ulang tentang konsul
+
 var schemas = {
   identitas: {
     no_antrian: {type: String, optional: true, exclude: true},
@@ -46,7 +48,7 @@ var schemas = {
       type: Number, label: 'Pekerjaan sekarang', optional: true,
       autoform: {type: 'select', options: selects('pekerjaan')}
     },
-    tempat_tinggal: {type: String, optional: true},
+    tempat_tinggal: {type: String, optional: true, label: 'Alamat tempat tinggal'},
     kontak: {type: Number, optional: true, label: 'No. Handphone'},
     keluarga: {type: Object},
     'keluarga.ayah': {type: String, optional: true, label: 'Nama Ayah'},
@@ -160,13 +162,17 @@ var schemas = {
       type: String, optional: true,
       autoform: {type: 'textarea'}
     },
-    rujuk: {
-      type: Number, optional: true, label: 'Konsultasikan ke',
-      autoform: {type: 'select', options: selects('klinik')}
-    },
     keluar: {type: Number, autoform: {
       type: 'select', options: selects('keluar')
     }},
+    rujuk: {
+      type: Number, optional: true, label: 'Konsultasikan ke',
+      autoform: { // hanya munculkan bila pilihan keluar 'rujuk'
+        type: 'select',
+        help: 'Hanya diisi bila pilihan keluar adalah Rujuk ke Poliklinik lain',
+        options: selects('klinik')
+      }
+    },
     tracer: {type: String, optional: true, label: 'File Tracer'},
     spm: {
       type: Number, autoform: {type: 'hidden'},
@@ -319,7 +325,7 @@ var schemas = {
   overcharge: {
     charges: {type: Array, optional: true},
     'charges.$': {type: Object},
-    'charges.$.item': {type: String},
+    'charges.$.item': {type: String, label: 'Nama item'},
     'charges.$.harga': {type: Number}
   }
 }

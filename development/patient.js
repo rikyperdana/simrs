@@ -165,13 +165,14 @@ _.assign(comp, {
               )
             }
           )),
+          // TODO: pikirkan ulang tentang rujuk poli
           // jika ada rujuk konsul maka regiskan pasien dengan ikut cara bayar awal
-          doc.rujuk && updateBoth('patients', state.onePatient._id, _.assign(
-            state.onePatient, {rawatJalan: state.onePatient.rawatJalan.concat(_.assign(
+          doc.rujuk && console.log('patients', state.onePatient._id, _.assign(state.onePatient, {
+            rawatJalan: state.onePatient.rawatJalan.concat(_.assign(
               _.pick(state.oneRawat, ['cara_bayar', 'sumber_rujukan', 'penanggungjawab', 'no_sep']),
               {idrawat: randomId(), tanggal: _.now(), klinik: doc.rujuk}
-            ))}
-          )),
+            ))
+          })),
           _.assign(state, {route: 'onePatient', oneRawat: null, oneInap: null}),
           m.redraw()
         ]

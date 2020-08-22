@@ -3,7 +3,7 @@
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
   m('p', 'Hanya untuk user pendaftaran') : m('.content',
-    m('h3', 'Pencarian Pasien'),
+    m('h1', 'Pencarian Pasien'),
     m('.control.is-expanded', m('input.input.is-fullwidth', {
       type: 'text', placeholder: 'Cari dengan nama lengkap atau No. MR',
       onkeypress: e => [

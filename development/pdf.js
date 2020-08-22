@@ -27,7 +27,7 @@ makePdf = {
           identitas.nama_lengkap,
           (identitas.tempat_lahir || '')+', '+hari(identitas.tanggal_lahir),
           _.get(identitas.keluarga, 'ibu') || '',
-          identitas.alamat || '',
+          identitas.tempat_tinggal || '',
           identitas.kontak || ''
         ].map(i => ': '+i)
       ]},
@@ -71,7 +71,7 @@ makePdf = {
         [
           pasien.identitas.no_mr,
           _.startCase(pasien.identitas.nama_lengkap),
-          look('kelamin', pasien.identitas.kelamin).label || '-',
+          look('kelamin', pasien.identitas.kelamin) || '-',
           hari(pasien.identitas.tanggal_lahir),
           moment().diff(pasien.identitas.tanggal_lahir, 'years')+' tahun',
           ors([
@@ -94,19 +94,36 @@ makePdf = {
     pdfMake.createPdf({content: [
       kop,
       {table: {widths: ['auto', '*', 'auto'], body: [
-        ['Nama: '+identitas.nama_lengkap, 'Tanggal lahir: '+hari(identitas.tanggal_lahir), 'No. MR: '+identitas.no_mr],
-        ['Kelamin: '+look('kelamin', identitas.kelamin), 'Tanggal kunjungan: '+hari(rawat.tanggal), 'Gol. Darah: '+look('darah', identitas.darah)],
-        ['Klinik: '+look('klinik', rawat.klinik), 'Tanggal cetak: '+hari(_.now()), 'Cara bayar: '+look('cara_bayar', rawat.cara_bayar)],
-        ['Perawat: '+(lookUser(_.get(rawat, 'soapPerawat.perawat')) || '-'), 'Dokter: '+(lookUser(_.get(rawat, 'soapDokter.dokter')) || '-'), '']
+        [
+          'Nama: '+identitas.nama_lengkap,
+          'Tanggal lahir: '+hari(identitas.tanggal_lahir),
+          'No. MR: '+identitas.no_mr
+        ],
+        [
+          'Kelamin: '+look('kelamin', identitas.kelamin),
+          'Tanggal kunjungan: '+hari(rawat.tanggal || _.get(rawat, 'soapDokter.tanggal')),
+          'Gol. Darah: '+look('darah', identitas.darah)],
+        [
+          'Klinik: '+look('klinik', rawat.klinik),
+          'Tanggal cetak: '+hari(_.now()),
+          'Cara bayar: '+look('cara_bayar', rawat.cara_bayar)
+        ],
+        [
+          'Perawat: '+(lookUser(_.get(rawat, 'soapPerawat.perawat')) || '-'),
+          'Dokter: '+(lookUser(_.get(rawat, 'soapDokter.dokter')) || '-'),
+          ''
+        ]
       ]}},
       rawat.soapPerawat && [
         {text: '\nSOAP Perawat', alignment: 'center', bold: true},
         {table: {widths: ['*', '*', '*'], body: [
           [
             'Tinggi/Berat: '+(_.get(rawat, 'soapPerawat.fisik.tinggi') || '-')+'/'+(_.get(rawat, 'soapPerawat.fisik.berat') || '-'),
-            'Suhu: '+(_.get(rawat, 'soapPerawat.fisik.suhu') || '-')+' C', 'LILA: '+(_.get(rawat, 'soapPerawat.fisik.lila') || '-')
+            'Suhu: '+(_.get(rawat, 'soapPerawat.fisik.suhu') || '-')+' C',
+            'LILA: '+(_.get(rawat, 'soapPerawat.fisik.lila') || '-')
           ], [
-            'Pernapasan: '+(_.get(rawat, 'soapPerawat.fisik.pernapasan') || '-'), 'Nadi: '+(_.get(rawat, 'soapPerawat.fisik.nadi') || '-'),
+            'Pernapasan: '+(_.get(rawat, 'soapPerawat.fisik.pernapasan') || '-'),
+            'Nadi: '+(_.get(rawat, 'soapPerawat.fisik.nadi') || '-'),
             'Tekanan darah: '+_.join(_.values(_.get(rawat, 'soapPerawat.fisik.tekanan_darah') || '-'), '/')
           ]
         ]}}, '\n',

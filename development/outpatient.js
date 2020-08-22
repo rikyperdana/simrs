@@ -123,7 +123,9 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapPerawat.perawat')),
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
+          // TODO: hilangkan tombol hapus bila semua sudah selesai
           state.login.peranan === 4 && m('td', m('.button.is-danger', {
+            'data-tooltip': 'klik ganda bila yakin hapus',
             ondblclick: e => [
               e.stopPropagation(),
               updateBoth('patients', state.onePatient._id, _.assign(

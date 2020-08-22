@@ -5,8 +5,12 @@ function autoForm(opts){return {view: function(){
   function ors(array){return array.find(Boolean)}
   function dateValue(timestamp, hour){
     var date = new Date(timestamp),
-    dateStamp = [date.getFullYear(), date.getMonth()+1, date.getDate()].join('-'),
-    zeros = function(num){return num < 10 ? '0'+num : num},
+    zeros = function(num){return num < 10 ? '0'+num : ''+num},
+    dateStamp = [
+      date.getFullYear(),
+      zeros(date.getMonth()+1),
+      zeros(date.getDate())
+    ].join('-'),
     hourStamp = 'T'+zeros(date.getHours())+':'+zeros(date.getMinutes())
     return !hour ? dateStamp : dateStamp+hourStamp
   }
@@ -24,7 +28,8 @@ function autoForm(opts){return {view: function(){
     )
   }
 
-  afState.form[opts.id] = opts.doc ? linearize(opts.doc) : afState.form[opts.id]
+  afState.form[opts.id] = opts.doc ?
+    linearize(opts.doc) : afState.form[opts.id]
 
   var attr = {
     form: {
