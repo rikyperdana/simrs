@@ -44,7 +44,7 @@ _.assign(comp, {
       m('tbody',
         (_.get(state, 'onePatient.emergency') || [])
         .map(i => m('tr',
-          {onclick: () =>
+          {ondblclick: () =>
             state.modalVisit = m('.box',
               m('h4', 'Rincian kunjungan'),
               m('table.table',
@@ -96,6 +96,7 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
           state.login.peranan === 4 && m('td', m('.button.is-danger', {
+            'data-tooltip': 'klik ganda bila yakin hapus',
             ondblclick: e => [
               e.stopPropagation(),
               updateBoth('patients', state.onePatient._id, _.assign(
@@ -116,6 +117,7 @@ _.assign(comp, {
     ),
     makeModal('modalVisit')
   ),
+
   igdVisit: () => m('.content',
     m('h3', 'Form pendaftaran IGD'),
     m('.box', m(autoForm({

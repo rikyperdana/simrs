@@ -1,4 +1,3 @@
-
 var
 dotenv = require('dotenv').config(),
 express = require('express'),
@@ -11,7 +10,7 @@ app = express()
 .use(express.static(
   process.env.production ?
   'production' : 'development'
-)).listen(process.env.PORT || 3000)
+)).listen(process.env.port || 3000)
 
 mongoDB.MongoClient.connect(
   process.env.MONGO,
@@ -34,8 +33,8 @@ mongoDB.MongoClient.connect(
         (err, res) => res && bcrypt.compare(
           // tes kebenaran password
           creds.password, res.password,
-          // kembalikan doc user yg ditemukan
-          (err, result) => result && cb({res})
+          // kembalikan doc user yg ditemukan, jgn diubah
+          (err, result) => cb({res: result && res})
         )
       )
     )),

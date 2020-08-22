@@ -214,8 +214,9 @@ _.assign(comp, {
         )
       }),
       res => res && [
-        state.route = 'cashier',
-        m.redraw()
+        _.assign(state, {
+          route: 'cashier', cashierList: []
+        }), m.redraw()
       ]
     )
   })))
