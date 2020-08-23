@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser lookGoods withThis moment reports autoForm schemas randomId tds rupiah makeIconLabel*/
+/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser withThis reports autoForm schemas randomId tds rupiah makeIconLabel*/
 
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?

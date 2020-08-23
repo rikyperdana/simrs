@@ -95,7 +95,10 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapPerawat.perawat')),
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
-          state.login.peranan === 4 && m('td', m('.button.is-danger', {
+          ands([
+            state.login.peranan === 4,
+            !i.bayar_konsultasi
+          ]) && m('td', m('.button.is-danger', {
             'data-tooltip': 'klik ganda bila yakin hapus',
             ondblclick: e => [
               e.stopPropagation(),

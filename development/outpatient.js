@@ -74,7 +74,16 @@ _.assign(comp, {
                   _.map(i.soapDokter.diagnosa, (j, k) =>
                     m('tr', m('th', 'Diagnosa '+k), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
                   ),
-                  // TODO: tampilkan rincian tindakan, obat, bhp bila ada
+                  i.soapDokter.tindakan &&
+                  i.soapDokter.tindakan.map(j => j && m('tr',
+                    m('th', _.get(lookReferences(j.idtindakan), 'nama')),
+                    m('td', _.get(lookReferences(j.idtindakan), 'harga'))
+                  )),
+                  i.soapDokter.obat &&
+                  i.soapDokter.obat.map(j => j && m('tr',
+                    m('th', _.get(lookGoods(j.idbarang), 'nama')),
+                    m('td', j.harga)
+                  )),
                   localStorage.openBeta && [
                     (i.soapDokter.radio || []).map((j, k) => m('tr',
                       m('th', 'Cek radiologi '+k),
@@ -125,7 +134,10 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
           // TODO: hilangkan tombol hapus bila semua sudah selesai
-          state.login.peranan === 4 && m('td', m('.button.is-danger', {
+          ands([
+            state.login.peranan === 4,
+            !i.bayar_konsultasi
+          ]) && m('td', m('.button.is-danger', {
             'data-tooltip': 'klik ganda bila yakin hapus',
             ondblclick: e => [
               e.stopPropagation(),
