@@ -74,6 +74,7 @@ _.assign(comp, {
                   _.map(i.soapDokter.diagnosa, (j, k) =>
                     m('tr', m('th', 'Diagnosa '+k), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
                   ),
+                  // TODO: tampilkan rincian tindakan, obat, bhp bila ada
                   localStorage.openBeta && [
                     (i.soapDokter.radio || []).map((j, k) => m('tr',
                       m('th', 'Cek radiologi '+k),
