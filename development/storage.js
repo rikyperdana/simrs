@@ -68,7 +68,7 @@ _.assign(comp, {
       doc: state.oneGood,
       action: doc => withThis(
         _.assign(state.oneGood || {}, doc, {
-          _id: state.oneGood._id || randomId()
+          _id: _.get(state, 'oneGood._id') || randomId()
         }),
         obj => [
           state.oneGood ?

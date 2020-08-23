@@ -24,7 +24,8 @@
     "bundle": "node bundler.js"
   },
   "keywords": [
-    "hospital", "simrs"
+    "hospital",
+    "simrs"
   ],
   "author": "Riky Perdana",
   "devDependencies": {
