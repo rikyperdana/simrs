@@ -118,7 +118,7 @@ _.assign(comp, {
         (state.onePatient.rawatInap || []).map(i => m('tr',
           {ondblclick: () =>
              // untuk melihat 1 rekaman observasi
-            state.modalObservasi = _.includes([2, 3], state.login.peranan) && m('.box',
+            state.modalObservasi = _.includes([2, 3, 4], state.login.peranan) && m('.box',
               m('h3', 'Riwayat Observasi'),
               Boolean(i.observasi.length) && m(
                 'p.help.is-italic.has-text-info',
@@ -151,7 +151,6 @@ _.assign(comp, {
                           ).join(', ')
                         )),
                         j.planning && m('tr', m('th', 'Planning'), m('td', j.planning)),
-                        // TODO: tambahkan rincian labor & radio
                         localStorage.openBeta && [
                           // kalau radiologi dibuat per item
                           j.radio && j.radio.map(k => m('tr',
