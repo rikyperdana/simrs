@@ -46,7 +46,7 @@ makePdf = {
     ]}).download('general_consent_'+identitas.no_mr)
   ,
 
-  bayar_pendaftaran: (pasien, rawat, oldPatient) =>
+  bayar_pendaftaran: (pasien, rawat, rawatLength) =>
     pdfMake.createPdf({content: [kop, {columns: [
       ['Tanggal', 'No. MR', 'Nama Pasien', 'Tarif', 'Petugas'],
       [
@@ -54,7 +54,7 @@ makePdf = {
         pasien.identitas.no_mr,
         pasien.identitas.nama_lengkap,
         'Total: '+rupiah(_.sum([
-          oldPatient ? 0 : tarifKartu,
+          rawatLength > 1 ? 0 : tarifKartu,
           1000 * +look('tarif_klinik', rawat.klinik)
         ])),
         state.login.nama
@@ -99,7 +99,10 @@ makePdf = {
         ],
         [
           'Kelamin: '+look('kelamin', identitas.kelamin),
-          'Tanggal kunjungan: '+hari(rawat.tanggal || _.get(rawat, 'soapDokter.tanggal')),
+          'Tanggal kunjungan: '+hari(ors([
+            rawat.tanggal, rawat.tanggal_masuk,
+            _.get(rawat, 'soapDokter.tanggal')
+          ])),
           'Gol. Darah: '+look('darah', identitas.darah)],
         [
           'Klinik: '+look('klinik', rawat.klinik),
