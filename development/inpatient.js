@@ -1,4 +1,4 @@
-/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas reports makeIconLabel ors*/
+/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas reports makeIconLabel ors makeRincianSoapPerawat makeRincianSoapDokter*/
 
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -137,41 +137,7 @@ _.assign(comp, {
                       m('table.table',
                         m('tr', m('th', 'Waktu observasi'), m('td', hari(j.tanggal, true))),
                         m('tr', m('th', 'Anamnesa'), m('td', j.anamnesa)),
-                        j.diagnosa && m('tr', m('th', 'Diagnosa'), m('td',
-                          j.diagnosa.map(k => k.text).join(', ')
-                        )),
-                        j.tindakan && m('tr', m('th', 'Tindakan'), m('td',
-                          j.tindakan.map(k =>
-                            lookReferences(k.idtindakan).nama
-                          ).join(', ')
-                        )),
-                        j.obat && m('tr', m('th', 'Obat'), m('td',
-                          j.obat.map(k =>
-                            lookGoods(k.idbarang).nama+'@'+k.jumlah
-                          ).join(', ')
-                        )),
-                        j.planning && m('tr', m('th', 'Planning'), m('td', j.planning)),
-                        localStorage.openBeta && [
-                          // kalau radiologi dibuat per item
-                          j.radio && j.radio.map(k => m('tr',
-                            m('th', 'Rad: '+lookReferences(k.idradio).nama),
-                            m('td', m('.button.is-info',
-                              {onclick: () => makePdf.radio(state.onePatient.identitas, k)},
-                              makeIconLabel('print', 'Cetak')
-                            ))
-                          )),
-                          // TODO: kalau labor dibuat semua sekaligus
-                          j.labor && m('tr',
-                            m('th', 'Laboratorium'),
-                            m('td', m('.button.is-info',
-                              {onclick: () => ''},
-                              makeIconLabel('print', 'Cetak')
-                            ))
-                          )
-                        ],
-                        m('tr', m('th', 'Tenaga medis'), m('td',
-                          lookUser(j.dokter || j.perawat)
-                        ))
+                        j.diagnosa ? makeRincianSoapDokter(j) : makeRincianSoapPerawat(j)
                       ),
                       m('.button.is-info',
                         {onclick: () => makePdf.soap(

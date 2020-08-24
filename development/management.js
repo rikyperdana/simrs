@@ -156,17 +156,6 @@ _.assign(comp, {
     ]
   ),
 
-  pagination: (id, length) => [
-    state.pagination = state.pagination ||
-      {[id]: _.get(state.pagination, id) || 0},
-    m('nav.pagination', m('.pagination-list',
-      _.range(length).map(i => m('div', m('a.pagination-link', {
-        class: i === state.pagination[id] && 'is-current',
-        onclick: () => [state.pagination[id] = i, m.redraw()]
-      }, i+1)))
-    ))
-  ][1],
-  
   management: () =>
     _.chunk(_.map(
       menus.management.children, (v, k) => [v, k]

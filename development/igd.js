@@ -1,4 +1,4 @@
-/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel*/
+/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter*/
 
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?
@@ -52,17 +52,8 @@ _.assign(comp, {
                 m('tr', m('th', 'Cara bayar'), m('td', look('cara_bayar', i.cara_bayar))),
                 m('tr', m('th', 'Perawat'), m('td', lookUser(_.get(i, 'soapPerawat.perawat')))),
                 m('tr', m('th', 'Dokter'), m('td', lookUser(_.get(i, 'soapDokter.dokter')))),
-                i.soapPerawat && [
-                  m('tr', m('th', 'Anamnesa Perawat'), m('td', i.soapPerawat.anamnesa)),
-                  i.soapPerawat.tekanan_darah &&
-                  m('tr', m('th', 'Tekanan darah'), m('td', i.soapPerawat.tekanan_darah))
-                ],
-                i.soapDokter && [
-                  m('tr', m('th', 'Anamnesa Dokter'), m('td', i.soapDokter.anamnesa)),
-                  _.map(i.soapDokter.diagnosa, (j, k) =>
-                    m('tr', m('th', 'Diagnosa '+k), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
-                  )
-                ],
+                makeRincianSoapPerawat(i.soapPerawat),
+                makeRincianSoapDokter(i.soapDokter)
               ),
               m('p.buttons',
                 ands([
