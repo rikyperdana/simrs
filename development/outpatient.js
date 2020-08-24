@@ -1,7 +1,6 @@
 /*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences reports makeIconLabel*/
 
 // TODO: di rincian kunjungan informasi soap perawat dan dokter belum lengkap seperti yg diisikan
-// TODO: sediakan tombol cetak radiologi per item, cetak labor keseluruhan
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -70,7 +69,16 @@ _.assign(comp, {
                 i.soapPerawat && [
                   m('tr', m('th', 'Anamnesa Perawat'), m('td', i.soapPerawat.anamnesa)),
                   i.soapPerawat.tekanan_darah &&
-                  m('tr', m('th', 'Tekanan darah'), m('td', i.soapPerawat.tekanan_darah))
+                  m('tr', m('th', 'Tekanan darah'), m('td', i.soapPerawat.tekanan_darah)),
+                  ['nadi', 'suhu', 'pernapasan', 'tinggi', 'berat', 'lila']
+                  .map(j => _.get(i.soapPerawat.fisik, j) && m('tr',
+                    m('th', _.startCase(j)),
+                    m('td', i.soapPerawat.fisik[j])
+                  )),
+                  i.soapPerawat.tracer && m('tr',
+                    m('th', 'File Tracer'),
+                    m('td', i.soapDokter.tracer)
+                  )
                 ],
                 i.soapDokter && [
                   m('tr', m('th', 'Anamnesa Dokter'), m('td', i.soapDokter.anamnesa)),
@@ -82,11 +90,28 @@ _.assign(comp, {
                     m('th', _.get(lookReferences(j.idtindakan), 'nama')),
                     m('td', _.get(lookReferences(j.idtindakan), 'harga'))
                   )),
+                  // bhp sementara ini belum ditampilkan
                   i.soapDokter.obat &&
                   i.soapDokter.obat.map(j => j && m('tr',
                     m('th', _.get(lookGoods(j.idbarang), 'nama')),
                     m('td', j.harga)
                   )),
+                  i.soapDokter.planning && m('tr',
+                    m('th', 'Planning'),
+                    m('td', i.soapDokter.planning)
+                  ),
+                  i.soapDokter.keluar && m('tr',
+                    m('th', 'Pilihan keluar'),
+                    m('td', look('keluar', i.soapDokter.keluar))
+                  ),
+                  i.soapDokter.rujuk && m('tr',
+                    m('th', 'Konsul ke poli lain'),
+                    m('td', look('klinik', i.soapDokter.rujuk))
+                  ),
+                  i.soapDokter.tracer && m('tr',
+                    m('th', 'File Tracer'),
+                    m('td', i.soapDokter.tracer)
+                  ),
                   localStorage.openBeta && [
                     (i.soapDokter.radio || []).map((j, k) => m('tr',
                       m('th', 'Cek radiologi '+(k+1)),
