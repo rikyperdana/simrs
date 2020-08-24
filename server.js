@@ -10,7 +10,7 @@ app = express()
 .use(express.static(
   process.env.production ?
   'production' : 'development'
-)).listen(process.env.port || 3000)
+)).listen(process.env.PORT || 3000)
 
 mongoDB.MongoClient.connect(
   process.env.MONGO,
