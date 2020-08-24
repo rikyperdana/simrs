@@ -268,5 +268,12 @@ makePdf = {
         text: 'Hasil Diagnosa Radiologist',
         fontSize: 15, bold: true, alignment: 'center'
       }, '\n\n',
-    ]})
+      {table: {widths: ['auto', '*'], body: [
+        ['Nama uji laboratorium', 'Hasil'],
+        ...labors.map(i => [
+          _.get(lookReferences(i.idlabor), 'nama'),
+          i.hasil
+        ])
+      ]}}
+    ]}).download('hasil_labor'+identitas.no_mr)
 }

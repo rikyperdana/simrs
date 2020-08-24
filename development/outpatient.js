@@ -1,5 +1,8 @@
 /*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences reports makeIconLabel*/
 
+// TODO: di rincian kunjungan informasi soap perawat dan dokter belum lengkap seperti yg diisikan
+// TODO: sediakan tombol cetak radiologi per item, cetak labor keseluruhan
+
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
@@ -72,7 +75,7 @@ _.assign(comp, {
                 i.soapDokter && [
                   m('tr', m('th', 'Anamnesa Dokter'), m('td', i.soapDokter.anamnesa)),
                   _.map(i.soapDokter.diagnosa, (j, k) =>
-                    m('tr', m('th', 'Diagnosa '+k), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
+                    m('tr', m('th', 'Diagnosa '+(k+1)), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
                   ),
                   i.soapDokter.tindakan &&
                   i.soapDokter.tindakan.map(j => j && m('tr',
@@ -86,15 +89,15 @@ _.assign(comp, {
                   )),
                   localStorage.openBeta && [
                     (i.soapDokter.radio || []).map((j, k) => m('tr',
-                      m('th', 'Cek radiologi '+k),
+                      m('th', 'Cek radiologi '+(k+1)),
                       m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
                       j.diagnosa && m('td', m('.button.is-info', {
                         "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
                         onclick: () => makePdf.radio(state.onePatient.identitas, j)
-                      }, 'Cetak'))
+                      }, makeIconLabel('print', '')))
                     )),
                     (i.soapDokter.labor || []).map((j, k) => m('tr',
-                      m('th', 'Cek labor '+k),
+                      m('th', 'Cek labor '+(k+1)),
                       m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama),
                       m('td', j.hasil)
                     ))
@@ -122,6 +125,11 @@ _.assign(comp, {
                 m('.button.is-info',
                   {onclick: () => makePdf.soap(state.onePatient.identitas, i)},
                   makeIconLabel('print', 'Cetak SOAP')
+                ),
+                _.get(i.soapDokter, 'labor') && m('.button.is-info',
+                  {onclick: () => makePdf.labor(
+                    state.onePatient.identitas, i.soapDokter.labor
+                  )}, makeIconLabel('print', 'Cetak Labor')
                 )
               )
             )
