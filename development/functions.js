@@ -154,6 +154,75 @@ betaMenus = {
   gizi: {full: 'Gizi', icon: 'utensils'}
 },
 
+makeRincianSoapPerawat = soapPerawat => soapPerawat && [
+  m('tr', m('th', 'Anamnesa Perawat'), m('td', soapPerawat.anamnesa)),
+  withThis(
+    _.get(soapPerawat, 'fisik.tekanan_darah'),
+    tensi => m('tr',
+      m('th', 'Tekanan Darah'),
+      m('td', tensi.systolic+'/'+tensi.diastolic)
+    )
+  ),
+  ['nadi', 'suhu', 'pernapasan', 'tinggi', 'berat', 'lila']
+  .map(j => _.get(soapPerawat.fisik, j) && m('tr',
+    m('th', _.startCase(j)),
+    m('td', soapPerawat.fisik[j])
+  )),
+  soapPerawat.tracer && m('tr',
+    m('th', 'File Tracer'),
+    m('td', soapPerawat.tracer)
+  )
+],
+
+makeRincianSoapDokter = soapDokter => soapDokter && [
+  m('tr', m('th', 'Anamnesa Dokter'), m('td', soapDokter.anamnesa)),
+  _.map(soapDokter.diagnosa, (j, k) =>
+    m('tr', m('th', 'Diagnosa '+(k+1)), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
+  ),
+  soapDokter.tindakan &&
+  soapDokter.tindakan.map(j => j && m('tr',
+    m('th', _.get(lookReferences(j.idtindakan), 'nama')),
+    m('td', _.get(lookReferences(j.idtindakan), 'harga'))
+  )),
+  // bhp sementara ini belum ditampilkan
+  soapDokter.obat &&
+  soapDokter.obat.map(j => j && m('tr',
+    m('th', _.get(lookGoods(j.idbarang), 'nama')),
+    m('td', j.harga)
+  )),
+  soapDokter.planning && m('tr',
+    m('th', 'Planning'),
+    m('td', soapDokter.planning)
+  ),
+  soapDokter.keluar && m('tr',
+    m('th', 'Pilihan keluar'),
+    m('td', look('keluar', soapDokter.keluar))
+  ),
+  soapDokter.rujuk && m('tr',
+    m('th', 'Konsul ke poli lain'),
+    m('td', look('klinik', soapDokter.rujuk))
+  ),
+  soapDokter.tracer && m('tr',
+    m('th', 'File Tracer'),
+    m('td', soapDokter.tracer)
+  ),
+  localStorage.openBeta && [
+    (soapDokter.radio || []).map((j, k) => m('tr',
+      m('th', 'Cek radiologi '+(k+1)),
+      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
+      j.diagnosa && m('td', m('.button.is-info', {
+        "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
+        onclick: () => makePdf.radio(state.onePatient.identitas, j)
+      }, makeIconLabel('print', '')))
+    )),
+    (soapDokter.labor || []).map((j, k) => m('tr',
+      m('th', 'Cek labor '+(k+1)),
+      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama),
+      m('td', j.hasil)
+    ))
+  ]
+],
+
 db = new Dexie('simrs'),
 
 getDifference = name =>
