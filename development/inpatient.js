@@ -151,7 +151,6 @@ _.assign(comp, {
                           ).join(', ')
                         )),
                         j.planning && m('tr', m('th', 'Planning'), m('td', j.planning)),
-                        // TODO: tambahkan rincian labor & radio
                         localStorage.openBeta && [
                           // kalau radiologi dibuat per item
                           j.radio && j.radio.map(k => m('tr',

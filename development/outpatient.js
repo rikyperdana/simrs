@@ -133,7 +133,6 @@ _.assign(comp, {
             lookUser(_.get(i, 'soapPerawat.perawat')),
             lookUser(_.get(i, 'soapDokter.dokter'))
           ]),
-          // TODO: hilangkan tombol hapus bila semua sudah selesai
           ands([
             state.login.peranan === 4,
             !i.bayar_konsultasi
