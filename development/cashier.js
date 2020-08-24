@@ -81,21 +81,21 @@ _.assign(comp, {
                 ]) ? [
                   ...[ // daftar tindakan
                     ...(_.get(j, 'soapDokter.tindakan') || []),
-                    ...(j.observasi ? j.observasi.flatMap(k => k.tindakan) : [])
+                    ...(j.observasi ? j.observasi.flatMap(k => k.tindakan || []) : [])
                   ].map(k => k.idtindakan ? [
                     lookReferences(k.idtindakan).nama,
                     +lookReferences(k.idtindakan).harga
                   ] : []),
                   ...[ // daftar obat
                     ...(_.get(j, 'soapDokter.obat') || []),
-                    ...(j.observasi ? j.observasi.flatMap(k => k.obat) : [])
+                    ...(j.observasi ? j.observasi.flatMap(k => k.obat || []) : [])
                   ].map(k => k.idbarang ? [
                     state.goodsList.find(l => l._id === k.idbarang).nama,
-                    k.harga // harga yg sudah dihitungkan ke pasien
+                    k.harga // harga yg sudah dihitungkan logika apotik ke pasien
                   ] : []),
                   ...[ //daftar bhp terpakai saat rawatan
                     ...(_.get(j, 'soapDokter.bhp') || []),
-                    ...(j.observasi ? j.observasi.flatMap(k => k.bhp) : [])
+                    ...(j.observasi ? j.observasi.flatMap(k => k.bhp || []) : [])
                   ].map(k => k.idbarang ? withThis(
                     state.goodsList.find(l => l._id === k.idbarang),
                     barang => [
