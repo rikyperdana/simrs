@@ -24,11 +24,15 @@ _.assign(comp, {
         )
       },
       m('thead', m('tr',
-        ['No. MR', 'Nama Pasien', 'Tanggal admisi']
+        ['No. MR', 'Nama Pasien', 'Tanggal admisi', 'Sumber admisi', 'Dokter']
         .map(i => m('th', i))
       )),
       m('tbody', (state.admissionList || [])
-      .reverse().map(i => m('tr',
+      .sort((a, b) => withThis(
+        obj => _.get(obj.inap, 'tanggal'),
+        tanggal => tanggal(b) - tanggal(a)
+      ))
+      .map(i => m('tr',
         {ondblclick: () => [
           state.admissionModal = m('.box',
             m('h4', 'Inapkan pasien'),
@@ -62,7 +66,9 @@ _.assign(comp, {
         tds([
           i.pasien.identitas.no_mr,
           i.pasien.identitas.nama_lengkap,
-          hari(i.inap.tanggal)
+          hari(i.inap.tanggal, true),
+          _.get(i.inap, 'klinik') ? 'Rawat Jalan' : 'IGD',
+          lookUser(_.get(i.inap, 'soapDokter.dokter'))
         ])
       )))
     ),
@@ -70,6 +76,7 @@ _.assign(comp, {
     m('br'),
 
     m('h3', 'Daftar Pasien Menginap'),
+    m('p.help', '* Urut berdasarkan tanggal masuk terbaru'),
     m('table.table',
       {onupdate: () =>
         db.patients.toArray(array => [
@@ -81,12 +88,16 @@ _.assign(comp, {
         ]),
       },
       m('thead', m('tr',
-        ['No. MR', 'Nama Pasien', 'Kelas / Kamar / Nomor']
+        ['No. MR', 'Nama Pasien', 'Kelas / Kamar / Nomor', 'Tanggal Masuk']
         .map(i => m('th', i))
       )),
       m('tbody',
-        state.inpatientList &&
-        state.inpatientList.map(i => withThis(
+        state.inpatientList && state.inpatientList
+        .sort((a, b) => withThis(
+          obj => _.get(_.last(obj.rawatInap), 'tanggal_masuk'),
+          lastDate => lastDate(b) - lastDate(a)
+        ))
+        .map(i => withThis(
           _.get(_.last(i.rawatInap), 'bed'),
           bed => bed && m('tr',
             {ondblclick: () => _.assign(state, {
@@ -100,7 +111,8 @@ _.assign(comp, {
                 _.upperCase(bed.kelas),
                 _.startCase(bed.kamar),
                 bed.nomor
-              ].join(' / ')
+              ].join(' / '),
+              hari(_.get(_.last(i.rawatInap), 'tanggal_masuk'), true)
             ])
           )
         ))
