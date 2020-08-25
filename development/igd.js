@@ -14,14 +14,19 @@ _.assign(comp, {
     },
     state.login.peranan === 4 && reports.igd(),
     m('h3', 'Unit Gawat Darurat'),
+    m('p.help', '* Urutan terbaru diatas'),
     m('table.table',
       m('thead', m('tr',
-        ['No. MR', 'Nama Pasien']
+        ['No. MR', 'Nama Pasien', 'Jam Masuk']
         .map(i => m('th', i))
       )),
       m('tbody',
-        state.emergencyList &&
-        state.emergencyList.map(i => m('tr',
+        state.emergencyList && state.emergencyList
+        .sort((a, b) => withThis(
+          obj => _.get(_.last(obj.emergency), 'tanggal'),
+          getTanggal => getTanggal(b) - getTanggal(a)
+        ))
+        .map(i => m('tr',
           {ondblclick: () => [
             _.assign(state, {
               route: 'onePatient', onePatient: i, onePatientTab: 'emergency'
@@ -29,7 +34,8 @@ _.assign(comp, {
             m.redraw()
           ]},
           m('td', i.identitas.no_mr),
-          m('td', i.identitas.nama_lengkap)
+          m('td', i.identitas.nama_lengkap),
+          m('td', hari(_.get(_.last(i.emergency), 'tanggal'), true))
         ))
       )
     )

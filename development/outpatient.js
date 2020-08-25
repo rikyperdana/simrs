@@ -1,7 +1,5 @@
 /*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter*/
 
-// TODO: di rincian kunjungan informasi soap perawat dan dokter belum lengkap seperti yg diisikan
-
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
@@ -27,15 +25,15 @@ _.assign(comp, {
         },
         (state.clinicQueue || [])
         .sort((a, b) => withThis(
-          obj => _.last(obj.rawatJalan).tanggal,
-          lastDate => lastDate(a) - lastDate(b)
+          obj => _.get(_.last(obj.rawatJalan), 'tanggal'),
+          lastDate => lastDate(b) - lastDate(a)
         ))
         .map(i => m('tr',
           {ondblclick: () => _.assign(state, {
             route: 'onePatient', onePatient: i
           })},
           tds([
-            hari(_.last(i.rawatJalan).tanggal),
+            hari(_.get(_.last(i.rawatJalan), 'tanggal'), true),
             i.identitas.no_mr, i.identitas.nama_lengkap,
             hari(i.identitas.tanggal_lahir),
             i.identitas.tempat_lahir

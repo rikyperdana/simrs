@@ -1,6 +1,6 @@
-/*global _ m state*/
+/*global _ m state comp lookReferences makePdf withThis look lookGoods*/
 
-tds = array =>
+var tds = array =>
   array.map(i => m('td', i)),
 
 paginate = (array, name, length) => array.slice(
