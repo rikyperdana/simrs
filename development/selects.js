@@ -10,7 +10,7 @@ var selects = name => _.reduce(
     darah: ['a', 'b', 'ab', 'o'],
     pekerjaan: ['pns', 'swasta', 'wiraswasta', 'tni', 'polri', 'pensiunan', 'lainnya'],
     cara_bayar: ['umum', 'bpjs', 'asuransi'],
-    kodepoli:     ['int',            'ana',  'obg',   'bed',   'gig'],
+    kodepoli:     ['int',            'ana',  'obg',   'bed',   'gig'], // referensi INACBGs
     klinik:       ['penyakit_dalam', 'anak', 'obgyn', 'bedah', 'gigi', 'umum'],
     tarif_klinik: [ 95,               95,     95,      95,      95,     45],
     rujukan: ['datang_sendiri', 'rs_lain', 'puskesmas', 'faskes_lainnya'],
@@ -25,8 +25,8 @@ var selects = name => _.reduce(
     pengarsipan: ['Rumah Sakit', 'Pribadi']
   }, (res, inc, key) =>
     _.merge(res, {[key]: () => _.map(inc, (val, key) =>
-        ({label: _.startCase(val), value: key+1})
-      )})
+      ({label: _.startCase(val), value: key+1})
+    )})
   , {}
 )[name],
 
