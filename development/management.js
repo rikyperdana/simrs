@@ -102,8 +102,8 @@ _.assign(comp, {
                   _.merge(i, {_id: randomId(), updated: _.now()})
                 )
               ),
-              result.data[0].nama_lengkap && updater('patients',
-                result.data.map(i => _.merge(
+              result.data[0].nama_lengkap && updater(
+                'patients', result.data.map(i => _.merge(
                   {updated: _.now(), _id: randomId()},
                   {identitas: _.merge(
                     {
@@ -122,8 +122,8 @@ _.assign(comp, {
                   )}
                 ))
               ),
-              result.data[0].no_batch && updater('goods',
-                result.data.map(i => _.merge(
+              result.data[0].no_batch && updater(
+                'goods', result.data.map(i => _.merge(
                   {_id: randomId(), updated: _.now()},
                   {
                     nama: i.nama, jenis: +i.jenis, kandungan: i.kandungan,
