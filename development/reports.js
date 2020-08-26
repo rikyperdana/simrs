@@ -153,8 +153,8 @@ var reports = {
                 hari(rawat.tanggal),
                 pasien.identitas.no_mr.toString(),
                 pasien.identitas.nama_lengkap,
-                lookUser(rawat.soapPerawat.perawat),
-                lookUser(rawat.soapDokter.dokter)
+                lookUser(_.get(rawat, 'soapPerawat.perawat')),
+                lookUser(_.get(rawat, 'soapDokter.dokter'))
               ]
             )
           )
@@ -209,27 +209,26 @@ var reports = {
         'Kunjungan Poliklinik',
         [
           ['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter'],
+          // TODO: seharusnya diurut dulu berdasarkan tanggal
           ...array.flatMap(pasien =>
-            pasien.rawatJalan &&
-            pasien.rawatJalan.map(rawat =>
-              _.every([
-                rawat.soapDokter,
-                rawat.tanggal > date.start &&
-                rawat.tanggal < date.end
-              ]) && [
-                hari(rawat.tanggal),
-                look('klinik', rawat.klinik),
-                pasien.identitas.no_mr.toString(),
-                pasien.identitas.nama_lengkap,
-                lookUser(rawat.soapPerawat.perawat),
-                lookUser(rawat.soapDokter.dokter)
-              ]
-            )
-          )
-          .sort((a, b) => a.tanggal - b.tanggal)
-          .filter(Boolean)
+            (pasien.rawatJalan || [])
+            .map(i => ({pasien, rawat: i}))
+          ).filter(({pasien, rawat}) => ands([
+            rawat.soapDokter,
+            rawat.tanggal > date.start &&
+            rawat.tanggal < date.end
+          ]))
+          .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
+          .map(({pasien, rawat}) => [
+            hari(rawat.tanggal),
+            look('klinik', rawat.klinik),
+            pasien.identitas.no_mr.toString(),
+            pasien.identitas.nama_lengkap,
+            lookUser(_.get(rawat, 'soapPerawat.perawat')),
+            lookUser(_.get(rawat, 'soapDokter.dokter'))
+          ])
         ]
       ))
     ]
-  )),
+  ))
 }

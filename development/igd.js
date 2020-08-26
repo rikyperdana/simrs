@@ -12,7 +12,7 @@ _.assign(comp, {
         )
       )
     },
-    state.login.peranan === 4 && reports.igd(),
+    reports.igd(),
     m('h3', 'Unit Gawat Darurat'),
     m('p.help', '* Urutan terbaru diatas'),
     m('table.table',
