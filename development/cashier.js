@@ -2,6 +2,7 @@
 
 // TODO: pikirkan ulang tentang obj kasir dalam rawat
 // TODO: libatkan tagihan radio & labor di bayar konsultasi
+// TODO: antrian loket pembayaran seharusnya berurut tanggal
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -81,21 +82,35 @@ _.assign(comp, {
                 ]) ? [
                   ...[ // daftar tindakan
                     ...(_.get(j, 'soapDokter.tindakan') || []),
-                    ...(j.observasi ? j.observasi.flatMap(k => k.tindakan || []) : [])
+                    ...((j.observasi || []).flatMap(k => k.tindakan || []))
                   ].map(k => k.idtindakan ? [
                     lookReferences(k.idtindakan).nama,
                     +lookReferences(k.idtindakan).harga
                   ] : []),
+                  ...[ // daftar labor
+                    ...(_.get(j, 'soapDokter.labor') || []),
+                    ...((j.observasi || []).flatMap(k => k.labor || []))
+                  ].map(k => ands([k.idlabor, k.hasil]) ? [
+                    lookReferences(k.idlabor).nama,
+                    +lookReferences(k.idlabor).harga
+                  ] : []),
+                  ...[ // daftar radio
+                    ...(_.get(j, 'soapDokter.radio') || []),
+                    ...((j.observasi || []).flatMap(k => k.radio || []))
+                  ].map(k => ands([k.idradio, k.diagnosa]) ? [
+                    lookReferences(k.idradio).nama,
+                    +lookReferences(k.idradio).harga
+                  ] : []),
                   ...[ // daftar obat
                     ...(_.get(j, 'soapDokter.obat') || []),
-                    ...(j.observasi ? j.observasi.flatMap(k => k.obat || []) : [])
+                    ...((j.observasi || []).flatMap(k => k.obat || []))
                   ].map(k => k.idbarang ? [
                     state.goodsList.find(l => l._id === k.idbarang).nama,
                     k.harga // harga yg sudah dihitungkan logika apotik ke pasien
                   ] : []),
                   ...[ //daftar bhp terpakai saat rawatan
                     ...(_.get(j, 'soapDokter.bhp') || []),
-                    ...(j.observasi ? j.observasi.flatMap(k => k.bhp || []) : [])
+                    ...((j.observasi || []).flatMap(k => k.bhp || []))
                   ].map(k => k.idbarang ? withThis(
                     state.goodsList.find(l => l._id === k.idbarang),
                     barang => [

@@ -10,7 +10,7 @@ _.assign(comp, {
           [
             ...(i.rawatJalan || []), ...(i.emergency || []),
             ...(i.rawatInap ? i.rawatInap.flatMap(
-              j => j.observasi.map(k => ({soapDokter: k}))
+              j => (j.observasi || []).map(k => ({soapDokter: k}))
             ) : [])
           ].filter(j =>
             _.get(j, 'soapDokter.labor') &&

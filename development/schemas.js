@@ -169,7 +169,7 @@ var schemas = {
       type: Number, optional: true, label: 'Konsultasikan ke',
       autoform: { // hanya munculkan bila pilihan keluar 'rujuk'
         type: 'select',
-        help: 'Hanya diisi bila pilihan keluar adalah Rujuk ke Poliklinik lain',
+        help: 'Hanya diisi bila pilihan keluar adalah Konsultasikan ke Poliklinik lain',
         options: selects('klinik')
       }
     },

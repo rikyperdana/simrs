@@ -190,5 +190,6 @@ io().on('connect', socket => [
   io().on('datachange', (name, doc) => [
     db[name].put(doc), state.lastSync = _.now()
   ]),
+  // jika koneksi sempat terputus, langsung reload halaman
   io().on('disconnect', () => location.reload())
 ])

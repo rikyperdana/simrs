@@ -14,7 +14,7 @@ var selects = name => _.reduce(
     klinik:       ['penyakit_dalam', 'anak', 'obgyn', 'bedah', 'gigi', 'umum'],
     tarif_klinik: [ 95,               95,     95,      95,      95,     45],
     rujukan: ['datang_sendiri', 'rs_lain', 'puskesmas', 'faskes_lainnya'],
-    keluar: ['pulang', 'rujuk', 'inap'],
+    keluar: ['pulang', 'konsultasikan_ke_poli_lain', 'inap'],
     jenis_barang: ['Obat', 'BHP', 'Logistik'],
     satuan: ['botol', 'vial', 'ampul', 'pcs', 'sachet', 'tube', 'supp', 'tablet', 'minidose', 'pot', 'turbuhaler', 'kaplet', 'kapsul', 'bag', 'pen', 'rectal', 'flash', 'cream', 'nebu', 'galon', 'lembar', 'roll', 'liter', 'cup', 'pasang', 'bungkus', 'box', 'syringe'],
     boolean: ['ya', 'tidak'],
