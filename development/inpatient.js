@@ -10,7 +10,7 @@ _.assign(comp, {
         db.patients.toArray(array =>
           state.admissionList = _.compact(array.flatMap(i =>
             // permintaan rawat inap bisa dari rawat jalan maupun IGD
-            ([]).concat(i.rawatJalan || [], i.emergency || [])
+            [...(i.rawatJalan || []), ...(i.emergency || [])]
             .flatMap(j => ands([
               // cari pasien yang ditunjuk dokter untuk diinapkan
               _.get(j, 'soapDokter.keluar') === 3,
@@ -50,14 +50,15 @@ _.assign(comp, {
               id: 'formBed', schema: schemas.beds,
               action: doc => [
                 updateBoth(
-                  'patients', i.pasien._id, _.assign(i.pasien, {
-                    rawatInap: (i.pasien.rawatInap || []).concat([{
+                  'patients', i.pasien._id, _.assign(i.pasien, {rawatInap: [
+                    ...(i.pasien.rawatInap || []),
+                    {
                       // buatkan record rawatInap dengan observasi kosong
                       tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
                       observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
                       cara_bayar: i.inap.cara_bayar, bed: doc
-                    }])
-                  })
+                    }
+                  ]})
                 ),
                 _.assign(state, {admissionList: null, admissionModal: null}),
                 m.redraw()

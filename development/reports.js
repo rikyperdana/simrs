@@ -13,20 +13,20 @@ var reports = {
         e.preventDefault(),
         db.patients.toArray(array => makePdf.report(
           'Penerimaan Kasir',
-          [['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Tarif', 'Obat', 'Tindakan', 'Tambahan', 'Jumlah', 'Kasir']]
-          .concat(
-            _.flattenDeep(array.map(
-              i => ([]).concat(
-                i.rawatJalan || [],
-                i.emergency || [],
-                i.rawatInap ? i.rawatInap.map(
+          [
+            ['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Tarif', 'Obat', 'Tindakan', 'Tambahan', 'Jumlah', 'Kasir'],
+            ..._.flattenDeep(array.map(
+              i => [
+                ...(i.rawatJalan || []),
+                ...(i.emergency || []),
+                ...(i.rawatInap ? i.rawatInap.map(
                   j => _.assign(j, {soapDokter: {
-                    obat: j.observasi.flatMap(k => k.obat),
-                    bhp: j.observasi.flatMap(k => k.bhp),
-                    tindakan: j.observasi.flatMap(k => k.tindakan)
+                    obat: (j.observasi || []).flatMap(k => k.obat),
+                    bhp: (j.observasi || []).flatMap(k => k.bhp),
+                    tindakan: (j.observasi || []).flatMap(k => k.tindakan)
                   }})
-                ) : []
-              ).map(j => ands([
+                ) : [])
+              ].map(j => ands([
                 j.cara_bayar === +obj.selection,
                 (j.tanggal || j.tanggal_masuk) > obj.start,
                 (j.tanggal || j.tanggal_masuk) < obj.end,
@@ -88,7 +88,7 @@ var reports = {
               ])),
               lookUser(i.rawat.kasir)
             ])
-          ),
+          ],
           'Cara Bayar: '+look('cara_bayar', +obj.selection)
         ))
       ]
@@ -102,18 +102,22 @@ var reports = {
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
         'Laporan Pengeluaran Obat',
-        [['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Dokter', 'Nama Obat', 'Jumlah']]
-        .concat(array.flatMap(pasien =>
-          _.compact(([]).concat(
-            pasien.rawatJalan || [],
-            pasien.emergency || [],
-            (pasien.rawatInap || []).flatMap(i =>
-              i.observasi && i.observasi
-              .filter(j => j.soapDokter)
-            )
-          ).flatMap(rawat =>
+        [
+          ['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Dokter', 'Nama Obat', 'Jumlah', 'Harga'],
+          // TODO: tambahkan kolom apoteker dan cara_bayar
+          ...array.flatMap(pasien =>
+            [
+              ...(pasien.rawatJalan || []),
+              ...(pasien.emergency || []),
+              ...((pasien.rawatInap || []).flatMap(i =>
+                (i.observasi || []).filter(j => j.soapDokter)
+              ))
+            ].map(i => ({pasien, rawat: i}))
+          )
+          .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
+          .flatMap(({pasien, rawat}) =>
             _.get(rawat, 'soapDokter.obat') &&
-            rawat.soapDokter.obat.map(i => [
+            rawat.soapDokter.obat.map(i => i.harga && [
               hari(rawat.tanggal),
               pasien.identitas.no_mr,
               pasien.identitas.nama_lengkap,
@@ -124,10 +128,10 @@ var reports = {
               ]),
               lookUser(rawat.soapDokter.dokter),
               lookGoods(i.idbarang).nama,
-              i.jumlah
-            ])
-          ))
-        ))
+              i.jumlah, rupiah(i.harga)
+            ]).filter(Boolean)
+          ).filter(Boolean).filter(i => i.length)
+        ]
       ))
     ]
   )),
@@ -137,9 +141,9 @@ var reports = {
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
         'Kunjungan IGD',
-        [['Tanggal', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter']]
-        .concat(
-          array.flatMap(pasien =>
+        [
+          ['Tanggal', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter'],
+          ...array.flatMap(pasien =>
             pasien.rawatJalan &&
             pasien.rawatJalan.map(rawat =>
               _.every([
@@ -156,7 +160,7 @@ var reports = {
           )
           .sort((a, b) => a.tanggal - b.tanggal)
           .filter(i => i)
-        )
+        ]
       ))
     ]
   )),
@@ -166,9 +170,9 @@ var reports = {
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
         'Kunjungan Rawat Inap',
-        [['Tanggal', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter']]
-        .concat(_.compact(
-          array.flatMap(pasien =>
+        [
+          ['Tanggal', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter'],
+          ...array.flatMap(pasien =>
             pasien.rawatInap &&
             pasien.rawatInap.map(rawat =>
               _.every([
@@ -187,8 +191,10 @@ var reports = {
                 ).join(', ')
               ]
             )
-          ).sort((a, b) => a.tanggal - b.tanggal)
-        ))
+          )
+          .sort((a, b) => a.tanggal - b.tanggal)
+          .filter(Boolean)
+        ]
       ))
     ]
   )),
@@ -201,9 +207,9 @@ var reports = {
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
         'Kunjungan Poliklinik',
-        [['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter']]
-        .concat(_.compact(
-          array.flatMap(pasien =>
+        [
+          ['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter'],
+          ...array.flatMap(pasien =>
             pasien.rawatJalan &&
             pasien.rawatJalan.map(rawat =>
               _.every([
@@ -219,8 +225,10 @@ var reports = {
                 lookUser(rawat.soapDokter.dokter)
               ]
             )
-          ).sort((a, b) => a.tanggal - b.tanggal)
-        ))
+          )
+          .sort((a, b) => a.tanggal - b.tanggal)
+          .filter(Boolean)
+        ]
       ))
     ]
   )),

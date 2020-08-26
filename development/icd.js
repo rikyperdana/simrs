@@ -13,19 +13,18 @@ _.assign(comp, {
         {onupdate: () => [
           db.patients.toArray(array =>
             state.codifications = _.compact(array.flatMap(a =>
-              ([]).concat(
-                a.rawatJalan || [], a.emergency || [],
-                a.rawatInap ? a.rawatInap.flatMap(b =>
+              [
+                ...(a.rawatJalan || []), ...(a.emergency || []),
+                ...(a.rawatInap ? a.rawatInap.flatMap(b =>
                   b.observasi ? b.observasi.map(c =>
                     c.dokter && {idinap: b.idinap, soapDokter: c}
                   ) : []
-                ) : []
-              ).flatMap(b =>
-                ([]).concat(
-                  _.get(b, 'soapDokter.diagnosa') || [],
-                  _.get(b, 'soapDokter.tindakan') || []
-                ).filter(c => !c.code).length &&
-                _.merge({}, a, b)
+                ) : [])
+              ].flatMap(b =>
+                [
+                  ...(_.get(b, 'soapDokter.diagnosa') || []),
+                  ...(_.get(b, 'soapDokter.tindakan') || [])
+                ].filter(c => !c.code).length && _.merge({}, a, b)
               )
             ))
           ),

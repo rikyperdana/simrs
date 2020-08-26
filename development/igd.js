@@ -126,7 +126,7 @@ _.assign(comp, {
       action: doc => [
         updateBoth('patients', state.onePatient._id, _.assign(
           state.onePatient, {emergency:
-            (_.get(state, 'onePatient.emergency') || []).concat([doc])
+            [...(_.get(state, 'onePatient.emergency') || []), doc]
           }
         )),
         state.route = 'onePatient',

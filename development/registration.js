@@ -94,11 +94,12 @@ _.assign(comp, {
           j.tanggal > startOfTheDay(+moment())
         ])).length
       ).toArray(array => [
-        updateBoth('patients', state.onePatient._id, _.assign(state.onePatient, {
-          rawatJalan: (state.onePatient.rawatJalan || []).concat([
+        updateBoth('patients', state.onePatient._id, _.assign(
+          state.onePatient, {rawatJalan: [
+            ...(state.onePatient.rawatJalan),
             _.merge(doc, {antrian: array.length+1})
-          ])
-        })),
+          ]}
+        )),
         doc.no_antrian && db.queue.toArray(arr => withThis(
           arr.find(i => i.no_antrian === doc.no_antrian),
           obj => updateBoth('queue', obj._id, _.merge(obj, {done: true}))
