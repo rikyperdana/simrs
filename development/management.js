@@ -122,7 +122,7 @@ _.assign(comp, {
                   )}
                 ))
               ),
-              result.data[0].no_batch && console.log(
+              result.data[0].no_batch && updater(
                 'goods', result.data.map(i => _.merge(
                   {_id: randomId(), updated: _.now()},
                   {
