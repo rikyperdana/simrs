@@ -122,11 +122,11 @@ _.assign(comp, {
                   )}
                 ))
               ),
-              result.data[0].no_batch && updater(
+              result.data[0].no_batch && console.log(
                 'goods', result.data.map(i => _.merge(
                   {_id: randomId(), updated: _.now()},
                   {
-                    nama: i.nama, jenis: +i.jenis, kandungan: i.kandungan,
+                    nama: i.nama_barang, jenis: +i.jenis, kandungan: i.kandungan,
                     satuan: +i.satuan, kriteria: {
                       antibiotik: +i.antibiotik, narkotika: +i.narkotika,
                       psikotropika: +i.psikotropika, fornas: +i.fornas
@@ -143,7 +143,14 @@ _.assign(comp, {
                       }
                     }]
                   }
-                ))
+                )).reduce((acc, inc) => withThis(
+                  acc.find(j => j.nama === inc.nama),
+                  found => found ? acc.map(j =>
+                    j.nama === inc.nama ? _.assign(j, {
+                      batches: [...j.batches, ...inc.batches]
+                    }) : j
+                  ) : [...acc, inc]
+                ), [])
               )
             ])
           )
