@@ -53,8 +53,7 @@ _.assign(comp, {
                   db.goods.get(i.idbarang, barang => [
                     updateBoth('goods', i.idbarang, _.assign(barang, {batch:
                       barang.batch.map(a =>
-                        a.idbatch === i.idbatch ?
-                        _.assign(a, {
+                        a.idbatch === i.idbatch ? _.assign(a, {
                           stok: {
                             gudang: a.stok.gudang - doc.diserah,
                             apotik:
@@ -63,8 +62,8 @@ _.assign(comp, {
                               : a.stok.apotik
                           },
                           amprah: a.amprah.map(b =>
-                            b.idamprah === i.idamprah
-                            ? _.assign(b, doc) : b
+                            b.idamprah === i.idamprah ?
+                            _.assign(b, doc) : b
                           )
                         }) : a
                       )
@@ -91,8 +90,8 @@ _.assign(comp, {
         ['Nama barang', 'No. Batch', 'Peminta', 'Jumlah minta', 'Tanggal diminta', 'Penyerah', 'Jumlah serah', 'Tanggal serah']
         .map(i => m('th', i))
       )),
-      m('tbody', state.transferList &&
-        state.transferList
+      m('tbody',
+        paginate(state.transferList || [], 'transferList', 100)
         .sort((a, b) => b.tanggal_serah - a.tanggal_serah)
         .map(i => m('tr',
           i.penyerah && tds([
@@ -102,6 +101,10 @@ _.assign(comp, {
           ])
         ))
       )
-    )
+    ),
+    m('div',comp.pagination(
+      'transferList',
+      _.get(state, 'transferList.length') / 100
+    )),
   )
 })

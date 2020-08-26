@@ -15,18 +15,16 @@ _.assign(comp, {
           db.patients.toArray(array => [
             state.pharmacyList = _.compact(
               array.flatMap(a =>
-                ([]).concat(
-                  a.rawatJalan ? a.rawatJalan : [],
-                  a.emergency ? a.emergency: [],
+                [
+                  ...(a.rawatJalan || []),
+                  ...(a.emergency || []),
                   // untuk inap, serahkan obat per kali observasi
-                  a.rawatInap ? _.compact(
-                    a.rawatInap.flatMap(i =>
-                      i.observasi && i.observasi.flatMap(j =>
-                        _.assign({}, j, i, {soapDokter: {obat: j.obat}})
-                      )
+                  ...(a.rawatInap ? _.compact(a.rawatInap.flatMap(i =>
+                    i.observasi && i.observasi.flatMap(j =>
+                      _.assign({}, j, i, {soapDokter: {obat: j.obat}})
                     )
-                  ) : []
-                ).flatMap(b => withThis(
+                  )) : [])
+                ].flatMap(b => withThis(
                   ands([
                     !_.get(b, 'soapDokter.batal') ? true
                     : !_.includes(b.soapDokter.batal, 'obat'),

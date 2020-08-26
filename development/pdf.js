@@ -144,73 +144,72 @@ makePdf = {
         ]}},
         _.get(rawat, 'soapDokter.diagnosa') && [
           {text: '\nDiagnosa', alignment: 'center'},
-          {table: {widths: ['*', 'auto'], body:
-            [['Teks', 'ICD10']].concat(
-              _.get(rawat, 'soapDokter.diagnosa')
-              .map(i => [i.text, i.code || '-'])
-            )
-          }},
+          {table: {widths: ['*', 'auto'], body: [
+            ['Teks', 'ICD10'],
+            _.get(rawat, 'soapDokter.diagnosa')
+            .map(i => [i.text, i.code || '-'])
+          ]}}
         ],
         _.get(rawat, 'soapDokter.tindakan') && [
           {text: '\nTindakan', alignment: 'center'},
-          {table: {widths: ['*', 'auto'], body: ([]).concat(
-            [['Nama Tindakan', 'ICD9-CM']],
-            _.get(rawat, 'soapDokter.tindakan').map(i =>
+          {table: {widths: ['*', 'auto'], body: [
+            ['Nama Tindakan', 'ICD9-CM'],
+            ..._.get(rawat, 'soapDokter.tindakan').map(i =>
               [lookReferences(i.idtindakan).nama, i.code || '-']
             )
-          )}},
+          ]}}
         ],
         _.get(rawat, 'soapDokter.obat') && [
           {text: '\nObat', alignment: 'center'},
-          {table: {widths: ['*', 'auto', 'auto'], body: ([]).concat(
-            [['Nama obat', 'Jumlah', 'Puyer']],
-            _.get(rawat, 'soapDokter.obat').map(i => [
+          {table: {widths: ['*', 'auto', 'auto'], body: [
+            ['Nama obat', 'Jumlah', 'Puyer'],
+            ..._.get(rawat, 'soapDokter.obat').map(i => [
               _.get(lookGoods(i.idbarang), 'nama'),
               i.jumlah, i.puyer || '-'
             ])
-          )}}
+          ]}}
         ],
         localStorage.openBeta &&
         _.get(rawat, 'soapDokter.radio') && [
           {text: '\nObat', alignment: 'center'},
-          {table: {widths: ['*', 'auto', 'auto'], body: ([]).concat(
-            [['Radiologi', 'No. Berkas', 'Diagnosa']],
-            _.get(rawat, 'soapDokter.radio').map(i => [
+          {table: {widths: ['*', 'auto', 'auto'], body: [
+            ['Radiologi', 'No. Berkas', 'Diagnosa'],
+            ..._.get(rawat, 'soapDokter.radio').map(i => [
               lookReferences(i.idradio).nama,
               i.kode_berkas, i.diagnosa
             ])
-          )}}
+          ]}}
         ],
         localStorage.openBeta &&
         _.get(rawat, 'soapDokter.labor') && [
           {text: '\nObat', alignment: 'center'},
-          {table: {widths: ['*', 'auto'], body: ([]).concat(
-            [['Laboratorium', 'Diagnosa']],
-            _.get(rawat, 'soapDokter.labor').map(i => [
+          {table: {widths: ['*', 'auto'], body: [
+            ['Laboratorium', 'Diagnosa'],
+            ..._.get(rawat, 'soapDokter.labor').map(i => [
               lookReferences(i.labor).nama,
               i.hasil
             ])
-          )}}
+          ]}}
         ]
       ]
     ]}).download('soap_'+identitas.no_mr),
-  
+
   resep: (drugs, no_mr) =>
     pdfMake.createPdf({content: [
       kop,
       {text: 'Salinan Resep\n\n', alignment: 'center', bold: true},
       {table: {
         widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: ([]).concat(
-          [['Nama Obat', 'Jumlah', 'Kali', 'Dosis', 'Puyer', 'Harga']],
-          [...drugs].map(i => [
+        body: [
+          ['Nama Obat', 'Jumlah', 'Kali', 'Dosis', 'Puyer', 'Harga'],
+          ...[...drugs].map(i => [
             i.nama_barang, i.serahkan+' unit',
             _.get(i, 'aturan.kali') || '-',
             _.get(i, 'aturan.dosis') || '-',
             i.puyer || '-', rupiah(i.harga || i.jual)
           ]),
-          [['Total', '', '', '', '', rupiah(_.sum(drugs.map(i => i.harga || i.jual)))]]
-        )
+          ['Total', '', '', '', '', rupiah(_.sum(drugs.map(i => i.harga || i.jual)))]
+        ]
       }},
       {alignment: 'justify', columns: [
         {text: '', alignment: 'center'},
@@ -218,10 +217,10 @@ makePdf = {
       ]},
       {text: '\n\n-------------------------------------potong disini------------------------------------------', alignment: 'center'},
       {text: '\nInstruksi penyerahan obat'},
-      {table: {body: ([]).concat(
-        [['Nama Barang', 'No. Batch', 'Jumlah']],
-        drugs.map(i => [i.nama_barang, i.no_batch, i.serahkan])
-      )}}
+      {table: {body: [
+        ['Nama Barang', 'No. Batch', 'Jumlah'],
+        ...drugs.map(i => [i.nama_barang, i.no_batch, i.serahkan])
+      ]}}
     ]}).download('salinan_resep_'+no_mr),
 
   report: (title, rows, info) =>

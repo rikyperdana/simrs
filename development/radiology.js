@@ -51,8 +51,7 @@ _.assign(comp, {
         .map(i => m('th', i))
       )),
       m('tbody',
-        state.radiologyList &&
-        state.radiologyList.map(i => m('tr',
+        (state.radiologyList || []).map(i => m('tr',
           // form untuk petugas radiologi merespon request
           {ondblclick: () => state.modalRadiologi = m('.box',
             m('h3', 'Form Radiologi'),
@@ -123,7 +122,7 @@ _.assign(comp, {
             ]),
             ors([
               i.inap && lookUser(_.get(i, 'observasi.dokter')),
-              lookUser(_.get(i, 'rawat.soapDokter.dokter')),  
+              lookUser(_.get(i, 'rawat.soapDokter.dokter')),
             ]),
             _.startCase(i.radio.grup),
             lookReferences(i.radio.idradio).nama,

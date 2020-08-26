@@ -235,8 +235,8 @@ _.assign(comp, {
                       _.assign(state.oneGood, {batch:
                         state.oneGood.batch.map(j =>
                           j.idbatch === state.oneBatch.idbatch ?
-                          _.assign(state.oneBatch, {amprah:
-                            (state.oneBatch.amprah || []).concat([doc])
+                          _.assign(state.oneBatch, {
+                            amprah: [...(state.oneBatch.amprah || []), doc]
                           }) : j
                         )
                       })
@@ -262,7 +262,7 @@ _.assign(comp, {
       confirmMessage: 'Yakin untuk menambahkan batch obat ini?',
       action: doc => [
         updateBoth('goods', state.oneGood._id, _.assign(state.oneGood, {
-          batch: (state.oneGood.batch || []).concat([doc])
+          batch: [...(state.oneGood.batch | []), doc]
         })), state.route = 'oneGood'
       ]
     }))

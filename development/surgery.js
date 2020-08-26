@@ -9,7 +9,7 @@ _.assign(comp, {
           db.references.toArray(array => state.references = array),
         onupdate: () =>
           db.patients.toArray(array => state.surgeryList = array.map(i =>
-            ([]).concat(i.rawatJalan, i.emergency).flatMap(j =>
+            [...(i.rawatJalan || []), ...(i.emergency || [])].flatMap(j =>
               j && j.soapDokter && j.soapDokter.tindakan &&
               j.soapDokter.tindakan.map(k =>
                 (k.jadwal > +moment()) && _.merge(i, j, k)

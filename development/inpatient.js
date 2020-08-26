@@ -3,14 +3,14 @@
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-    state.login.peranan === 4 && reports.inpatient(),
+    reports.inpatient(),
     m('h3', 'Daftar Admisi Rawat Inap'),
     m('table.table',
       {onupdate: () =>
         db.patients.toArray(array =>
           state.admissionList = _.compact(array.flatMap(i =>
             // permintaan rawat inap bisa dari rawat jalan maupun IGD
-            ([]).concat(i.rawatJalan || [], i.emergency || [])
+            [...(i.rawatJalan || []), ...(i.emergency || [])]
             .flatMap(j => ands([
               // cari pasien yang ditunjuk dokter untuk diinapkan
               _.get(j, 'soapDokter.keluar') === 3,
@@ -27,11 +27,13 @@ _.assign(comp, {
         ['No. MR', 'Nama Pasien', 'Tanggal admisi', 'Sumber admisi', 'Dokter']
         .map(i => m('th', i))
       )),
-      m('tbody', (state.admissionList || [])
-      .sort((a, b) => withThis(
-        obj => _.get(obj.inap, 'tanggal'),
-        tanggal => tanggal(b) - tanggal(a)
-      ))
+      m('tbody',
+        (state.admissionList || [])
+        .sort((a, b) => withThis(
+          obj => _.get(obj.inap, 'tanggal'),
+          tanggal => tanggal(b) - tanggal(a)
+        )
+      )
       .map(i => m('tr',
         {ondblclick: () => [
           state.admissionModal = m('.box',
@@ -48,14 +50,15 @@ _.assign(comp, {
               id: 'formBed', schema: schemas.beds,
               action: doc => [
                 updateBoth(
-                  'patients', i.pasien._id, _.assign(i.pasien, {
-                    rawatInap: (i.pasien.rawatInap || []).concat([{
+                  'patients', i.pasien._id, _.assign(i.pasien, {rawatInap: [
+                    ...(i.pasien.rawatInap || []),
+                    {
                       // buatkan record rawatInap dengan observasi kosong
                       tanggal_masuk: _.now(), dokter: i.inap.soapDokter.dokter,
                       observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
                       cara_bayar: i.inap.cara_bayar, bed: doc
-                    }])
-                  })
+                    }
+                  ]})
                 ),
                 _.assign(state, {admissionList: null, admissionModal: null}),
                 m.redraw()
@@ -92,7 +95,7 @@ _.assign(comp, {
         .map(i => m('th', i))
       )),
       m('tbody',
-        state.inpatientList && state.inpatientList
+        (state.inpatientList || [])
         .sort((a, b) => withThis(
           obj => _.get(_.last(obj.rawatInap), 'tanggal_masuk'),
           lastDate => lastDate(b) - lastDate(a)

@@ -1,6 +1,7 @@
 /*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
 // TODO: pikirkan ulang tentang obj kasir dalam rawat
+// TODO: libatkan tagihan radio & labor di bayar konsultasi
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -15,11 +16,11 @@ _.assign(comp, {
       m('tbody',
         {onupdate: () => [
           db.patients.filter(i =>
-            ([]).concat(
-              i.rawatJalan ? i.rawatJalan : [],
-              i.emergency ? i.emergency: [],
-              i.rawatInap ? i.rawatInap: []
-            ).filter(j =>
+            [
+              ...(i.rawatJalan || []),
+              ...(i.emergency || []),
+              ...(i.rawatInap || [])
+            ].filter(j =>
               // cari pasien yang masih berhutang biaya
               j.cara_bayar === 1 && ors([
                 // yang belum bayar pendaftaran klinik
@@ -34,13 +35,12 @@ _.assign(comp, {
           db.references.toArray(array => state.references = array),
           db.goods.toArray(array => state.goodsList = array)
         ]},
-        state.cashierList &&
-        state.cashierList.map(i =>
-          ([]).concat(
-            i.rawatJalan ? i.rawatJalan : [],
-            i.emergency ? i.emergency: [],
-            i.rawatInap ? i.rawatInap : []
-          ).map(j => ors([
+        (state.cashierList || []).map(i =>
+          [
+            ...(i.rawatJalan || []),
+            ...(i.emergency || []),
+            ...(i.rawatInap || [])
+          ].map(j => ors([
             j.cara_bayar === 1 && ors([
               // samakan dengan logika filter diatas
               j.klinik && !j.bayar_pendaftaran,

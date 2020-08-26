@@ -72,8 +72,7 @@ _.assign(comp, {
         .map(i => m('th', i))
       )),
       m('tbody',
-        state.referenceList &&
-        paginate(state.referenceList, 'references', 20)
+        paginate(state.referenceList || [], 'references', 20)
         .map(i => i.nama && m('tr', tds([
           i.nama, rupiah(i.harga), i[0], i[1], i[2]
         ])))

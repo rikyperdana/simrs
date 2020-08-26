@@ -12,7 +12,7 @@ _.assign(comp, {
         )
       )
     },
-    state.login.peranan === 4 && reports.igd(),
+    reports.igd(),
     m('h3', 'Unit Gawat Darurat'),
     m('p.help', '* Urutan terbaru diatas'),
     m('table.table',
@@ -126,7 +126,7 @@ _.assign(comp, {
       action: doc => [
         updateBoth('patients', state.onePatient._id, _.assign(
           state.onePatient, {emergency:
-            (_.get(state, 'onePatient.emergency') || []).concat([doc])
+            [...(_.get(state, 'onePatient.emergency') || []), doc]
           }
         )),
         state.route = 'onePatient',
