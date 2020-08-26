@@ -27,11 +27,13 @@ _.assign(comp, {
         ['No. MR', 'Nama Pasien', 'Tanggal admisi', 'Sumber admisi', 'Dokter']
         .map(i => m('th', i))
       )),
-      m('tbody', (state.admissionList || [])
-      .sort((a, b) => withThis(
-        obj => _.get(obj.inap, 'tanggal'),
-        tanggal => tanggal(b) - tanggal(a)
-      ))
+      m('tbody',
+        (state.admissionList || [])
+        .sort((a, b) => withThis(
+          obj => _.get(obj.inap, 'tanggal'),
+          tanggal => tanggal(b) - tanggal(a)
+        )
+      )
       .map(i => m('tr',
         {ondblclick: () => [
           state.admissionModal = m('.box',
@@ -92,7 +94,7 @@ _.assign(comp, {
         .map(i => m('th', i))
       )),
       m('tbody',
-        state.inpatientList && state.inpatientList
+        (state.inpatientList || [])
         .sort((a, b) => withThis(
           obj => _.get(_.last(obj.rawatInap), 'tanggal_masuk'),
           lastDate => lastDate(b) - lastDate(a)

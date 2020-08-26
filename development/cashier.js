@@ -34,8 +34,7 @@ _.assign(comp, {
           db.references.toArray(array => state.references = array),
           db.goods.toArray(array => state.goodsList = array)
         ]},
-        state.cashierList &&
-        state.cashierList.map(i =>
+        (state.cashierList || []).map(i =>
           ([]).concat(
             i.rawatJalan ? i.rawatJalan : [],
             i.emergency ? i.emergency: [],

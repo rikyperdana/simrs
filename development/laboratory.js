@@ -84,11 +84,11 @@ _.assign(comp, {
       schema: _.merge({},
         schemas.responLaboratory,
         // cek apakah salah satu item labor sudah dikonfirmasi
-        state.responLaboratory.labor.filter(i => i.konfirmasi).length ?
+        state.responLaboratory.labor.filter(i => i.konfirmasi).length
         // jika salah satu sudah dikonfirmasi maka buka form isian hasil
-        {'labor.$.hasil': {type: String}} :
+        ? {'labor.$.hasil': {type: String}}
         // jika belum ada yg dikonfirmasi pada array labor, konfirmasi dulu
-        {'labor.$.konfirmasi': {
+        : {'labor.$.konfirmasi': {
           type: Number, autoform: {
             type: 'select', options: selects('konfirmasi')
           }
