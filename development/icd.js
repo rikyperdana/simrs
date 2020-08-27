@@ -16,15 +16,16 @@ _.assign(comp, {
               [
                 ...(a.rawatJalan || []), ...(a.emergency || []),
                 ...(a.rawatInap ? a.rawatInap.flatMap(b =>
-                  b.observasi ? b.observasi.map(c =>
-                    c.dokter && {idinap: b.idinap, soapDokter: c}
-                  ) : []
+                  b.observasi ? b.observasi.map(c => c.dokter && {
+                    idinap: b.idinap, soapDokter: c, tanggal: b.tanggal_masuk
+                  }) : []
                 ) : [])
               ].flatMap(b =>
                 [
                   ...(_.get(b, 'soapDokter.diagnosa') || []),
                   ...(_.get(b, 'soapDokter.tindakan') || [])
-                ].filter(c => !c.code).length && _.merge({}, a, b)
+                ].filter(c => !c.code).length &&
+                {pasien: a, rawat: b}
               )
             ))
           ),
@@ -32,35 +33,37 @@ _.assign(comp, {
             state.references = array
           )
         ]},
-        (state.codifications || []).map(a => m('tr',
-          m('td', a.identitas.nama_lengkap), m('td', hari(a.tanggal)),
+        (state.codifications || [])
+        .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
+        .map(({pasien, rawat}) => m('tr',
+          m('td', pasien.identitas.nama_lengkap),
+          m('td', hari(rawat.tanggal)),
           m('td', ors([
-            a.klinik && look('klinik', a.klinik),
-            a.idrawat && 'IGD', 'Rawat Inap'
+            rawat.klinik && look('klinik', rawat.klinik),
+            rawat.idrawat && 'IGD', 'Rawat Inap'
           ])),
           m('td',
-            lookUser(_.get(a, 'soapPerawat.perawat'))),
-            m('td', lookUser(a.soapDokter.dokter)
+            lookUser(_.get(rawat, 'soapPerawat.perawat'))),
+            m('td', lookUser(rawat.soapDokter.dokter)
           ),
           m('td', m('.button',
             {onclick: () =>
               state.modalICD10 = m('.box',
                 m('h4', 'Form kodifikasi diagnosa ICD10'),
                 m('form',
-                  {onsubmit: e => withThis(
-                    a.idrawat && a.klinik ? 'rawatJalan' : 'emergency',
+                  {onsubmit: e => confirm('Yakin dengan ICD ini?') && withThis(
+                    rawat.idrawat && rawat.klinik ? 'rawatJalan' : 'emergency',
                     facility => [
                       e.preventDefault(),
-                      a.idrawat ?
-                      updateBoth(
-                        'patients', a._id,
+                      rawat.idrawat ? updateBoth(
+                        'patients', pasien._id,
                         _.assign({
-                          _id: a._id, identitas: a.identitas,
-                          rawatJalan: a.rawatJalan || [],
-                          emergency: a.emergency || [],
-                          rawatInap: a.rawatInap || []
-                        }, {[facility]: a[facility].map(b =>
-                          b.idrawat === a.idrawat ? _.assign(b, {soapDokter: _.assign(
+                          _id: pasien._id, identitas: pasien.identitas,
+                          rawatJalan: pasien.rawatJalan || [],
+                          emergency: pasien.emergency || [],
+                          rawatInap: pasien.rawatInap || []
+                        }, {[facility]: pasien[facility].map(b =>
+                          b.idrawat === rawat.idrawat ? _.assign(b, {soapDokter: _.assign(
                             b.soapDokter, {diagnosa: b.soapDokter.diagnosa.map((c, d) =>
                               ({text: c.text, code: _.compact(_.map(e.target, f =>
                                 f.name && f.value
@@ -68,16 +71,19 @@ _.assign(comp, {
                             )}
                           )}) : b
                         )}),
-                        res => res && m.redraw()
+                        res => res && [
+                          state.codifications = [],
+                          m.redraw()
+                        ]
                       ) : updateBoth(
-                        'patients', a._id, {
-                          _id: a._id, identitas: a.identitas,
-                          rawatJalan: a.rawatJalan || [],
-                          emergency: a.emergency || [],
-                          rawatInap : a.rawatInap.map(b =>
-                            b.idinap === a.idinap ?
+                        'patients', pasien._id, {
+                          _id: pasien._id, identitas: pasien.identitas,
+                          rawatJalan: pasien.rawatJalan || [],
+                          emergency: pasien.emergency || [],
+                          rawatInap : pasien.rawatInap.map(b =>
+                            b.idinap === rawat.idinap ?
                             _.assign(b, {observasi: b.observasi.map(c =>
-                              c.idobservasi === a.soapDokter.idobservasi ?
+                              c.idobservasi === rawat.soapDokter.idobservasi ?
                               _.assign(c, {diagnosa: c.diagnosa.map((d, f) =>
                                 ({text: d.text, code: _.compact(_.map(e.target, g =>
                                   g.name && g.value
@@ -86,7 +92,10 @@ _.assign(comp, {
                             )}) : b
                           )
                         },
-                        res => res && m.redraw()
+                        res => res && [
+                          state.codifications = [],
+                          m.redraw()
+                        ]
                       ),
                       state.modalICD10 = null,
                       m.redraw()
@@ -94,7 +103,7 @@ _.assign(comp, {
                   )},
                   m('table.table',
                     m('thead', m('tr', m('th', 'Teks'), m('th', 'Kode'))),
-                    m('tbody', a.soapDokter.diagnosa.map((b, c) => m('tr',
+                    m('tbody', rawat.soapDokter.diagnosa.map((b, c) => m('tr',
                       m('td', b.text), m('td', m('input.input', {
                         type: 'text', name: c, value: b.code
                       }))
@@ -104,57 +113,69 @@ _.assign(comp, {
                 )
               )
             },
-            _.every(
-              (a.soapDokter.diagnosa || []).map(b => b.code)
-            ) ? 'Selesai' : 'Belum'
+            _.every((
+              _.get(rawat, 'soapDokter.diagnosa') || []
+            ).map(b => b.code)) ? 'Selesai' : 'Belum'
           )),
-          m('td', a.soapDokter.tindakan && m('.button',
+          m('td', rawat.soapDokter.tindakan && m('.button',
             {onclick: () =>
               state.modalICD9 = m('.box',
                 m('h4', 'Form kodifikasi tindakan ICD9'),
                 m('form',
-                  {onsubmit: e => withThis(
-                    a.idrawat && a.klinik ? 'rawatJalan' : 'emergency',
+                  {onsubmit: e => confirm('Yakin dengan ICD ini?') && withThis(
+                    rawat.idrawat && rawat.klinik ? 'rawatJalan' : 'emergency',
                     facility => [
                       e.preventDefault(),
-                      a.idrawat ? updateBoth('patients', a._id,
+                      rawat.idrawat ? updateBoth(
+                        'patients', pasien._id,
                         _.assign({
-                          _id: a._id, identitas: a.identitas,
-                          rawatJalan: a.rawatJalan || [],
-                          emergency: a.emergency || [],
-                          rawatInap: a.rawatInap || []
-                        }, {[facility]: a[facility].map(b =>
-                          b.idrawat === a.idrawat ? _.assign(b, {soapDokter: _.assign(
+                          _id: pasien._id, identitas: pasien.identitas,
+                          rawatJalan: pasien.rawatJalan || [],
+                          emergency: pasien.emergency || [],
+                          rawatInap: pasien.rawatInap || []
+                        }, {[facility]: pasien[facility].map(b =>
+                          b.idrawat === rawat.idrawat ? _.assign(b, {soapDokter: _.assign(
                             b.soapDokter, {tindakan: b.soapDokter.tindakan.map((c, d) =>
                               ({text: c.idtindakan, code: _.compact(_.map(e.target, f =>
                                 f.name && f.value
                               ))[d]})
                             )}
                           )}) : b
-                        )})
-                      ) : updateBoth('patients', a._id, {
-                        _id: a._id, identitas: a.identitas,
-                        rawatJalan: a.rawatJalan || [],
-                        emergency: a.emergency || [],
-                        rawatInap : a.rawatInap.map(b =>
-                          b.idinap === a.idinap ?
-                          _.assign(b, {observasi: b.observasi.map(c =>
-                            c.idobservasi === a.soapDokter.idobservasi ?
-                            _.assign(c, {tindakan: c.tindakan.map((d, f) =>
-                              ({text: d.text, code: _.compact(_.map(e.target, g =>
-                                g.name && g.value
-                              ))[f]})
-                            )}) : c
-                          )}) : b
-                        )
-                      }),
+                        )}),
+                        res => res && [
+                          state.codifications = [],
+                          m.redraw()
+                        ]
+                      ) : updateBoth(
+                        'patients', pasien._id, {
+                          _id: pasien._id, identitas: pasien.identitas,
+                          rawatJalan: pasien.rawatJalan || [],
+                          emergency: pasien.emergency || [],
+                          rawatInap : pasien.rawatInap.map(b =>
+                            b.idinap === rawat.idinap ?
+                            _.assign(b, {observasi: b.observasi.map(c =>
+                              c.idobservasi === rawat.soapDokter.idobservasi ?
+                              _.assign(c, {tindakan: c.tindakan.map((d, f) =>
+                                ({text: d.text, code: _.compact(_.map(e.target, g =>
+                                  g.name && g.value
+                                ))[f]})
+                              )}) : c
+                            )}) : b
+                          )
+                        },
+                        res => res && [
+                          state.codifications = [],
+                          m.redraw()
+                        ]
+                      ),
                       state.modalICD9 = null,
                       m.redraw()
                     ]
                   )},
                   m('table.table',
                     m('thead', m('tr', m('th', 'Teks'), m('th', 'Kode'))),
-                    m('tbody', a.soapDokter.tindakan.map((b, c) => m('tr',
+                    m('tbody', (_.get(rawat, 'soapDokter.tindakan') || [])
+                    .map((b, c) => m('tr',
                       m('td', lookReferences(b.idtindakan).nama),
                       m('td', m('input.input', {
                         type: 'text', name: c, value: b.code
@@ -165,7 +186,9 @@ _.assign(comp, {
                 )
               )
             },
-            _.every(a.soapDokter.tindakan.map(b => b.code)) ? 'Selesai' : 'Belum'
+            _.every((
+              _.get(rawat, 'soapDokter.tindakan') || []
+            ).map(b => b.code)) ? 'Selesai' : 'Belum'
           ))
         ))
       )
