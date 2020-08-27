@@ -24,7 +24,7 @@ _.assign(comp, {
         state.emergencyList && state.emergencyList
         .sort((a, b) => withThis(
           obj => _.get(_.last(obj.emergency), 'tanggal'),
-          getTanggal => getTanggal(b) - getTanggal(a)
+          lastDate => lastDate(a) - lastDate(b)
         ))
         .map(i => m('tr',
           {ondblclick: () => [

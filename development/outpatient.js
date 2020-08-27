@@ -26,7 +26,7 @@ _.assign(comp, {
         (state.clinicQueue || [])
         .sort((a, b) => withThis(
           obj => _.get(_.last(obj.rawatJalan), 'tanggal'),
-          lastDate => lastDate(b) - lastDate(a)
+          lastDate => lastDate(a) - lastDate(b)
         ))
         .map(i => m('tr',
           {ondblclick: () => _.assign(state, {

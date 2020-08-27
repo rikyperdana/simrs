@@ -31,7 +31,7 @@ _.assign(comp, {
         (state.admissionList || [])
         .sort((a, b) => withThis(
           obj => _.get(obj.inap, 'tanggal'),
-          tanggal => tanggal(b) - tanggal(a)
+          tanggal => tanggal(a) - tanggal(b)
         )
       )
       .map(i => m('tr',

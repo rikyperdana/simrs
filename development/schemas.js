@@ -1,7 +1,5 @@
 /*global ors _ state selects randomId beds ands withThis lookReferences*/
 
-// TODO: pikirkan ulang tentang konsul
-
 var schemas = {
   identitas: {
     no_antrian: {type: String, optional: true, exclude: true},
@@ -169,7 +167,7 @@ var schemas = {
       type: Number, optional: true, label: 'Konsultasikan ke',
       autoform: { // hanya munculkan bila pilihan keluar 'rujuk'
         type: 'select',
-        help: 'Hanya diisi bila pilihan keluar adalah Rujuk ke Poliklinik lain',
+        help: 'Hanya diisi bila pilihan keluar adalah Konsultasikan ke Poliklinik lain',
         options: selects('klinik')
       }
     },
