@@ -146,7 +146,7 @@ makePdf = {
           {text: '\nDiagnosa', alignment: 'center'},
           {table: {widths: ['*', 'auto'], body: [
             ['Teks', 'ICD10'],
-            _.get(rawat, 'soapDokter.diagnosa')
+            ..._.get(rawat, 'soapDokter.diagnosa')
             .map(i => [i.text, i.code || '-'])
           ]}}
         ],
