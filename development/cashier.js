@@ -45,7 +45,9 @@ _.assign(comp, {
           db.references.toArray(array => state.references = array),
           db.goods.toArray(array => state.goodsList = array)
         ]},
-        (state.cashierList || []).map(
+        (state.cashierList || [])
+        .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
+        .map(
           ({pasien, rawat}) => m('tr',
             {ondblclick: () => withThis(
               [
