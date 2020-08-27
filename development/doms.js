@@ -66,16 +66,14 @@ makeRincianSoapPerawat = soapPerawat => soapPerawat && [
 makeRincianSoapDokter = soapDokter => soapDokter && [
   m('tr', m('th', 'Anamnesa Dokter'), m('td', soapDokter.anamnesa)),
   _.map(soapDokter.diagnosa, (j, k) =>
-    m('tr', m('th', 'Diagnosa '+(k+1)), m('td', j.text+' / ICD X: '+(j.icd10 || '?')))
+    m('tr', m('th', 'Diagnosa '+(k+1)), m('td', j.text+' / ICD X: '+(j.code || '?')))
   ),
-  soapDokter.tindakan &&
-  soapDokter.tindakan.map(j => j && m('tr',
+  (soapDokter.tindakan || []).map(j => j && m('tr',
     m('th', _.get(lookReferences(j.idtindakan), 'nama')),
     m('td', _.get(lookReferences(j.idtindakan), 'harga'))
   )),
   // bhp sementara ini belum ditampilkan
-  soapDokter.obat &&
-  soapDokter.obat.map(j => j && m('tr',
+  (soapDokter.obat || []).map(j => j && m('tr',
     m('th', _.get(lookGoods(j.idbarang), 'nama')),
     m('td', j.harga)
   )),
