@@ -96,7 +96,7 @@ _.assign(comp, {
       ).toArray(array => [
         updateBoth('patients', state.onePatient._id, _.assign(
           state.onePatient, {rawatJalan: [
-            ...(state.onePatient.rawatJalan),
+            ...(state.onePatient.rawatJalan || []),
             _.merge(doc, {antrian: array.length+1})
           ]}
         )),
