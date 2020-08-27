@@ -83,15 +83,16 @@ _.assign(comp, {
               updatedPatient: _.assign(i.pasien, {
                 rawatJalan: (i.pasien.rawatJalan || []).map(
                   a => a.idrawat === i.rawat.idrawat ?
-                   _.assign(a, {soapDokter: _.assign(a.soapDokter,
-                    {obat: (a.soapDokter.obat || []).map(
+                   _.assign(a, {soapDokter: _.assign(a.soapDokter, {
+                    obat: (a.soapDokter.obat || []).map(
                       b => _.assign(b, {diserah: true, harga: _.sum(
                         serahList.filter(
                           c => c.idbarang === b.idbarang
                         ).map(c => c.jual)
                       )})
-                    )}
-                  )}) : a
+                    ),
+                    apoteker: state.login._id
+                  })}) : a
                 ),
                 emergency: (i.pasien.emergency || []).map(
                   a => a.idrawat === i.rawat.idrawat ?

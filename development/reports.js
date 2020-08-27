@@ -103,7 +103,7 @@ var reports = {
       db.patients.toArray(array => makePdf.report(
         'Laporan Pengeluaran Obat',
         [
-          ['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Dokter', 'Nama Obat', 'Jumlah', 'Harga'],
+          ['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Dokter', 'Nama Obat', 'Jumlah', 'Harga', 'Cara Bayar', 'Apoteker'],
           // TODO: tambahkan kolom apoteker dan cara_bayar
           ...array.flatMap(pasien =>
             [
@@ -128,7 +128,9 @@ var reports = {
               ]),
               lookUser(rawat.soapDokter.dokter),
               lookGoods(i.idbarang).nama,
-              i.jumlah, rupiah(i.harga)
+              i.jumlah, rupiah(i.harga),
+              look('cara_bayar', rawat.cara_bayar),
+              lookUser(_.get(rawat, 'soapDokter.apoteker'))
             ]).filter(Boolean)
           ).filter(Boolean).filter(i => i.length)
         ]
@@ -209,7 +211,6 @@ var reports = {
         'Kunjungan Poliklinik',
         [
           ['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter'],
-          // TODO: seharusnya diurut dulu berdasarkan tanggal
           ...array.flatMap(pasien =>
             (pasien.rawatJalan || [])
             .map(i => ({pasien, rawat: i}))

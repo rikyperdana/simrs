@@ -1,8 +1,6 @@
 /*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
 // TODO: pikirkan ulang tentang obj kasir dalam rawat
-// TODO: libatkan tagihan radio & labor di bayar konsultasi
-// TODO: antrian loket pembayaran seharusnya berurut tanggal
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -171,8 +169,10 @@ _.assign(comp, {
                         )
                       })),
                       [
-                        ors([rawat.soapDokter, rawat.observasi])
-                        && makePdf.bayar_konsultasi(pasien, rawat, [...bills, ...(rawat.charges || [])]),
+                        ors([rawat.soapDokter, rawat.observasi]) &&
+                        makePdf.bayar_konsultasi(
+                          pasien, rawat, [...bills, ...(rawat.charges || [])]
+                        ),
                         makePdf.bayar_pendaftaran(pasien, rawat, [
                           ...(pasien.rawatJalan || []),
                           ...(pasien.emergency || [])

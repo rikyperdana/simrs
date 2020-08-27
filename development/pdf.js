@@ -226,6 +226,7 @@ makePdf = {
   report: (title, rows, info) =>
     pdfMake.createPdf({
       pageOrientation: 'landscape',
+      defaultStyle: {fontSize: 10},
       content: [
         kop,
         {text: title, alignment: 'center', bold: true},

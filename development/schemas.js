@@ -1,7 +1,5 @@
 /*global ors _ state selects randomId beds ands withThis lookReferences*/
 
-// TODO: pikirkan ulang tentang konsul
-
 var schemas = {
   identitas: {
     no_antrian: {type: String, optional: true, exclude: true},
