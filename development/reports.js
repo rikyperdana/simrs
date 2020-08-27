@@ -104,7 +104,6 @@ var reports = {
         'Laporan Pengeluaran Obat',
         [
           ['Tanggal', 'No. MR', 'Nama Pasien', 'Layanan', 'Dokter', 'Nama Obat', 'Jumlah', 'Harga', 'Cara Bayar', 'Apoteker'],
-          // TODO: tambahkan kolom apoteker dan cara_bayar
           ...array.flatMap(pasien =>
             [
               ...(pasien.rawatJalan || []),
@@ -128,7 +127,8 @@ var reports = {
               ]),
               lookUser(rawat.soapDokter.dokter),
               lookGoods(i.idbarang).nama,
-              i.jumlah, rupiah(i.harga),
+              i.jumlah+' '+look('satuan', lookGoods(i.idbarang).satuan),
+              rupiah(i.harga),
               look('cara_bayar', rawat.cara_bayar),
               lookUser(_.get(rawat, 'soapDokter.apoteker'))
             ]).filter(Boolean)
