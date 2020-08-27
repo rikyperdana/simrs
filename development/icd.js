@@ -4,7 +4,7 @@ _.assign(comp, {
   icd: () => state.login.bidang !== 1 ?
   m('p', 'Hanya untuk bidang Pendaftaran/ICD') : m('.content',
     m('h3', 'Kodifikasi Diagnosa ICD 10 & ICD 9-CM'),
-    m('table.table',
+    m('.box', m('table.table',
       m('thead', m('tr',
         ['Nama pasien', 'Tanggal kunjungan', 'Layanan', 'Perawat', 'Dokter', 'ICD10', 'ICD9CM']
         .map(i => m('th', i))
@@ -105,7 +105,7 @@ _.assign(comp, {
               )
             },
             _.every(
-              a.soapDokter.diagnosa.map(b => b.code)
+              (a.soapDokter.diagnosa || []).map(b => b.code)
             ) ? 'Selesai' : 'Belum'
           )),
           m('td', a.soapDokter.tindakan && m('.button',
@@ -169,7 +169,7 @@ _.assign(comp, {
           ))
         ))
       )
-    ),
+    )),
     makeModal('modalICD10'),
     makeModal('modalICD9')
   )
