@@ -5,7 +5,7 @@ _.assign(comp, {
   m('p', 'Hanya untuk tenaga medis') : m('.content',
     reports.outpatient(),
     m('h3', 'Antrian pasien poliklinik '+look('klinik', state.login.poliklinik)),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
         .map(i => m('th', i))
@@ -40,11 +40,11 @@ _.assign(comp, {
           ])
         ))
       )
-    )
+    ))
   ),
 
   outPatientHistory: () => m('.content',
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {onupdate: () => dbCall({
         method: 'find', collection: 'patients',
         _id: state.onePatient._id
@@ -122,7 +122,7 @@ _.assign(comp, {
           }, makeIconLabel('trash-alt', 'Hapus')))
         ))
       )
-    ),
+    )),
     m('p.help.has-text-grey-light', 'Note: Jika pasien umum belum bayar maka tidak dapat diklik'),
     makeModal('modalVisit'),
     state.login.bidang === 1 && m('.button.is-success',

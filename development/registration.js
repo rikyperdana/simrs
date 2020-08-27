@@ -23,9 +23,9 @@ _.assign(comp, {
           ])
         ]
       ]
-    })),
+    })), m('br'),
     state.loading && m('progress.progress.is-small.is-primary'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
         .map(i => m('th', i))
@@ -40,7 +40,7 @@ _.assign(comp, {
           hari(i.identitas.tanggal_lahir), i.identitas.tempat_lahir
         ])
       )))
-    ),
+    )),
     state.searchPatients &&
     m('.button.is-primary',
       {onclick: () => _.assign(state, {

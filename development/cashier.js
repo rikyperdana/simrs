@@ -7,7 +7,7 @@ _.assign(comp, {
   m('p', 'Hanya untuk user bidang kasir') : m('.content',
     state.login.peranan === 4 && reports.cashier(),
     m('h3', 'Loket Pembayaran'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Lengkap', 'Tanggal', 'Layanan', 'Tambahan']
         .map(i => m('th', i))
@@ -123,14 +123,17 @@ _.assign(comp, {
               bills => state.modalCashier = m('.box',
                 m('h3', 'Konfirmasi Pembayaran'),
                 m('p', m('b', [pasien.identitas.nama_lengkap, pasien.identitas.no_mr].join(' / '))),
-                m('table.table',
-                  [...bills, ...(rawat.charges || [])].map(k => m('tr',
-                    m('th', k.item), m('td', rupiah(k.harga))
-                  )),
-                  m('tr', m('th', 'Total'), m('td', rupiah(_.sum(
-                    [...bills, ...(rawat.charges || [])].map(k => k.harga)
-                  ))))
-                ),
+                m('table.table', withThis(
+                  [...bills, ...(rawat.charges || [])],
+                  combined => [
+                    combined.map(k => m('tr',
+                      m('th', k.item), m('td', rupiah(k.harga))
+                    )),
+                    m('tr', m('th', 'Total'), m('td', rupiah(_.sum(
+                      combined.map(k => k.harga)
+                    ))))
+                  ]
+                )),
                 m('.buttons',
                   m('.button.is-success',
                     {ondblclick: () => [
@@ -207,7 +210,7 @@ _.assign(comp, {
           )
         )
       )
-    ),
+    )),
     makeModal('modalCashier')
   ),
 

@@ -3,7 +3,7 @@
 _.assign(comp, {
   laboratory: () => m('.content',
     m('h1', 'Laboratorium'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {onupdate: () => [
         db.references.toArray(array => state.references = array),
         db.patients.filter(i => // logicnya berbeda dengan radiologi
@@ -75,7 +75,7 @@ _.assign(comp, {
           ])
         ))
       )
-    )
+    ))
   ),
   responLaboratory: () => m('.content',
     m('h2', 'Respon Laboratorium'),

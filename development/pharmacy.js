@@ -5,7 +5,7 @@ _.assign(comp, {
   m('p', 'Hanya untuk user apotik') : m('.content',
     state.login.peranan === 4 && reports.pharmacy(),
     m('h3', 'Apotik'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Tanggal berobat', 'Cara bayar', 'Layanan']
         .map(i => m('th', i))
@@ -195,7 +195,7 @@ _.assign(comp, {
         )),
         makeModal('modalSerahObat')
       )
-    ),
+    )),
     localStorage.openBeta &&
     m('.button.is-primary',
       {

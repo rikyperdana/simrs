@@ -238,7 +238,7 @@ makePdf = {
       ]
     }).download('laporan_'+title),
 
-  regQueue: (last) =>
+  regQueue: last =>
     pdfMake.createPdf({
       content: [{text: last+1}],
       pageSize: 'B8'

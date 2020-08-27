@@ -5,7 +5,7 @@ _.assign(comp, {
   radiology: () => m('.content',
     m('h1', 'Radiologi'),
     // tabel untuk melihat daftar request radiologi yang direquest dokter
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {onupdate: () => [
         // siapkan daftar referensi untuk dilookup
         db.references.toArray(array => state.references = array),
@@ -131,6 +131,6 @@ _.assign(comp, {
         ))
       ),
       makeModal('modalRadiologi')
-    )
+    ))
   )
 })

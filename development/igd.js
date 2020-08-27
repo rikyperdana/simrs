@@ -15,7 +15,7 @@ _.assign(comp, {
     reports.igd(),
     m('h3', 'Unit Gawat Darurat'),
     m('p.help', '* Urutan terbaru diatas'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Jam Masuk']
         .map(i => m('th', i))
@@ -38,10 +38,10 @@ _.assign(comp, {
           m('td', hari(_.get(_.last(i.emergency), 'tanggal'), true))
         ))
       )
-    )
+    ))
   ),
   emergencyHistory: () => m('.content',
-    m('table.table',
+    m('.box', m('table.table',
       m('thead', m('tr',
         ['Tanggal berobat', 'Cara bayar', 'Perawat', 'Dokter']
         .map(i => m('th', i)),
@@ -110,7 +110,7 @@ _.assign(comp, {
           }, makeIconLabel('trash-alt', 'Hapus')))
         ))
       )
-    ),
+    )),
     state.login.bidang === 1 && m('.button.is-success',
       {onclick: () => state.route = 'igdVisit'},
       makeIconLabel('file-invoice', 'Kunjungi IGD')

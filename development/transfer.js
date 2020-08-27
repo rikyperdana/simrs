@@ -8,7 +8,7 @@ _.assign(comp, {
   ? m('p', 'Hanya untuk user farmasi, apotik dan petugas medis')
   : m('.content',
     m('h3', 'Daftar antrian amprah'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {onupdate: () => [
         db.users.toArray(array =>
           state.userList = array
@@ -82,10 +82,10 @@ _.assign(comp, {
         ])
       ))),
       makeModal('modalResponAmprah')
-    ),
+    )),
     m('p'),
     m('h3', 'Daftar riwayat amprah'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['Nama barang', 'No. Batch', 'Peminta', 'Jumlah minta', 'Tanggal diminta', 'Penyerah', 'Jumlah serah', 'Tanggal serah']
         .map(i => m('th', i))
@@ -101,7 +101,7 @@ _.assign(comp, {
           ])
         ))
       )
-    ),
+    )),
     m('div',comp.pagination(
       'transferList',
       _.get(state, 'transferList.length') / 100

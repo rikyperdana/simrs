@@ -26,7 +26,7 @@ _.assign(comp, {
         onclick: () => state.searchGoods = null
       }, 'Show All'))
     ),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Retur']
         .map(i => m('th', i))
@@ -50,7 +50,7 @@ _.assign(comp, {
           }, stokSum)
         ))
       )))
-    ),
+    )),
     state.login.bidang === 3 &&
     m('.button.is-primary',
       {onclick: () => _.assign(state, {
@@ -89,7 +89,7 @@ _.assign(comp, {
       }, res => db.goods.put(res))
     ]},
     m('h3', 'Rincian barang'),
-    m('table.table', _.chunk([
+    m('.box', m('table.table.is-striped', _.chunk([
       ['Nama barang', state.oneGood.nama],
       ['Jenis barang', look('jenis_barang', state.oneGood.jenis)],
       ['Kode Rak', state.oneGood.kode_rak],
@@ -97,12 +97,12 @@ _.assign(comp, {
       ['Narkotika', look('boolean', _.get(state.oneGood, 'kriteria.narkotika'))],
       ['Psikotropika', look('boolean', _.get(state.oneGood, 'kriteria.psikotropika'))],
       ['Fornas', look('boolean', _.get(state.oneGood, 'kriteria.fornas'))],
-      ['Min. Gudang', state.oneGood.stok_minimum.gudang],
-      ['Min. Apotik', state.oneGood.stok_minimum.apotik],
+      ['Min. Gudang', _.get(state, 'oneGood.stok_minimum.gudang')],
+      ['Min. Apotik', _.get(state, 'oneGood.stok_minimum.apotik')],
       ['Kandungan', state.oneGood.kandungan]
     ], 3).map(i => m('tr', i.map(j =>
       [m('th', j[0]), m('td', j[1])]
-    )))),
+    ))))),
     state.login.bidang === 3 && m('.buttons',
       m('.button.is-primary',
         {onclick: () => state.route = 'formBatch'},
@@ -145,7 +145,7 @@ _.assign(comp, {
       ]
     ),
     m('p'), m('h4', 'Daftar batch barang ini'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. Batch', 'Merek', 'Tanggal Masuk', 'Tanggal Kadaluarsa', 'Gudang', 'Apotik', 'Retur']
         .map(i => m('th', i))
@@ -252,7 +252,7 @@ _.assign(comp, {
           i.stok.gudang || 0, i.stok.apotik || 0, i.stok.retur || 0
         ])
       )))
-    ),
+    )),
     makeModal('modalBatch')
   ),
   formBatch: () => m('.content',
