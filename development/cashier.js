@@ -7,7 +7,7 @@ _.assign(comp, {
   m('p', 'Hanya untuk user bidang kasir') : m('.content',
     state.login.peranan === 4 && reports.cashier(),
     m('h3', 'Loket Pembayaran'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Lengkap', 'Tanggal', 'Layanan', 'Tambahan']
         .map(i => m('th', i))
@@ -210,7 +210,7 @@ _.assign(comp, {
           )
         )
       )
-    ),
+    )),
     makeModal('modalCashier')
   ),
 

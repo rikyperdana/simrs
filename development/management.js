@@ -19,9 +19,9 @@ _.assign(comp, {
         )
       },
       makeIconLabel('user-plus', 'Tambah akun')
-    ),
+    ), m('br'), m('br'),
     makeModal('modalAccount'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {onupdate: () => db.users.toArray(array => [
         state.userList = array, m.redraw()
       ])},
@@ -55,14 +55,14 @@ _.assign(comp, {
           ])
         )
       ))
-    )
+    ))
   ),
 
   // referensi harus terbuka untuk seluruh pihak
   references: () => m('.content',
     m('h3', 'Daftar Tarif'),
     m('p.help', '* Tersusun alfabetis'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {oncreate: () => db.references.toArray(array => [
         state.referenceList = _.sortBy(array, ['nama']),
         m.redraw()
@@ -77,7 +77,7 @@ _.assign(comp, {
           i.nama, rupiah(i.harga), i[0], i[1], i[2]
         ])))
       )
-    ),
+    )),
     m('div',comp.pagination(
       'references',
       _.get(state, 'referenceList.length') / 20

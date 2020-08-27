@@ -10,7 +10,7 @@ _.assign(comp, {
         db.users.toArray(array => state.userList = array)
       ]},
       m('h3', 'Rekam Medik Pasien'),
-      m('table.table', _.chunk([
+      m('.box', m('table.table.is-striped', _.chunk([
         ['No. MR', id.no_mr],
         ['Nama Lengkap', id.nama_lengkap],
         ['Tanggal lahir', hari(id.tanggal_lahir)],
@@ -29,7 +29,7 @@ _.assign(comp, {
         ['No. Handphone', id.kontak]
       ], 4).map(i => m('tr', i.map(j =>
         [m('th', j[0]), m('td', j[1])]
-      )))),
+      ))))),
       m('p.buttons',
         [
           {

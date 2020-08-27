@@ -5,7 +5,7 @@ _.assign(comp, {
   m('p', 'Hanya untuk tenaga medis') : m('.content',
     reports.inpatient(),
     m('h3', 'Daftar Admisi Rawat Inap'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {onupdate: () =>
         db.patients.toArray(array =>
           state.admissionList = _.compact(array.flatMap(i =>
@@ -74,13 +74,13 @@ _.assign(comp, {
           lookUser(_.get(i.inap, 'soapDokter.dokter'))
         ])
       )))
-    ),
+    )),
     makeModal('admissionModal'),
     m('br'),
 
     m('h3', 'Daftar Pasien Menginap'),
     m('p.help', '* Urut berdasarkan tanggal masuk terbaru'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {onupdate: () =>
         db.patients.toArray(array => [
           state.inpatientList = array.filter(i =>
@@ -120,11 +120,11 @@ _.assign(comp, {
           )
         ))
       )
-    )
+    ))
   ),
 
   inpatientHistory: () => m('.content',
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['Tanggal masuk', 'Kelas / Kamar / Nomor']
         .map(i => m('th', i))
@@ -208,7 +208,7 @@ _.assign(comp, {
           ])
         ))
       )
-    ),
+    )),
     makeModal('modalObservasi')
   ),
 
@@ -216,8 +216,8 @@ _.assign(comp, {
     _.includes([2, 3], state.login.peranan),
     _.includes([1], state.login.bidang)
   ]) ? m('p', 'Hanya untuk tenaga medis') : m('.content',
-    m('h3', 'Daftar Kamar'),
-    m('table.table',
+    m('h3', 'Daftar Ketersediaan Bed'),
+    m('.box', m('table.table.is-striped',
       {onupdate: () =>
         db.patients.toArray(array => [
           state.inpatientList = array.filter(i =>
@@ -233,7 +233,7 @@ _.assign(comp, {
           i.kamar, (k, l) => _.range(k).map(m => [
             j, l, m+1, _.get(state.inpatientList.find(
               n => n.rawatInap.find(
-                o => ands([
+                o => o.bed && ands([
                   o.bed.kelas === j,
                   o.bed.kamar === l,
                   o.bed.nomor === m+1
@@ -245,7 +245,7 @@ _.assign(comp, {
       ).map(p => m('tr', p.map(
         q => m('td', _.upperCase(q))
       )))
-    )
+    ))
   ),
 })
 

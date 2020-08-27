@@ -3,7 +3,7 @@
 _.assign(comp, {
   surgery: () => m('.content',
     m('h1', 'Jadwal Instalasi Bedah'),
-    m('table.table',
+    m('.box', m('table.table.is-striped',
       {
         oncreate: () =>
           db.references.toArray(array => state.references = array),
@@ -23,6 +23,6 @@ _.assign(comp, {
         hari(i.jadwal, true),
         lookReferences(i.idtindakan).nama
       ])))
-    )
+    ))
   )
 })
