@@ -186,7 +186,7 @@ makePdf = {
           {table: {widths: ['*', 'auto'], body: [
             ['Laboratorium', 'Diagnosa'],
             ..._.get(rawat, 'soapDokter.labor').map(i => [
-              lookReferences(i.labor).nama,
+              lookReferences(i.idlabor).nama,
               i.hasil
             ])
           ]}}
