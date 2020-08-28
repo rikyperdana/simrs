@@ -70,7 +70,7 @@ makeRincianSoapDokter = soapDokter => soapDokter && [
   ),
   (soapDokter.tindakan || []).map(j => j && m('tr',
     m('th', _.get(lookReferences(j.idtindakan), 'nama')),
-    m('td', _.get(lookReferences(j.idtindakan), 'harga'))
+    m('td', rupiah(_.get(lookReferences(j.idtindakan), 'harga')))
   )),
   // bhp sementara ini belum ditampilkan
   (soapDokter.obat || []).map(j => j && m('tr',

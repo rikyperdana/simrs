@@ -1,6 +1,7 @@
 /*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
 // TODO: pikirkan ulang tentang obj kasir dalam rawat
+// TODO: antrian bayar masih belum berurut waktu juga
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -181,7 +182,7 @@ _.assign(comp, {
                           ...(pasien.emergency || [])
                         ].length)
                       ],
-                      _.assign(state, {modalCashier: null, cashierList: null}),
+                      _.assign(state, {modalCashier: null, cashierList: []}),
                       m.redraw()
                     ]},
                     makeIconLabel('check', 'Sudah bayar')

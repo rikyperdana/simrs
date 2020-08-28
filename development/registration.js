@@ -25,6 +25,7 @@ _.assign(comp, {
       ]
     })), m('br'),
     state.loading && m('progress.progress.is-small.is-primary'),
+    state.searchPatients && m('p.help', '* Berurut berdasarkan tanggal lahir'),
     m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']

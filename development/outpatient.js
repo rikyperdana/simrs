@@ -59,7 +59,7 @@ _.assign(comp, {
           {ondblclick: () => [
             state.modalVisit = _.includes([2, 3, 4], state.login.peranan) &&
             ors([i.cara_bayar !== 1, i.bayar_pendaftaran]) && m('.box',
-              m('h3', 'Rincian Kunjungan'),
+              m('h3', 'Rincian Kunjungan Rawat Jalan'),
               m('table.table',
                 m('tr', m('th', 'Tanggal'), m('td', hari(i.tanggal, true))),
                 m('tr', m('th', 'Poliklinik'), m('td', look('klinik', i.klinik))),

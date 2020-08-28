@@ -94,7 +94,7 @@ _.assign(comp, {
           }
         }}
       ),
-      doc: {labor: state.responLaboratory.labor},
+      doc: {labor: state.responLaboratory.labor.filter(i => i.konfirmasi === 1)},
       action: doc => [
         updateBoth(
           'patients', state.responLaboratory.pasien._id,

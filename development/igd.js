@@ -52,7 +52,7 @@ _.assign(comp, {
         .map(i => m('tr',
           {ondblclick: () =>
             state.modalVisit = m('.box',
-              m('h4', 'Rincian kunjungan'),
+              m('h4', 'Rincian kunjungan IGD'),
               m('table.table',
                 m('tr', m('th', 'Tanggal berobat'), m('td', hari(i.tanggal))),
                 m('tr', m('th', 'Cara bayar'), m('td', look('cara_bayar', i.cara_bayar))),
