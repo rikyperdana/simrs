@@ -86,7 +86,7 @@ _.assign(comp, {
       dbCall({
         method: 'findOne', collection: 'goods',
         _id: state.oneGood._id
-      }, res => db.goods.put(res))
+      }, res => res && db.goods.put(res))
     ]},
     m('h3', 'Rincian barang'),
     m('.box', m('table.table.is-striped', _.chunk([

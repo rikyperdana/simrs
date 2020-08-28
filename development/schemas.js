@@ -17,7 +17,7 @@ var schemas = {
       type: Number, optional: true,
       autoform: {type: 'select', options: selects('alias')}
     },
-    nama_lengkap: {type: String,},
+    nama_lengkap: {type: String, autoform: {placeholder: 'minimal 4 huruf'}},
     ktp: {type: Number, label: 'No. KTP', optional: true},
     bpjs: {type: Number, label: 'No. Peserta BPJS', optional: true},
     tanggal_lahir: {type: Date},
