@@ -262,7 +262,7 @@ _.assign(comp, {
       confirmMessage: 'Yakin untuk menambahkan batch obat ini?',
       action: doc => [
         updateBoth('goods', state.oneGood._id, _.assign(state.oneGood, {
-          batch: [...(state.oneGood.batch | []), doc]
+          batch: [...(state.oneGood.batch || []), doc]
         })), state.route = 'oneGood'
       ]
     }))
