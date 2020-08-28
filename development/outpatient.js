@@ -48,7 +48,7 @@ _.assign(comp, {
       {onupdate: () => dbCall({
         method: 'findOne', collection: 'patients',
         _id: state.onePatient._id
-      }, res => db.patients.put(res))},
+      }, res => res && db.patients.put(res))},
       m('thead', m('tr',
         ['Tanggal berobat', 'Poliklinik', 'Cara bayar', 'Perawat', 'Dokter']
         .map(i => m('th', i)),
