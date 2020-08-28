@@ -46,7 +46,7 @@ _.assign(comp, {
   outPatientHistory: () => m('.content',
     m('.box', m('table.table.is-striped',
       {onupdate: () => dbCall({
-        method: 'find', collection: 'patients',
+        method: 'findOne', collection: 'patients',
         _id: state.onePatient._id
       }, res => db.patients.put(res))},
       m('thead', m('tr',

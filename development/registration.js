@@ -30,16 +30,20 @@ _.assign(comp, {
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
         .map(i => m('th', i))
       )),
-      m('tbody', (state.searchPatients || []).map(i => m('tr',
-        {ondblclick: () => _.assign(state, {
-          route: 'onePatient', onePatient: i
-        })},
-        tds([
-          hari(_.get(_.last([...(i.rawatJalan || []), ...(i.emergency || [])]), 'tanggal')),
-          i.identitas.no_mr, i.identitas.nama_lengkap,
-          hari(i.identitas.tanggal_lahir), i.identitas.tempat_lahir
-        ])
-      )))
+      m('tbody',
+        (state.searchPatients || [])
+        .sort((a, b) => a.identitas.tanggal_lahir - b.identitas.tanggal_lahir)
+        .map(i => m('tr',
+          {ondblclick: () => _.assign(state, {
+            route: 'onePatient', onePatient: i
+          })},
+          tds([
+            hari(_.get(_.last([...(i.rawatJalan || []), ...(i.emergency || [])]), 'tanggal')),
+            i.identitas.no_mr, i.identitas.nama_lengkap,
+            hari(i.identitas.tanggal_lahir), i.identitas.tempat_lahir
+          ])
+        ))
+      )
     )),
     state.searchPatients &&
     m('.button.is-primary',
