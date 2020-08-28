@@ -139,7 +139,10 @@ _.assign(comp, {
         ])
       ]),
       action: doc => withThis(
-        _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',
+        ands([
+          !_.get(state, 'oneInap'),
+          _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',
+        ]),
         facility => [
           // jika berasal dari rawat jalan atau IGD
           facility && updateBoth('patients', state.onePatient._id, _.assign(

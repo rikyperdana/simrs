@@ -13,10 +13,10 @@ _.assign(comp, {
               j => (j.observasi || []).map(k => ({soapDokter: k}))
             ) : [])
           ].filter(j =>
-            _.get(j, 'soapDokter.labor') &&
-            // cari pada array labor yang salah satunya belum ada hasil
-            j.soapDokter.labor.filter(k => k.hasil).length <
-            j.soapDokter.labor.length
+            // cari pada array labor yg seluruhnya sudah ada hasil atau ditolak
+            _.get(j, 'soapDokter.labor') && j.soapDokter.labor.filter(
+              k => k.hasil || (k.konfirmasi === 2)
+            ).length !== j.soapDokter.labor.length
           ).length
         ).toArray(arr => state.laboratoryList = arr.flatMap(i =>
           [
@@ -94,7 +94,10 @@ _.assign(comp, {
           }
         }}
       ),
-      doc: {labor: state.responLaboratory.labor.filter(i => i.konfirmasi === 1)},
+      doc: {labor: state.responLaboratory.labor.filter(i => ors([
+        !i.konfirmasi, !i.hasil
+      ]))},
+      confirmMessage: 'Yakin dengan respon form laboratorium ini?',
       action: doc => [
         updateBoth(
           'patients', state.responLaboratory.pasien._id,
