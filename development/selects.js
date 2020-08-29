@@ -44,6 +44,7 @@ lookReferences = _id =>
   _id && state.references
   .filter(i => i._id === _id)[0],
 
-lookUser = _id =>
-  !_id ? '-' : state.userList
-  .filter(i => i._id === _id)[0].nama
+lookUser = id =>
+  !id ? '-' : _.get(state.userList.find(
+    i => i._id === id
+  ), 'nama') || '-'
