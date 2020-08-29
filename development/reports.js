@@ -1,4 +1,4 @@
-/*global _ m makeReport withThis moment db makePdf hari look rupiah tarifIGD lookReferences ors lookUser lookGoods selects ands beds tarifInap*/
+/*global _ m makeReport withThis moment db makePdf hari look rupiah tarifIGD lookReferences ors lookUser lookGoods selects ands beds tarifInap tomorrow*/
 
 var reports = {
   cashier: () => makeReport(
@@ -6,7 +6,7 @@ var reports = {
     e => withThis(
       {
         start: +moment(e.target[0].value),
-        end: +moment(e.target[1].value),
+        end: tomorrow(+moment(e.target[1].value)),
         selection: e.target[2].value
       },
       obj => [
@@ -97,7 +97,10 @@ var reports = {
   ),
 
   pharmacy: () => makeReport('Pengeluaran Apotik', e => withThis(
-    {start: +moment(e.target[0].value), end: +moment(e.target[1].value)},
+    {
+      start: +moment(e.target[0].value),
+      end: tomorrow(+moment(e.target[1].value))
+    },
     date => [
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
@@ -138,7 +141,10 @@ var reports = {
     ]
   )),
   igd: () => makeReport('Kunjungan IGD', e => withThis(
-    {start: +moment(e.target[0].value), end: +moment(e.target[1].value)},
+    {
+      start: +moment(e.target[0].value),
+      end: tomorrow(+moment(e.target[1].value))
+    },
     date => [
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
@@ -167,7 +173,10 @@ var reports = {
     ]
   )),
   inpatient: () => makeReport('Kunjungan Rawat Inap', e => withThis(
-    {start: +moment(e.target[0].value), end: +moment(e.target[1].value)},
+    {
+      start: +moment(e.target[0].value),
+      end: tomorrow(+moment(e.target[1].value))
+    },
     date => [
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
@@ -201,10 +210,10 @@ var reports = {
     ]
   )),
   outpatient: () => makeReport('Kunjungan Poliklinik', e => withThis(
-    ({
+    {
       start: +moment(e.target[0].value),
-      end: +moment(e.target[1].value)
-    }),
+      end: tomorrow(+moment(e.target[1].value))
+    },
     date => [
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
