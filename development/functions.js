@@ -86,7 +86,8 @@ menus = {
     full: 'Rawat Inap', icon: 'bed',
     children: {
       beds: {full: 'Daftar Kamar', icon: 'bed'},
-      surgery: {full: 'Antrian Bedah', icon: 'procedures'}
+      surgery: {full: 'Antrian Bedah', icon: 'procedures'},
+      gizi: {full: 'Gizi', icon: 'utensils'}
     }
   },
   cashier: {full: 'Kasir', icon: 'cash-register'},
@@ -106,8 +107,8 @@ menus = {
       references: {full: 'Referensi', icon: 'file-contract'}
     }
   },
-  cssd: {full: 'Laundry', icon: 'tshirt'},
-  gizi: {full: 'Gizi', icon: 'utensils'}
+  gizi: {full: 'Gizi', icon: 'utensils'},
+  cssd: {full: 'Laundry', icon: 'tshirt'}
 },
 
 db = new Dexie('simrs'),
