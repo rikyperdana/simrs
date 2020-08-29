@@ -99,7 +99,8 @@ _.assign(comp, {
       ['Fornas', look('boolean', _.get(state.oneGood, 'kriteria.fornas'))],
       ['Min. Gudang', _.get(state, 'oneGood.stok_minimum.gudang')],
       ['Min. Apotik', _.get(state, 'oneGood.stok_minimum.apotik')],
-      ['Kandungan', state.oneGood.kandungan]
+      ['Kandungan', state.oneGood.kandungan],
+      ['Satuan', look('satuan', state.oneGood.satuan)]
     ], 3).map(i => m('tr', i.map(j =>
       [m('th', j[0]), m('td', j[1])]
     ))))),
@@ -255,6 +256,7 @@ _.assign(comp, {
     )),
     makeModal('modalBatch')
   ),
+
   formBatch: () => m('.content',
     m('h3', 'Form tambah batch'),
     m(autoForm({
