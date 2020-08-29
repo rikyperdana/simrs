@@ -1,7 +1,9 @@
 /*global _ m comp tds*/
 
 _.assign(comp, {
-  gizi: () => m('.content',
+  gizi: () => state.login.bidang !== 10
+  ? m('p', 'Hanya untuk user bidang Gizi')
+  : m('.content',
     m('h1', 'Daftar konsumsi pasien inap'),
     m('.box', m('table.table.is-striped',
       {oncreate: () => db.patients.filter(

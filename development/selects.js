@@ -20,7 +20,7 @@ var selects = name => _.reduce(
     boolean: ['ya', 'tidak'],
     konfirmasi: ['proses', 'tolak'],
     peranan: ['petugas', 'perawat', 'dokter', 'admin'],
-    bidang: ['pendaftaran', 'kasir', 'farmasi', 'apotik', 'manajemen', 'rawat_jalan', 'rawat_inap', 'laboratorium', 'radiologi'],
+    bidang: ['pendaftaran', 'kasir', 'farmasi', 'apotik', 'manajemen', 'rawat_jalan', 'rawat_inap', 'laboratorium', 'radiologi', 'gizi'],
     keaktifan: ['aktif', 'non-aktif'],
     pengarsipan: ['Rumah Sakit', 'Pribadi']
   }, (res, inc, key) =>
