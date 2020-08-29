@@ -133,8 +133,10 @@ _.assign(comp, {
       schema: ors([
         state.login.peranan === 2 && schemas.soapPerawat,
         state.login.peranan === 3 && ors([
-          state.oneInap &&
-          _.omit(schemas.soapDokter, ['rujuk', 'keluar']),
+          state.oneInap && _.merge(
+            _.omit(schemas.soapDokter, ['rujuk', 'keluar']),
+            schemas.gizi
+          ),
           schemas.soapDokter
         ])
       ]),

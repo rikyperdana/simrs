@@ -14,7 +14,6 @@ _.assign(comp, {
     },
     reports.igd(),
     m('h3', 'Unit Gawat Darurat'),
-    m('p.help', '* Urutan terbaru diatas'),
     m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Jam Masuk']
