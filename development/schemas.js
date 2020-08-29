@@ -417,5 +417,11 @@ var schemas = {
       type: Number, autoform: {type: 'hidden'},
       autoValue: () => _.now()
     }
+  },
+  gizi: {
+    konsumsi: {
+      type: String, label: 'Konsumsi gizi untuk pasien',
+      optional: true, autoform: {type: 'textarea'}
+    }
   }
 }
