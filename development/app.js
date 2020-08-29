@@ -90,7 +90,7 @@ _.assign(comp, {
         rawatInap: ['Rawat Inap', 'bed'],
         radiology: ['Radiologi', 'radiation'],
         laboratory: ['Laboratorium', 'flask'],
-        manajemen: ['Manajemen', 'users']
+        management: ['Management', 'users']
       }, (val, key) => m('li',
         {class: key === state.dashboardTab && 'is-active'},
         m('a',
@@ -101,7 +101,7 @@ _.assign(comp, {
     )),
     m('.columns', {
       oncreate: () => [
-        db.patients.toArray(array => _.assign(state, {stats: {
+        db.patients.toArray(array => _.merge(state, {stats: {
           pasien: {
             total: array.length,
             pria: array.filter(
@@ -120,6 +120,14 @@ _.assign(comp, {
           ),
           emergency: _.sum(array.map(i => (i.emergency || []).length)),
           rawatInap: _.sum(array.map(i => (i.rawatInap || []).length))
+        }})),
+        db.users.toArray(array => _.merge(state, {stats: {
+          management: {
+            petugas: array.filter(i => i.peranan === 1).length,
+            perawat: array.filter(i => i.peranan === 2).length,
+            dokter: array.filter(i => i.peranan === 3).length,
+            admin: array.filter(i => i.peranan === 4).length
+          }
         }}))
       ]
     }, ({
@@ -136,10 +144,10 @@ _.assign(comp, {
       rawatInap: ['Total pasien pernah inap: '+_.get(state, 'stats.rawatInap') ],
       radiology: ['Total layanan radiologi: '],
       laboratory: ['Total layanan laboratorium: '],
-      manajemen: [
-        'Jumlah petugas: ',
-        'Jumlah perawat: ',
-        'Jumlah dokter: '
+      management: [
+        'Jumlah petugas: '+_.get(state, 'stats.management.petugas'),
+        'Jumlah perawat: '+_.get(state, 'stats.management.perawat'),
+        'Jumlah dokter: '+_.get(state, 'stats.management.dokter')
       ]
     })[state.dashboardTab || 'pasien']
     .map(i => m('.column', m('.notification',
