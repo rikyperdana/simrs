@@ -196,7 +196,6 @@ _.assign(comp, {
         makeModal('modalSerahObat')
       )
     )),
-    localStorage.openBeta &&
     m('.button.is-primary',
       {
         'data-tooltip': 'Untuk menjual obat secara manual',

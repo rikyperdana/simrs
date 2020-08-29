@@ -1,8 +1,9 @@
 /*global m _ comp db state tds lookUser look makeModal autoForm schemas moment lookReferences hari ors makePdf updateBoth*/
 
 _.assign(comp, {
-  // Note: Selagi masih beta radiologi tidak integrated dengan kasir dan pdf
-  radiology: () => m('.content',
+  radiology: () => state.login.bidang !== 9
+  ? m('p', 'Hanya untuk petugas radiologi')
+  : m('.content',
     m('h1', 'Radiologi'),
     // tabel untuk melihat daftar request radiologi yang direquest dokter
     m('.box', m('table.table.is-striped',

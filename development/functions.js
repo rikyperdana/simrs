@@ -95,18 +95,15 @@ menus = {
     }
   },
   pharmacy: {full: 'Apotik', icon: 'pills'},
+  laboratory: {full: 'Laboratorium', icon: 'flask'},
+  radiology: {full: 'Radiologi', icon: 'radiation'},
   management: {
     full: 'Manajemen', icon: 'users',
     children: {
       users: {full: 'Pengguna', icon: 'users'},
       references: {full: 'Referensi', icon: 'file-contract'}
     }
-  }
-},
-
-betaMenus = {
-  laboratory: {full: 'Laboratorium', icon: 'flask'},
-  radiology: {full: 'Radiologi', icon: 'radiation'},
+  },
   cssd: {full: 'Laundry', icon: 'tshirt'},
   gizi: {full: 'Gizi', icon: 'utensils'}
 },
