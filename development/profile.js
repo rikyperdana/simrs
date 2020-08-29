@@ -3,7 +3,7 @@
 _.assign(comp, {
   profile: () => m('.content',
     m('h1', 'Profil Pengguna'),
-    m('table.table', m('tbody',
+    m('.box', m('table.table.is-striped', m('tbody',
       m('tr',
         m('th', 'Username'),
         m('td', state.login.username)
@@ -24,7 +24,7 @@ _.assign(comp, {
         m('th', 'Peranan'),
         m('td', look('peranan', state.login.peranan))
       )
-    )),
+    ))),
     m('.buttons',
       m('.button.is-warning',
         {onclick: () => state.modalProfile = m('.box',
@@ -62,16 +62,6 @@ _.assign(comp, {
           target: '_blank'
         },
         makeIconLabel('envelope-open-text', 'Kritik/Saran')
-       ),
-      m('a.button.is-danger',
-        {
-          "data-tooltip": 'Double-click untuk buka/tutup menu beta (radiologi & laboratorium)',
-          ondblclick: () =>
-            localStorage.openBeta ?
-            localStorage.removeItem('openBeta')
-            : localStorage.setItem('openBeta', true)
-        },
-        makeIconLabel('adjust', 'Versi Beta')
       ),
       m('a.button.is-link',
         {

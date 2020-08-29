@@ -169,7 +169,6 @@ makePdf = {
             ])
           ]}}
         ],
-        localStorage.openBeta &&
         _.get(rawat, 'soapDokter.radio') && [
           {text: '\nObat', alignment: 'center'},
           {table: {widths: ['*', 'auto', 'auto'], body: [
@@ -180,7 +179,6 @@ makePdf = {
             ])
           ]}}
         ],
-        localStorage.openBeta &&
         _.get(rawat, 'soapDokter.labor') && [
           {text: '\nObat', alignment: 'center'},
           {table: {widths: ['*', 'auto'], body: [

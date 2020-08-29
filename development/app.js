@@ -1,16 +1,13 @@
 /*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor makeIconLabel*/
 
-var {laboratory, radiology} = betaMenus
+var topMenus = _.omit(menus, ['cssd', 'gizi'])
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary.is-fixed-top',
     m('.navbar-brand', m('a.navbar-item', {
       onclick: () => state.route = 'dashboard'
     }, "SIMRS.dev")),
     m('.navbar-menu',
-      m('.navbar-start', _.map(_.merge(
-        {}, menus, localStorage.openBeta ?
-        {laboratory, radiology} : {}
-      ), (val, key) =>
+      m('.navbar-start', _.map(topMenus, (val, key) =>
         m('a.navbar-item',
           {
             class: val.children && 'has-dropdown is-hoverable',
@@ -72,9 +69,7 @@ _.assign(comp, {
         'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
       ),
     ),
-    _.chunk(_.map(_.merge(
-      {}, menus, localStorage.openBeta ? betaMenus : {}
-    ), (v, k) => [v, k]), 3).map(i =>
+    _.chunk(_.map(menus, (v, k) => [v, k]), 3).map(i =>
       m('.columns', i.map(j => m('.column',
         m('.box', m('article.media',
           {onclick: () => [state.route = j[1], m.redraw()]},
@@ -85,48 +80,46 @@ _.assign(comp, {
         ))
       )))
     ),
-    localStorage.openBeta && [
-      m('h1', 'Statistik Sistem'),
-      m('.tabs.is-boxed', m('ul',
-        {style: 'margin-left: 0%'},
-        _.map({
-          pasien: ['Pasien', 'walking'],
-          rawatJalan: ['Rawat Jalan', 'ambulance'],
-          emergency: ['Emergency', 'heart'],
-          rawatInap: ['Rawat Inap', 'bed'],
-          radiology: ['Radiologi', 'radiation'],
-          laboratory: ['Laboratorium', 'flask'],
-          manajemen: ['Manajemen', 'users']
-        }, (val, key) => m('li',
-          {class: key === state.dashboardTab && 'is-active'},
-          m('a',
-            {onclick: () => [state.dashboardTab = key, m.redraw()]},
-            makeIconLabel(val[1], val[0])
-          )
-        ))
-      )),
-      m('.columns', ({
-        pasien: [
-          'Total jumlah pasien: ',
-          'Total pasien pria: ',
-          'Total pasien wanita: '
-        ],
-        rawatJalan: selects('klinik')()
-        .map(i => 'Total pasien klinik '+i.label+': '),
-        emergency: ['Total pasien emergency: '],
-        rawatInap: ['Total okupasi bed: '],
-        radiology: ['Total layanan radiologi: '],
-        laboratory: ['Total layanan laboratorium: '],
-        manajemen: [
-          'Jumlah petugas: ',
-          'Jumlah perawat: ',
-          'Jumlah dokter: '
-        ]
-      })[state.dashboardTab || 'pasien']
-      .map(i => m('.column', m('.notification',
-        {class: 'is-primary'}, i
-      ))))
-    ],
+    m('h1', 'Statistik Sistem'),
+    m('.tabs.is-boxed', m('ul',
+      {style: 'margin-left: 0%'},
+      _.map({
+        pasien: ['Pasien', 'walking'],
+        rawatJalan: ['Rawat Jalan', 'ambulance'],
+        emergency: ['Emergency', 'heart'],
+        rawatInap: ['Rawat Inap', 'bed'],
+        radiology: ['Radiologi', 'radiation'],
+        laboratory: ['Laboratorium', 'flask'],
+        manajemen: ['Manajemen', 'users']
+      }, (val, key) => m('li',
+        {class: key === state.dashboardTab && 'is-active'},
+        m('a',
+          {onclick: () => [state.dashboardTab = key, m.redraw()]},
+          makeIconLabel(val[1], val[0])
+        )
+      ))
+    )),
+    m('.columns', ({
+      pasien: [
+        'Total jumlah pasien: ',
+        'Total pasien pria: ',
+        'Total pasien wanita: '
+      ],
+      rawatJalan: selects('klinik')()
+      .map(i => 'Total pasien klinik '+i.label+': '),
+      emergency: ['Total pasien emergency: '],
+      rawatInap: ['Total okupasi bed: '],
+      radiology: ['Total layanan radiologi: '],
+      laboratory: ['Total layanan laboratorium: '],
+      manajemen: [
+        'Jumlah petugas: ',
+        'Jumlah perawat: ',
+        'Jumlah dokter: '
+      ]
+    })[state.dashboardTab || 'pasien']
+    .map(i => m('.column', m('.notification',
+      {class: 'is-primary'}, i
+    ))))
   ),
 
   login: () => m('.content', m('.columns',

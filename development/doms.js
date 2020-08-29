@@ -93,21 +93,19 @@ makeRincianSoapDokter = soapDokter => soapDokter && [
     m('th', 'File Tracer'),
     m('td', soapDokter.tracer)
   ),
-  localStorage.openBeta && [
-    (soapDokter.radio || []).map((j, k) => m('tr',
-      m('th', 'Cek radiologi '+(k+1)),
-      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
-      j.diagnosa && m('td', m('.button.is-info', {
-        "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
-        onclick: () => makePdf.radio(state.onePatient.identitas, j)
-      }, makeIconLabel('print', '')))
-    )),
-    (soapDokter.labor || []).map((j, k) => m('tr',
-      m('th', 'Cek labor '+(k+1)),
-      m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama),
-      m('td', j.hasil)
-    ))
-  ]
+  (soapDokter.radio || []).map((j, k) => m('tr',
+    m('th', 'Cek radiologi '+(k+1)),
+    m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
+    j.diagnosa && m('td', m('.button.is-info', {
+      "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
+      onclick: () => makePdf.radio(state.onePatient.identitas, j)
+    }, makeIconLabel('print', '')))
+  )),
+  (soapDokter.labor || []).map((j, k) => m('tr',
+    m('th', 'Cek labor '+(k+1)),
+    m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama),
+    m('td', j.hasil)
+  ))
 ]
 
 _.assign(comp, {

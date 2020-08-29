@@ -24,6 +24,8 @@ startOfTheDay = timestamp => +moment(
   moment(timestamp).format('YYYY-MM-DD')
 ),
 
+tomorrow = timestamp => timestamp + 86400000,
+
 rupiah = num =>
   'Rp '+numeral(num || 0).format('0,0'),
 
@@ -95,18 +97,15 @@ menus = {
     }
   },
   pharmacy: {full: 'Apotik', icon: 'pills'},
+  laboratory: {full: 'Laboratorium', icon: 'flask'},
+  radiology: {full: 'Radiologi', icon: 'radiation'},
   management: {
     full: 'Manajemen', icon: 'users',
     children: {
       users: {full: 'Pengguna', icon: 'users'},
       references: {full: 'Referensi', icon: 'file-contract'}
     }
-  }
-},
-
-betaMenus = {
-  laboratory: {full: 'Laboratorium', icon: 'flask'},
-  radiology: {full: 'Radiologi', icon: 'radiation'},
+  },
   cssd: {full: 'Laundry', icon: 'tshirt'},
   gizi: {full: 'Gizi', icon: 'utensils'}
 },

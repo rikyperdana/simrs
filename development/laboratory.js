@@ -1,7 +1,9 @@
 /*global m _ comp state tds db hari ors look lookUser makeModal lookReferences withThis updateBoth autoForm schemas selects*/
 
 _.assign(comp, {
-  laboratory: () => m('.content',
+  laboratory: () => state.login.bidang !== 8
+  ? m('p', 'Hanya untuk petugas labor')
+  : m('.content',
     m('h1', 'Laboratorium'),
     m('.box', m('table.table.is-striped',
       {onupdate: () => [
