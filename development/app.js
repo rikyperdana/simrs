@@ -99,16 +99,41 @@ _.assign(comp, {
         )
       ))
     )),
-    m('.columns', ({
+    m('.columns', {
+      oncreate: () => [
+        db.patients.toArray(array => _.assign(state, {stats: {
+          pasien: {
+            total: array.length,
+            pria: array.filter(
+              i => i.identitas.kelamin === 1
+            ).length,
+            wanita: array.filter(
+              i => i.identitas.kelamin === 2
+            ).length
+          },
+          rawatJalan: selects('klinik')().map(
+            i => _.sum(array.map(
+              j => (j.rawatJalan || []).filter(
+                k => k.klinik === i.value
+              ).length
+            ).filter(Boolean))
+          ),
+          emergency: _.sum(array.map(i => (i.emergency || []).length)),
+          rawatInap: _.sum(array.map(i => (i.rawatInap || []).length))
+        }}))
+      ]
+    }, ({
       pasien: [
-        'Total jumlah pasien: ',
-        'Total pasien pria: ',
-        'Total pasien wanita: '
+        'Total jumlah pasien: '+_.get(state, 'stats.pasien.total'),
+        'Total pasien pria: '+_.get(state, 'stats.pasien.pria'),
+        'Total pasien wanita: '+_.get(state, 'stats.pasien.wanita')
       ],
-      rawatJalan: selects('klinik')()
-      .map(i => 'Total pasien klinik '+i.label+': '),
-      emergency: ['Total pasien emergency: '],
-      rawatInap: ['Total okupasi bed: '],
+      rawatJalan: selects('klinik')().map(i => [
+        'Total pasien klinik ', i.label, ': ',
+        _.get(state, ['stats', 'rawatJalan', i.value-1])
+      ].join('')),
+      emergency: ['Total pasien emergency: '+_.get(state, 'stats.emergency')],
+      rawatInap: ['Total pasien pernah inap: '+_.get(state, 'stats.rawatInap') ],
       radiology: ['Total layanan radiologi: '],
       laboratory: ['Total layanan laboratorium: '],
       manajemen: [
