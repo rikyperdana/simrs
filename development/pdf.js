@@ -261,7 +261,8 @@ makePdf = {
 
   labor: (identitas, labors) =>
     pdfMake.createPdf(defaultStyle({content: [
-      kop, {
+      kop,
+      {
         text: 'Hasil Diagnosa Laborat',
         fontSize: 15, bold: true, alignment: 'center'
       }, '\n\n',
@@ -271,6 +272,10 @@ makePdf = {
           _.get(lookReferences(i.idlabor), 'nama'),
           i.hasil
         ])
-      ]}}
-    ]})).download('hasil_labor'+identitas.no_mr)
+      ]}}, '\n\n\n',
+      {alignment: 'justify', columns: [
+        {text: '\n\n\n\n__________________\nPasien', alignment: 'center'},
+        {text: 'Pangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\nPetugas', alignment: 'center'}
+      ]}
+    ]})).download('hasil_labor_'+identitas.no_mr)
 }
