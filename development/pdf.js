@@ -1,9 +1,9 @@
-/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds tarifIGD tarifKartu localStorage*/
+/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds tarifIGD tarifKartu localStorage defaultStyle*/
 
 var kop = {text: 'RUMAH SAKIT MEDICARE\nJL. Dt. Laksamana No. 1, Pangkalan Kuras, Pelalawan, Provinsi Riau.\n\n', alignment: 'center', bold: true},
 makePdf = {
   card: identitas =>
-    pdfMake.createPdf({
+    pdfMake.createPdf(defaultStyle({
       content: [
         'Nama: '+identitas.nama_lengkap,
         'No. MR: '+identitas.no_mr
@@ -11,11 +11,10 @@ makePdf = {
       pageSize: 'B8',
       pageMargins: [110, 50, 0, 0],
       pageOrientation: 'landscape'
-    }).download('kartu_peserta_'+identitas.no_mr)
-  ,
+    })).download('kartu_peserta_'+identitas.no_mr),
 
   consent: identitas =>
-    pdfMake.createPdf({content: [
+    pdfMake.createPdf(defaultStyle({content: [
       kop,
       {text: 'Data Umum Pasien\n', alignment: 'center'},
       {columns: [
@@ -43,11 +42,10 @@ makePdf = {
         {text: '\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'},
         {text: 'Pangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\nPasien', alignment: 'center'}
       ]}
-    ]}).download('general_consent_'+identitas.no_mr)
-  ,
+    ]})).download('general_consent_'+identitas.no_mr),
 
   bayar_pendaftaran: (pasien, rawat, rawatLength) =>
-    pdfMake.createPdf({content: [kop, {columns: [
+    pdfMake.createPdf(defaultStyle({content: [kop, {columns: [
       ['Tanggal', 'No. MR', 'Nama Pasien', 'Tarif', 'Petugas'],
       [
         hari(_.now()),
@@ -59,10 +57,10 @@ makePdf = {
         ])),
         state.login.nama
       ].map(i => ': '+i)
-    ]}]}).download('bayar_pendaftaran_'+pasien.identitas.no_mr),
+    ]}]})).download('bayar_pendaftaran_'+pasien.identitas.no_mr),
 
   bayar_konsultasi: (pasien, rawat, bills) =>
-    pdfMake.createPdf({content: [
+    pdfMake.createPdf(defaultStyle({content: [
       kop,
       {columns: [
         ['No. MR', 'Nama Pasien', 'Jenis Kelamin', 'Tanggal Lahir', 'Umur', 'Layanan'],
@@ -86,10 +84,10 @@ makePdf = {
       )}},
       '\nTotal Biaya '+rupiah(_.sum(bills.map(i => i.harga))),
       {text: '\nP. Kuras, '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
-    ]}).download('bayar_konsultasi_'+pasien.identitas.no_mr),
+    ]})).download('bayar_konsultasi_'+pasien.identitas.no_mr),
 
   soap: (identitas, rawat) =>
-    pdfMake.createPdf({content: [
+    pdfMake.createPdf(defaultStyle({content: [
       kop,
       {table: {widths: ['auto', '*', 'auto'], body: [
         [
@@ -190,10 +188,10 @@ makePdf = {
           ]}}
         ]
       ]
-    ]}).download('soap_'+identitas.no_mr),
+    ]})).download('soap_'+identitas.no_mr),
 
   resep: (drugs, no_mr) =>
-    pdfMake.createPdf({content: [
+    pdfMake.createPdf(defaultStyle({content: [
       kop,
       {text: 'Salinan Resep\n\n', alignment: 'center', bold: true},
       {table: {
@@ -219,10 +217,10 @@ makePdf = {
         ['Nama Barang', 'No. Batch', 'Jumlah'],
         ...drugs.map(i => [i.nama_barang, i.no_batch, i.serahkan])
       ]}}
-    ]}).download('salinan_resep_'+no_mr),
+    ]})).download('salinan_resep_'+no_mr),
 
   report: (title, rows, info) =>
-    pdfMake.createPdf({
+    pdfMake.createPdf(defaultStyle({
       pageOrientation: 'landscape',
       defaultStyle: {fontSize: 10},
       content: [
@@ -234,16 +232,16 @@ makePdf = {
           body: rows
         }}
       ]
-    }).download('laporan_'+title),
+    })).download('laporan_'+title),
 
   regQueue: last =>
-    pdfMake.createPdf({
+    pdfMake.createPdf(defaultStyle({
       content: [{text: last+1}],
       pageSize: 'B8'
-    }).download('antrian_pendaftaran_'+(last+1)),
+    })).download('antrian_pendaftaran_'+(last+1)),
 
   radio: (identitas, radiologi) =>
-    pdfMake.createPdf({content: [
+    pdfMake.createPdf(defaultStyle({content: [
       kop, {
         text: 'Hasil Diagnosa Radiologist',
         fontSize: 15, bold: true, alignment: 'center'
@@ -259,10 +257,10 @@ makePdf = {
         {text: '\n\n\n\n__________________\nPasien', alignment: 'center'},
         {text: 'Pangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\n'+lookUser(radiologi.petugas), alignment: 'center'}
       ]}
-    ]}).download('hasil_radiologi_'+identitas.no_mr+'_'+radiologi.kode_berkas),
+    ]})).download('hasil_radiologi_'+identitas.no_mr+'_'+radiologi.kode_berkas),
 
   labor: (identitas, labors) =>
-    pdfMake.createPdf({content: [
+    pdfMake.createPdf(defaultStyle({content: [
       kop, {
         text: 'Hasil Diagnosa Radiologist',
         fontSize: 15, bold: true, alignment: 'center'
@@ -274,5 +272,5 @@ makePdf = {
           i.hasil
         ])
       ]}}
-    ]}).download('hasil_labor'+identitas.no_mr)
+    ]})).download('hasil_labor'+identitas.no_mr)
 }
