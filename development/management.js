@@ -82,7 +82,10 @@ _.assign(comp, {
       'references',
       _.get(state, 'referenceList.length') / 20
     )),
-    [
+    ands([
+      state.login.bidang === 5,
+      state.login.peranan === 4
+    ]) && [
       m('h3', 'Import Data'),
       m('.file.is-danger',
         {onchange: e => Papa.parse(e.target.files[0], {
@@ -158,7 +161,11 @@ _.assign(comp, {
           m('input.file-input', {type: 'file', name: 'import'}),
           m('span.file-cta', m('span.file-label', 'Pilih file'))
         )
-      )
+      ),
+      m('a.help', {
+        href: 'https://github.com/rikyperdana/simrs/wiki/Import-Master-Data',
+        target: '_blank'
+      }, 'Panduan Import Data Master')
     ]
   ),
 
