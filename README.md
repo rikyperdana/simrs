@@ -8,6 +8,8 @@ SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang menandakan bahw
 
 ## Screenshots
 ![dashboard](https://user-images.githubusercontent.com/11875540/89487820-a0d98200-d7d0-11ea-8017-f24d64aef486.png "Dashboard")
+![rekam_medis](https://user-images.githubusercontent.com/11875540/91721198-92f60180-ebc2-11ea-9d42-9ffc2c22ba67.png)
+![storage](https://user-images.githubusercontent.com/11875540/91721215-9c7f6980-ebc2-11ea-8a0c-5851498ae4b3.png)
 
 Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 
@@ -105,11 +107,12 @@ Adalah menu yang dapat digunakan oleh user gudang, apoteker, dan tenaga medis de
 ### Apotik
 Adalah menu yang dapat digunakan oleh user apotik untuk mengeksekusi instruksi penyerahan obat dari resep dokter ke pasien dengan cara yang terotomatisasi oleh sistem. User apotik dapat memantau stok dan me-request mutasi barang dari gudang farmasi ke apotik melalui menu Storage dan Amprah. Apoteker juga dapat melakukan penjualan bebas atas pilihan obat yang tersedia melalui menu penjualan obat.
 
-## Struktur Kode
-Buka halaman Wiki > [Code Structure](https://github.com/rikyperdana/simrs/wiki/Code-Structure)
-
-## Pengujian Sistem
-Buka halaman Wiki > [Testing Guide](https://github.com/rikyperdana/simrs/wiki/Testing-Guide)
+## Wiki
+- [Code Structure](https://github.com/rikyperdana/simrs/wiki/Code-Structure)
+- [Data Structure](https://github.com/rikyperdana/simrs/wiki/Data-Structure)
+- [Testing Guide](https://github.com/rikyperdana/simrs/wiki/Testing-Guide)
+- [Import Data Master](https://github.com/rikyperdana/simrs/wiki/Import-Master-Data)
+- [Question & Answers](https://github.com/rikyperdana/simrs/wiki/Question-&-Answers)
 
 ## Integrasi/Bridging BPJS
 Buka halaman project [WSBPJS](https://github.com/rikyperdana/wsbpjs)
@@ -129,4 +132,4 @@ Lampiran [Hak Cipta](https://drive.google.com/file/d/1WvzHdWEZrsszxUD1txK-30fEta
 - Sistem ini dirancang hanya mendukung pencatatan stok untuk 1 Gudang dan 1 Apotik
 
 ## Pengembangan
-- Informasi statistik untuk masing-masing modul
+- Aplikasi khusus untuk diakses oleh pasien
