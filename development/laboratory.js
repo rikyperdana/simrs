@@ -141,6 +141,7 @@ _.assign(comp, {
             )
           })
         ),
+        doc.labor.filter(i => i.hasil).length &&
         makePdf.labor(state.responLaboratory.pasien.identitas, doc.labor),
         _.assign(state, {route: 'laboratory', laboratoryList: []}),
         m.redraw()
