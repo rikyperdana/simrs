@@ -43,6 +43,9 @@ makeReport = (name, action, selections) => m('.box',
   )
 ),
 
+defaultStyle = obj => true ? ((+localStorage.license || 0) > _.now())
+  ? obj : _.merge({defaultStyle: {decoration: 'lineThrough'}}, obj) : obj,
+
 makeRincianSoapPerawat = soapPerawat => soapPerawat && [
   m('tr', m('th', 'Anamnesa Perawat'), m('td', soapPerawat.anamnesa)),
   withThis(
