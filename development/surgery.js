@@ -1,7 +1,11 @@
 /*global _ m comp state db tds hari lookReferences moment*/
 
 _.assign(comp, {
-  surgery: () => m('.content',
+  surgery: () => !ors([
+    state.login.bidang === 1,
+    _.includes([2, 3], state.login.peranan)
+  ]) ? m('p', 'Hanya untuk tenaga medis dan user pendaftaran')
+  : m('.content',
     m('h1', 'Jadwal Instalasi Bedah'),
     m('.box', m('table.table.is-striped',
       {

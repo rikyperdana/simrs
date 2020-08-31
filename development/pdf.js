@@ -262,7 +262,7 @@ makePdf = {
   labor: (identitas, labors) =>
     pdfMake.createPdf(defaultStyle({content: [
       kop, {
-        text: 'Hasil Diagnosa Radiologist',
+        text: 'Hasil Diagnosa Laborat',
         fontSize: 15, bold: true, alignment: 'center'
       }, '\n\n',
       {table: {widths: ['auto', '*'], body: [
