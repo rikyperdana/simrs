@@ -27,6 +27,7 @@ _.assign(comp, {
       }, 'Reset Antrian')
     ),
     Array(3).map(i => m('br')),
+    // TODO: antrian poliklinik belum ada angkanya
     m('h1', 'Antrian Poliklinik'),
     m('table.is-fullwidth.is-striped',
       selects('klinik')().map(i => m('tr',

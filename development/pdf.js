@@ -113,7 +113,7 @@ makePdf = {
           ''
         ]
       ]}},
-      rawat.soapPerawat && [
+      rawat.soapPerawat ? [
         {text: '\nSOAP Perawat', alignment: 'center', bold: true},
         {table: {widths: ['*', '*', '*'], body: [
           [
@@ -133,8 +133,8 @@ makePdf = {
             'Sumber: '+(_.get(rawat, 'soapPerawat.sumber_rujukan') || '-')
           ],
         ]}},
-      ],
-      rawat.soapDokter && [
+      ] : '',
+      rawat.soapDokter ? [
         {text: '\nSOAP Dokter', alignment: 'center', bold: true},
         {table: {widths: ['auto', '*'], body: [
           ['Anamnesa dokter', (_.get(rawat, 'soapDokter.anamnesa') || '-')],
@@ -168,27 +168,28 @@ makePdf = {
           ]}}
         ],
         _.get(rawat, 'soapDokter.radio') && [
-          {text: '\nObat', alignment: 'center'},
+          {text: '\nRadiologi', alignment: 'center'},
           {table: {widths: ['*', 'auto', 'auto'], body: [
             ['Radiologi', 'No. Berkas', 'Diagnosa'],
             ..._.get(rawat, 'soapDokter.radio').map(i => [
-              lookReferences(i.idradio).nama,
+              _.get(lookReferences(i.idradio), 'nama'),
               i.kode_berkas, i.diagnosa
             ])
           ]}}
         ],
         _.get(rawat, 'soapDokter.labor') && [
-          {text: '\nObat', alignment: 'center'},
+          {text: '\nLaboratorium', alignment: 'center'},
           {table: {widths: ['*', 'auto'], body: [
             ['Laboratorium', 'Diagnosa'],
             ..._.get(rawat, 'soapDokter.labor').map(i => [
-              lookReferences(i.idlabor).nama,
-              i.hasil
+              _.get(lookReferences(i.idlabor), 'nama'),
+              i.hasil || '-'
             ])
           ]}}
         ]
-      ]
-    ]})).download('soap_'+identitas.no_mr),
+      ].filter(Boolean) : ''
+    ].filter(Boolean)}))
+    .download('soap_'+identitas.no_mr),
 
   resep: (drugs, no_mr) =>
     pdfMake.createPdf(defaultStyle({content: [
