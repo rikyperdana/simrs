@@ -69,8 +69,30 @@ _.assign(comp, {
           target: '_blank'
         },
         makeIconLabel('chalkboard-teacher', 'Tutorial')
+      ),
+      m('a.button.is-danger',
+        {onclick: () => [
+          state.modalLicense = m('.box',
+            m('h3', 'Unlock Lisensi Enterprise'),
+            m(autoForm({
+              id: 'updateLicense',
+              schema: {key: {type: String, autoform: {
+                help: 'Dapatkan dari developer'
+              }}},
+              action: ({key}) => key.length === 15 && [
+                withThis(['license', key.split(' ').reverse().join(''), localStorage],
+                name => _.last(name).setItem(_.first(name), +(name[+true]+'e5'))),
+                state.modalLicense = null,
+                m.redraw()
+              ]
+            }))
+          ),
+          m.redraw()
+        ]},
+        makeIconLabel('key', 'Unlock')
       )
     ),
-    makeModal('modalProfile')
+    makeModal('modalProfile'),
+    makeModal('modalLicense')
   )
 })
