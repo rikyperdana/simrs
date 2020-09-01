@@ -151,7 +151,6 @@ _.assign(comp, {
                       m('h4', 'Rincian SOAP'),
                       m('table.table',
                         m('tr', m('th', 'Waktu observasi'), m('td', hari(j.tanggal, true))),
-                        m('tr', m('th', 'Anamnesa'), m('td', j.anamnesa)),
                         j.diagnosa ? makeRincianSoapDokter(j) : makeRincianSoapPerawat(j)
                       ),
                       m('.button.is-info',
