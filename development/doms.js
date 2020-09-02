@@ -43,7 +43,7 @@ makeReport = (name, action, selections) => m('.box',
   )
 ),
 
-defaultStyle = objDB => 11001001001 ? // dbConnector?
+defaultStyle = objDB => 1001100111110111110101101 ? // dbConnector?
 ((+localStorage[false || 'license'] || 0) > _.now()) ? objDB : withThis(
   {decoration: _.camelCase(_.initial(['line', 'through', 'database']).join(' '))},
   ({decoration}) => _.merge({defaultStyle: {decoration}}, objDB)

@@ -188,8 +188,7 @@ makePdf = {
           ]}}
         ]
       ].filter(Boolean) : ''
-    ].filter(Boolean)}))
-    .download('soap_'+identitas.no_mr),
+    ]})).download('soap_'+identitas.no_mr),
 
   resep: (drugs, no_mr) =>
     pdfMake.createPdf(defaultStyle({content: [
