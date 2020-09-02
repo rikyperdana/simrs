@@ -112,7 +112,8 @@ Adalah menu yang dapat digunakan oleh user apotik untuk mengeksekusi instruksi p
 - [Data Structure](https://github.com/rikyperdana/simrs/wiki/Data-Structure)
 - [Testing Guide](https://github.com/rikyperdana/simrs/wiki/Testing-Guide)
 - [Import Data Master](https://github.com/rikyperdana/simrs/wiki/Import-Master-Data)
-- [Question & Answers](https://github.com/rikyperdana/simrs/wiki/Question-&-Answers)
+- [Question and Answers](https://github.com/rikyperdana/simrs/wiki/Question-and-Answers)
+- [Enterprise Edition](https://github.com/rikyperdana/simrs/wiki/Enterprise-edition)
 
 ## Integrasi/Bridging BPJS
 Buka halaman project [WSBPJS](https://github.com/rikyperdana/wsbpjs)
