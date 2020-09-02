@@ -74,10 +74,11 @@ _.assign(comp, {
         {onclick: () => [
           state.modalLicense = m('.box',
             m('h3', 'Unlock Lisensi Enterprise'),
+            m('p.help', 'Untuk menghilangkan semua garis batas pada pdf'),
             m(autoForm({
               id: 'updateLicense',
               schema: {key: {type: String, autoform: {
-                help: 'Dapatkan dari developer'
+                placeholder: 'Dapatkan dari developer'
               }}},
               action: ({key}) => key.length === 15 && [
                 withThis(['license', key.split(' ').reverse().join(''), localStorage],

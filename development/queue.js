@@ -3,11 +3,22 @@
 _.assign(comp, {
   queue: () => m('.content',
     m('table.is-fullwidth', m('tr',
-      {oncreate: () => db.queue.toArray(
-        array => localStorage.setItem('regQueue', array.filter(
-          i => i.timestamp > startOfTheDay(+moment())
-        ).length)
-      )},
+      {onupdate: () => [
+        db.queue.toArray(
+          array => localStorage.setItem('regQueue', array.filter(
+            i => i.timestamp > startOfTheDay(+moment())
+          ).length)
+        ),
+        db.patients.toArray(array => localStorage.setItem(
+          'clinicQueue', JSON.stringify(
+            array.flatMap(i => (i.rawatJalan || []).map(j =>
+              (startOfTheDay(j.tanggal) === startOfTheDay(_.now())) &&
+              [j.klinik, Boolean(j.soapDokter)]
+            ).filter(Boolean))
+            .filter(i => i.length)
+          )
+        ))
+      ]},
       m('th', m('h1', 'Antrian Pendaftaran')),
       m('th', m('h1', 'R'+(localStorage.regQueue || 0)))
     )),
@@ -28,10 +39,18 @@ _.assign(comp, {
     ),
     Array(3).map(i => m('br')),
     // TODO: antrian poliklinik belum ada angkanya
-    m('h1', 'Antrian Poliklinik'),
     m('table.is-fullwidth.is-striped',
+      m('thead', m('tr'), [
+        'Antrian Poliklinik', 'Urutan', 'Panjang'
+      ].map(i => m('td', m('h1', i)))),
       selects('klinik')().map(i => m('tr',
-        m('td', m('h2', i.label))
+        [
+          i.label,
+          JSON.parse(localStorage.clinicQueue || '[]')
+          .filter(j => ands([j[0] === i.value, j[1]])).length,
+          JSON.parse(localStorage.clinicQueue || '[]')
+          .filter(j => j[0] === i.value).length
+        ].map(i => m('td', m('h1', i)))
       ))
     )
   )
