@@ -4,7 +4,7 @@
 Bismillahirrahmanirrahim,
 
 ## Pengenalan
-SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang menandakan bahwa sistem ini mencakup fungsi umum yang terdapat pada rumah sakit seperti Rawat Jalan, IGD, Rawat Inap, Apotik, Farmasi, Amprahan, Manajemen, dsb. Sistem ini menggunakan 1 database yang saling menghubungkan fungsi tersebut dengan otomatisasi sehingga memungkinkan rumah sakit untuk menjalankan sistem ini secara paperless maupun hybrid dengan dokumen fisiknya.
+SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang menandakan bahwa sistem ini mencakup fungsi umum yang terdapat pada rumah sakit seperti Rawat Jalan, IGD, Rawat Inap, Apotik, Farmasi, Amprahan, Manajemen, Radiologi, Laboratorium, Gizi, dsb. Sistem ini menggunakan 1 database yang saling menghubungkan fungsi tersebut dengan otomatisasi sehingga memungkinkan rumah sakit untuk menjalankan sistem ini secara paperless maupun hybrid dengan dokumen fisiknya.
 
 ## Screenshots
 ![dashboard](https://user-images.githubusercontent.com/11875540/89487820-a0d98200-d7d0-11ea-8017-f24d64aef486.png "Dashboard")
@@ -50,8 +50,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 4. Pilih MongoDB version 2.2.12 or later
 5. Klik Copy pada Connection String Only
 6. Pada halaman MongoDB Atlas Cluster, create database "simrs" (atau nama lainnya).
-7. Masih pada halaman Cluster, tambahkan dibawah db tersebut 5 collection
-    `goods, patients, references, users, queue`
+7. Masih pada halaman Cluster, tambahkan dibawah db tersebut 5 collection `goods, patients, references, users, queue`
 8. Pada Glitch code editor, Buat file pada project (jika belum ada) bernama `.env`. Ketikkan
 ```
 MONGO="isikan dengan connection string, dan ganti <username> dan <password>"
@@ -64,7 +63,7 @@ dengan alamat server database local Anda
 1. Login dengan username 'admin' password 'admin'
 2. Segera buat akun admin baru dan non-aktifkan akun admin bawaan
 3. Unduh dan ganti isi [Daftar tarif tindakan](https://docs.google.com/spreadsheets/d/1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ/edit?usp=sharing), simpan sebagai .csv dan unggah melalui tombol Import
-4. Selamat mengikuti video tutorial pada playlist youtube berikut ini [Playlist Tutorial Pemakaian SIMRST Open Source](https://www.youtube.com/playlist?list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ)
+4. Selamat mengikuti video tutorial pada playlist youtube berikut ini [Playlist Tutorial Pemakaian SIMRS.dev Open Source](https://www.youtube.com/playlist?list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ)
 
 ## Cara Menjalankan
 ### Development
