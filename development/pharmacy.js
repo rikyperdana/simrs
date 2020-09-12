@@ -3,7 +3,10 @@
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
   m('p', 'Hanya untuk user apotik') : m('.content',
-    state.login.peranan === 4 && reports.pharmacy(),
+    state.login.peranan === 4 && [
+      reports.pharmacy(),
+      reports.sales()
+    ],
     m('h3', 'Apotik'),
     m('.box', m('table.table.is-striped',
       m('thead', m('tr',
@@ -295,9 +298,16 @@ _.assign(comp, {
                 makeIconLabel('print', 'Cetak salinan resep')
               ),
               m('.button.is-primary',
-                {ondblclick: () => updatedGoods[0].map(
-                  i => updateBoth('goods', i._id, i)
-                )},
+                {ondblclick: () => [
+                  updatedGoods[0].map(
+                    i => updateBoth('goods', i._id, i)
+                  ),
+                  _.assign(state, {
+                    modalPenjualanBebas: null,
+                    route: 'pharmacy'
+                  }),
+                  m.redraw()
+                ]},
                 makeIconLabel('check', 'Serahkan')
               )
             )
