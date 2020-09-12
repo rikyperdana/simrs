@@ -96,6 +96,35 @@ var reports = {
     selects('cara_bayar')()
   ),
 
+  sales: () => makeReport('Penjualan Bebas', e => withThis(
+    {
+      start: +moment(e.target[0].value),
+      end: tomorrow(+moment(e.target[1].value))
+    },
+    date => [
+      e.preventDefault(),
+      db.goods.toArray(array => makePdf.report(
+        'Laporan Penjualan Bebas',
+        [
+          ['Tanggal', 'Nama Barang', 'No. Batch', 'Jumlah', 'Harga', 'Apoteker'],
+          ..._.flattenDeep(array.map(i => i.batch.map(
+            j => j.penjualan && j.penjualan.map(
+              k => ({barang: i, batch: j, penjualan: k})
+            )
+          ))).filter(Boolean)
+          .sort((a, b) => a.penjualan.tanggal - b.penjualan.tanggal)
+          .map(i => [
+            hari(i.penjualan.tanggal, true),
+            i.barang.nama, i.batch.no_batch,
+            i.penjualan.jumlah,
+            rupiah(i.batch.harga.jual),
+            lookUser(i.penjualan.user)
+          ])
+        ]
+      ))
+    ]
+  )),
+
   pharmacy: () => makeReport('Pengeluaran Apotik', e => withThis(
     {
       start: +moment(e.target[0].value),

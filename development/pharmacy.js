@@ -3,7 +3,10 @@
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
   m('p', 'Hanya untuk user apotik') : m('.content',
-    state.login.peranan === 4 && reports.pharmacy(),
+    state.login.peranan === 4 && [
+      reports.pharmacy(),
+      reports.sales()
+    ],
     m('h3', 'Apotik'),
     m('.box', m('table.table.is-striped',
       m('thead', m('tr',
@@ -96,27 +99,31 @@ _.assign(comp, {
                 ),
                 emergency: (i.pasien.emergency || []).map(
                   a => a.idrawat === i.rawat.idrawat ?
-                   _.assign(a, {soapDokter: _.assign(a.soapDokter,
-                    {obat: (a.soapDokter.obat || []).map(
+                   _.assign(a, {soapDokter: _.assign(a.soapDokter,{
+                    obat: (a.soapDokter.obat || []).map(
                       b => _.assign(b, {diserah: true, harga: _.sum(
                         serahList.filter(
                           c => c.idbarang === b.idbarang
                         ).map(c => c.jual)
                       )})
-                    )}
-                  )}) : a
+                    ),
+                    apoteker: state.login._id
+                  })}) : a
                 ),
                 rawatInap: (i.pasien.rawatInap || []).map(
                   a => a.idinap === i.rawat.idinap ?
                   _.assign(a, {observasi: a.observasi.map(
                     b => b.idobservasi === i.rawat.idobservasi ?
-                    _.assign(b, {obat: b.obat.map(
-                      c => _.assign(c, {diserah: true, harga: _.sum(
-                        serahList.filter(
-                          d => d.idbarang === c.idbarang
-                        ).map(d => d.jual)
-                      )})
-                    )}) : b
+                    _.assign(b, {
+                      obat: b.obat.map(
+                        c => _.assign(c, {diserah: true, harga: _.sum(
+                          serahList.filter(
+                            d => d.idbarang === c.idbarang
+                          ).map(d => d.jual)
+                        )})
+                      ),
+                      apoteker: state.login._id
+                    }) : b
                   )}) : a
                 )
               })
@@ -291,9 +298,16 @@ _.assign(comp, {
                 makeIconLabel('print', 'Cetak salinan resep')
               ),
               m('.button.is-primary',
-                {ondblclick: () => updatedGoods[0].map(
-                  i => updateBoth('goods', i._id, i)
-                )},
+                {ondblclick: () => [
+                  updatedGoods[0].map(
+                    i => updateBoth('goods', i._id, i)
+                  ),
+                  _.assign(state, {
+                    modalPenjualanBebas: null,
+                    route: 'pharmacy'
+                  }),
+                  m.redraw()
+                ]},
                 makeIconLabel('check', 'Serahkan')
               )
             )
