@@ -126,6 +126,40 @@ var reports = {
     ]
   )),
 
+  transfer: () => makeReport(
+    'Riwayat Mutasi Barang',
+    e => withThis(
+      {
+        start: +moment(e.target[0].value),
+        end: tomorrow(+moment(e.target[1].value))
+      },
+      date => [
+        e.preventDefault(),
+        db.goods.toArray(array => makePdf.report(
+          'Riwayat Mutasi Barang',
+          [
+            ['No. Batch', 'Nama ', 'Jenis', 'Tanggal Minta', 'Peminta', 'Diminta', 'Diserah',  'Penyerah', 'Tanggal Serah'],
+            ..._.flattenDeep(array.map(i => (i.batch || []).map(
+              j => (j.amprah || []).map(
+                k => ({barang: i, batch: j, amprah: k})
+              )
+            ))).filter(Boolean)
+            .sort((a, b) => a.amprah.tanggal_minta - b.amprah.tanggal_minta)
+            .map(i => [
+              i.batch.no_batch, i.barang.nama,
+              look('jenis_barang', i.barang.jenis),
+              hari(i.amprah.tanggal_minta, true),
+              lookUser(i.amprah.peminta),
+              i.amprah.diminta, i.amprah.diserah,
+              lookUser(i.amprah.penyerah),
+              hari(i.amprah.tanggal_minta, true),
+            ])
+          ]
+        ))
+      ]
+    )
+  ),
+
   pharmacy: () => makeReport('Pengeluaran Apotik', e => withThis(
     {
       start: +moment(e.target[0].value),

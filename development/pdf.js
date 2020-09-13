@@ -228,7 +228,8 @@ makePdf = {
         {text: title, alignment: 'center', bold: true},
         info && {text: info+'\n\n', alignment: 'center', bold: true},
         {table: {
-          widths: _.range(rows[0].length).map(i => '*'),
+          // widths: _.range(rows[0].length).map(() => 'auto'),
+          widths: [..._.range(rows[0].length-1).map(() => 'auto'), '*'],
           body: rows
         }}
       ]

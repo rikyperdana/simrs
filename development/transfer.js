@@ -7,6 +7,7 @@ _.assign(comp, {
   ])
   ? m('p', 'Hanya untuk user farmasi, apotik dan petugas medis')
   : m('.content',
+    state.login.peranan === 4 && reports.transfer(),
     m('h3', 'Daftar antrian amprah'),
     m('.box', m('table.table.is-striped',
       {onupdate: () => [
