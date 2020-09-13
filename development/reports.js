@@ -21,9 +21,9 @@ var reports = {
                 ...(i.emergency || []),
                 ...(i.rawatInap ? i.rawatInap.map(
                   j => _.assign(j, {soapDokter: {
-                    obat: (j.observasi || []).flatMap(k => k.obat),
-                    bhp: (j.observasi || []).flatMap(k => k.bhp),
-                    tindakan: (j.observasi || []).flatMap(k => k.tindakan)
+                    obat: (j.observasi || []).flatMap(k => k.obat || []),
+                    bhp: (j.observasi || []).flatMap(k => k.bhp || []),
+                    tindakan: (j.observasi || []).flatMap(k => k.tindakan || [])
                   }})
                 ) : [])
               ].map(j => ands([
