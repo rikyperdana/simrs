@@ -297,6 +297,7 @@ var reports = {
                 pasien: i, rawat: j, radio: k
               }))
             ))).filter(Boolean)
+            .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [
               i.pasien.identitas.nama_lengkap,
               i.pasien.identitas.no_mr,
@@ -305,6 +306,42 @@ var reports = {
               _.get(lookReferences(i.radio.idradio), 'nama'),
               i.radio.tanggal ? hari(i.radio.tanggal, true) : '',
               lookUser(i.radio.petugas)
+            ])
+          ]
+        ))
+      ]
+    )
+  ),
+
+  laboratory: () => makeReport(
+    'Instalasi Laboratorium',
+    e => withThis(
+      {
+        start: +moment(e.target[0].value),
+        end: tomorrow(+moment(e.target[1].value))
+      },
+      date => [
+        e.preventDefault(),
+        db.patients.toArray(array => makePdf.report(
+          'Laporan Instalasi Laboratorium',
+          [
+            ['Nama Pasien', 'No. MR', 'Diminta', 'Grup Uji', 'Jenis Uji', 'Diproses', 'Petugas'],
+            ..._.flattenDeep(array.map(i => [
+              ...i.rawatJalan || []
+            ].flatMap(j => _.get(j, 'soapDokter.labor') &&
+              j.soapDokter.labor.map(k => ({
+                pasien: i, rawat: j, labor: k
+              }))
+            ))).filter(Boolean)
+            .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
+            .map(i => [
+              i.pasien.identitas.nama_lengkap,
+              i.pasien.identitas.no_mr,
+              hari(i.rawat.tanggal, true),
+              _.startCase(i.labor.grup),
+              _.get(lookReferences(i.labor.idlabor), 'nama'),
+              i.labor.tanggal ? hari(i.labor.tanggal, true) : '',
+              lookUser(i.labor.petugas)
             ])
           ]
         ))
