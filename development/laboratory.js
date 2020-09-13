@@ -4,6 +4,7 @@ _.assign(comp, {
   laboratory: () => state.login.bidang !== 8
   ? m('p', 'Hanya untuk petugas labor')
   : m('.content',
+    state.login.peranan === 4 && reports.laboratory(),
     m('h1', 'Laboratorium'),
     m('.box', m('table.table.is-striped',
       {onupdate: () => [
