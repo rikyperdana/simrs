@@ -33,9 +33,12 @@ makeReport = (name, action, selections) => m('.box',
     )),
     selections &&
     m('.field', m('.control.is-expanded',
-      m('.select.is-fullwidth', m('select', selections.map(
-        i => m('option', {value: i.value}, i.label)
-      )))
+      m('.select.is-fullwidth', m('select',
+        m('option', 'Semua'),
+        selections.map(
+          i => m('option', {value: i.value}, i.label)
+        ))
+      )
     )),
     m('input.button.is-primary',
       {type: 'submit', value: 'Unduh'}

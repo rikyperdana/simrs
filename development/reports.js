@@ -1,13 +1,14 @@
 /*global _ m makeReport withThis moment db makePdf hari look rupiah tarifIGD lookReferences ors lookUser lookGoods selects ands beds tarifInap tomorrow*/
 
 var reports = {
+
   cashier: () => makeReport(
     'Penerimaan Kasir',
     e => withThis(
       {
         start: +moment(e.target[0].value),
         end: tomorrow(+moment(e.target[1].value)),
-        selection: e.target[2].value
+        selection: _.get(e, 'target.2.value')
       },
       obj => [
         e.preventDefault(),
@@ -27,7 +28,7 @@ var reports = {
                   }})
                 ) : [])
               ].map(j => ands([
-                j.cara_bayar === +obj.selection,
+                +obj.selection ? j.cara_bayar === +obj.selection : true,
                 (j.tanggal || j.tanggal_masuk) > obj.start,
                 (j.tanggal || j.tanggal_masuk) < obj.end,
                 +obj.selection === 1 ? j.bayar_konsultasi : true,
@@ -89,7 +90,7 @@ var reports = {
               lookUser(i.rawat.kasir)
             ])
           ],
-          'Cara Bayar: '+look('cara_bayar', +obj.selection)
+          'Cara Bayar: '+ (+obj.selection ? look('cara_bayar', +obj.selection) : 'Semua')
         ))
       ]
     ),
@@ -169,6 +170,7 @@ var reports = {
       ))
     ]
   )),
+
   igd: () => makeReport('Kunjungan IGD', e => withThis(
     {
       start: +moment(e.target[0].value),
@@ -201,6 +203,7 @@ var reports = {
       ))
     ]
   )),
+
   inpatient: () => makeReport('Kunjungan Rawat Inap', e => withThis(
     {
       start: +moment(e.target[0].value),
@@ -238,15 +241,17 @@ var reports = {
       ))
     ]
   )),
+
   outpatient: () => makeReport('Kunjungan Poliklinik', e => withThis(
     {
       start: +moment(e.target[0].value),
-      end: tomorrow(+moment(e.target[1].value))
+      end: tomorrow(+moment(e.target[1].value)),
+      selection: _.get(e, 'target.2.value')
     },
-    date => [
+    obj => [
       e.preventDefault(),
       db.patients.toArray(array => makePdf.report(
-        'Kunjungan Poliklinik',
+        'Kunjungan Poliklinik: ' + (+obj.selection ? look('klinik', +obj.selection) : 'Semua'),
         [
           ['Tanggal', 'Poliklinik', 'No. MR', 'Nama Pasien', 'Perawat', 'Dokter'],
           ...array.flatMap(pasien =>
@@ -254,8 +259,9 @@ var reports = {
             .map(i => ({pasien, rawat: i}))
           ).filter(({pasien, rawat}) => ands([
             rawat.soapDokter,
-            rawat.tanggal > date.start &&
-            rawat.tanggal < date.end
+            rawat.tanggal > obj.start &&
+            rawat.tanggal < obj.end,
+            +obj.selection ? rawat.klinik === +obj.selection : true
           ]))
           .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
           .map(({pasien, rawat}) => [
@@ -269,5 +275,5 @@ var reports = {
         ]
       ))
     ]
-  ))
+  ), selects('klinik')())
 }
