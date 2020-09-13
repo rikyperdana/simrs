@@ -36,7 +36,7 @@ _.assign(comp, {
         .sort((a, b) => a.identitas.tanggal_lahir - b.identitas.tanggal_lahir)
         .map(i => m('tr',
           {ondblclick: () => _.assign(state, {
-            route: 'onePatient', onePatient: i
+            route: 'onePatient', onePatient: i, searchPatients: null
           })},
           tds([
             hari(_.get(_.last([...(i.rawatJalan || []), ...(i.emergency || [])]), 'tanggal')),
