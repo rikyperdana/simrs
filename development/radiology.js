@@ -4,6 +4,7 @@ _.assign(comp, {
   radiology: () => state.login.bidang !== 9
   ? m('p', 'Hanya untuk petugas radiologi')
   : m('.content',
+    state.login.peranan === 4 && reports.radiology(),
     m('h1', 'Radiologi'),
     // tabel untuk melihat daftar request radiologi yang direquest dokter
     m('.box', m('table.table.is-striped',
@@ -127,7 +128,7 @@ _.assign(comp, {
             ]),
             _.startCase(i.radio.grup),
             lookReferences(i.radio.idradio).nama,
-            i.radio.konfirmasi === 1 && hari(i.radio.tanggal, true)
+            i.radio.konfirmasi === 1 ? hari(i.radio.tanggal, true) : 'Belum'
           ])
         ))
       ),

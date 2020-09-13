@@ -275,5 +275,40 @@ var reports = {
         ]
       ))
     ]
-  ), selects('klinik')())
+  ), selects('klinik')()),
+
+  radiology: () => makeReport(
+    'Instalasi Radiologi',
+    e => withThis(
+      {
+        start: +moment(e.target[0].value),
+        end: tomorrow(+moment(e.target[1].value))
+      },
+      date => [
+        e.preventDefault(),
+        db.patients.toArray(array => makePdf.report(
+          'Laporan Instalasi Radiologi',
+          [
+            ['Nama Pasien', 'No. MR', 'Diminta', 'Grup Uji', 'Jenis Uji', 'Diproses', 'Petugas'],
+            ..._.flattenDeep(array.map(i => [
+              ...i.rawatJalan || []
+            ].flatMap(j => _.get(j, 'soapDokter.radio') &&
+              j.soapDokter.radio.map(k => ({
+                pasien: i, rawat: j, radio: k
+              }))
+            ))).filter(Boolean)
+            .map(i => [
+              i.pasien.identitas.nama_lengkap,
+              i.pasien.identitas.no_mr,
+              hari(i.rawat.tanggal, true),
+              _.startCase(i.radio.grup),
+              _.get(lookReferences(i.radio.idradio), 'nama'),
+              i.radio.tanggal ? hari(i.radio.tanggal, true) : '',
+              lookUser(i.radio.petugas)
+            ])
+          ]
+        ))
+      ]
+    )
+  )
 }
