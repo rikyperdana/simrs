@@ -104,12 +104,8 @@ _.assign(comp, {
         db.patients.toArray(array => _.merge(state, {stats: {
           pasien: {
             total: array.length,
-            pria: array.filter(
-              i => i.identitas.kelamin === 1
-            ).length,
-            wanita: array.filter(
-              i => i.identitas.kelamin === 2
-            ).length
+            pria: array.filter(i => i.identitas.kelamin === 1).length,
+            wanita: array.filter(i => i.identitas.kelamin === 2).length
           },
           rawatJalan: selects('klinik')().map(
             i => _.sum(array.map(
@@ -119,7 +115,17 @@ _.assign(comp, {
             ).filter(Boolean))
           ),
           emergency: _.sum(array.map(i => (i.emergency || []).length)),
-          rawatInap: _.sum(array.map(i => (i.rawatInap || []).length))
+          rawatInap: _.sum(array.map(i => (i.rawatInap || []).length)),
+          radiology: _.flattenDeep(array.map(i => [
+            ...i.rawatJalan || [],
+            ...i.emergency || [],
+            ...(i.rawatInap || []).flatMap(i => i.observasi) || []
+          ].map(j => _.get(j, 'soapDokter.radio')).filter(Boolean))).length,
+          laboratory: _.flattenDeep(array.map(i => [
+            ...i.rawatJalan || [],
+            ...i.emergency || [],
+            ...(i.rawatInap || []).flatMap(i => i.observasi) || []
+          ].map(j => _.get(j, 'soapDokter.labor')).filter(Boolean))).length
         }})),
         db.users.toArray(array => _.merge(state, {stats: {
           management: {
@@ -142,8 +148,8 @@ _.assign(comp, {
       ].join('')),
       emergency: ['Total pasien emergency: '+_.get(state, 'stats.emergency')],
       rawatInap: ['Total pasien pernah inap: '+_.get(state, 'stats.rawatInap') ],
-      radiology: ['Total layanan radiologi: '],
-      laboratory: ['Total layanan laboratorium: '],
+      radiology: ['Total riwayat layanan radiologi: '+_.get(state, 'stats.radiology')],
+      laboratory: ['Total riwayat layanan laboratorium: '+_.get(state, 'stats.laboratory')],
       management: [
         'Jumlah petugas: '+_.get(state, 'stats.management.petugas'),
         'Jumlah perawat: '+_.get(state, 'stats.management.perawat'),
@@ -209,7 +215,7 @@ io().on('connect', socket => [
       m('.content', m('a.help', {
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank'
-      }, 'Versi 2.2.0'))
+      }, 'Versi 2.3.1'))
     )
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi
