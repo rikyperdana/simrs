@@ -16,7 +16,8 @@ _.assign(comp, {
                 insertBoth('users', _.assign(doc, {password: res})),
                 state.modalAccount = null
               ])
-          }))
+          })),
+          m('p.help', 'Jika tidak bisa disimpan, berarti username sudah terpakai')
         )
       },
       makeIconLabel('user-plus', 'Tambah akun')
