@@ -327,9 +327,9 @@ var reports = {
             ..._.flattenDeep(array.map(i => [
               ...i.rawatJalan || []
             ].flatMap(j => _.get(j, 'soapDokter.radio') &&
-              j.soapDokter.radio.map(k => ({
-                pasien: i, rawat: j, radio: k
-              }))
+              j.soapDokter.radio.map(k => ands([
+                j.tanggal > date.start, j.tanggal < date.end
+              ]) && {pasien: i, rawat: j, radio: k})
             ))).filter(Boolean)
             .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [
@@ -363,9 +363,9 @@ var reports = {
             ..._.flattenDeep(array.map(i => [
               ...i.rawatJalan || []
             ].flatMap(j => _.get(j, 'soapDokter.labor') &&
-              j.soapDokter.labor.map(k => ({
-                pasien: i, rawat: j, labor: k
-              }))
+              j.soapDokter.labor.map(k => ands([
+                j.tanggal > date.start, j.tanggal < date.end
+              ]) && {pasien: i, rawat: j, labor: k})
             ))).filter(Boolean)
             .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [

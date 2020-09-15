@@ -11,6 +11,7 @@ _.assign(comp, {
           m(autoForm({
             id: 'createAccount', schema: schemas.account,
             action: doc =>
+              !(state.userList || []).find(i => i.username === doc.username) &&
               io().emit('bcrypt', doc.password, res => [
                 insertBoth('users', _.assign(doc, {password: res})),
                 state.modalAccount = null
