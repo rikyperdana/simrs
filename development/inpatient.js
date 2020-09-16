@@ -3,7 +3,6 @@
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-    reports.inpatient(),
     m('h3', 'Daftar Admisi Rawat Inap'),
     m('.box', m('table.table.is-striped',
       {onupdate: () =>

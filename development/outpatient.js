@@ -3,7 +3,6 @@
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-    reports.outpatient(),
     m('h3', 'Antrian pasien poliklinik '+look('klinik', state.login.poliklinik)),
     m('.box', m('table.table.is-striped',
       m('thead', m('tr',
