@@ -23,7 +23,7 @@ _.assign(comp, {
       makeIconLabel('user-plus', 'Tambah akun')
     ), m('br'), m('br'),
     makeModal('modalAccount'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => db.users.toArray(array => [
         state.userList = array, m.redraw()
       ])},
@@ -35,7 +35,7 @@ _.assign(comp, {
         i.keaktifan === 1
       ) || []).map(i =>
         m('tr',
-          {ondblclick: () =>
+          {onclick: () =>
             state.modalAccount = m('.box',
               m('h4', 'Profil Pengguna'),
               m(autoForm({
@@ -57,14 +57,14 @@ _.assign(comp, {
           ])
         )
       ))
-    ))
+    )))
   ),
 
   // referensi harus terbuka untuk seluruh pihak
   references: () => m('.content',
     m('h3', 'Daftar Tarif'),
     m('p.help', '* Tersusun alfabetis'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {oncreate: () => db.references.toArray(array => [
         state.referenceList = _.sortBy(array, ['nama']),
         m.redraw()
@@ -79,7 +79,7 @@ _.assign(comp, {
           i.nama, rupiah(i.harga), i[0], i[1], i[2]
         ])))
       )
-    )),
+    ))),
     m('div',comp.pagination(
       'references',
       _.get(state, 'referenceList.length') / 20

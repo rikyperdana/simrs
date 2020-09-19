@@ -8,7 +8,7 @@ _.assign(comp, {
   m('p', 'Hanya untuk user bidang kasir') : m('.content',
     state.login.peranan === 4 && reports.cashier(),
     m('h3', 'Loket Pembayaran'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Lengkap', 'Tanggal', 'Layanan', 'Tambahan']
         .map(i => m('th', i))
@@ -48,7 +48,7 @@ _.assign(comp, {
         .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
         .map(
           ({pasien, rawat}) => m('tr',
-            {ondblclick: () => withThis(
+            {onclick: () => withThis(
               [
                 !rawat.bed ? ands([
                   [ // cek apakah ini pasien baru
@@ -137,7 +137,8 @@ _.assign(comp, {
                 )),
                 m('.buttons',
                   m('.button.is-success',
-                    {ondblclick: () => [
+                    {onclick: () => [
+                      confirm('Yakin sudah menerima pembayaran?') &&
                       updateBoth('patients', pasien._id, _.assign(pasien, {
                         // rajal bisa pembayaran awal dan akhir
                         rawatJalan: (pasien.rawatJalan || []).map(
@@ -211,7 +212,7 @@ _.assign(comp, {
           )
         )
       )
-    )),
+    ))),
     makeModal('modalCashier')
   ),
 

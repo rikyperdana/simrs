@@ -7,7 +7,7 @@ _.assign(comp, {
     state.login.peranan === 4 && reports.radiology(),
     m('h1', 'Radiologi'),
     // tabel untuk melihat daftar request radiologi yang direquest dokter
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => [
         // siapkan daftar referensi untuk dilookup
         db.references.toArray(array => state.references = array),
@@ -55,7 +55,7 @@ _.assign(comp, {
       m('tbody',
         (state.radiologyList || []).map(i => m('tr',
           // form untuk petugas radiologi merespon request
-          {ondblclick: () => state.modalRadiologi = m('.box',
+          {onclick: () => state.modalRadiologi = m('.box',
             m('h3', 'Form Radiologi'),
             m('p', 'Catatan dokter: '+(i.radio.catatan || '-')),
             m(autoForm({
@@ -133,6 +133,6 @@ _.assign(comp, {
         ))
       ),
       makeModal('modalRadiologi')
-    ))
+    )))
   )
 })

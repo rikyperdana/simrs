@@ -25,7 +25,7 @@ _.assign(comp, {
           lastDate => lastDate(a) - lastDate(b)
         ))
         .map(i => m('tr',
-          {ondblclick: () => [
+          {onclick: () => [
             _.assign(state, {
               route: 'onePatient', onePatient: i, onePatientTab: 'emergency'
             }),
@@ -39,7 +39,7 @@ _.assign(comp, {
     ))
   ),
   emergencyHistory: () => m('.content',
-    m('.box', m('table.table',
+    m('.box', m('.table-container', m('table.table',
       m('thead', m('tr',
         ['Tanggal berobat', 'Cara bayar', 'Perawat', 'Dokter']
         .map(i => m('th', i)),
@@ -48,7 +48,7 @@ _.assign(comp, {
       m('tbody',
         (_.get(state, 'onePatient.emergency') || [])
         .map(i => m('tr',
-          {ondblclick: () =>
+          {onclick: () =>
             state.modalVisit = m('.box',
               m('h4', 'Rincian kunjungan IGD'),
               m('table.table',
@@ -94,9 +94,9 @@ _.assign(comp, {
             state.login.peranan === 4,
             !i.bayar_konsultasi
           ]) && m('td', m('.button.is-danger', {
-            'data-tooltip': 'klik ganda bila yakin hapus',
-            ondblclick: e => [
+            onclick: e => [
               e.stopPropagation(),
+              confirm('Yakin hapus riwayat IGD?') &&
               updateBoth('patients', state.onePatient._id, _.assign(
                 state.onePatient, {emergency:
                   state.onePatient.emergency.filter(j =>
@@ -108,7 +108,7 @@ _.assign(comp, {
           }, makeIconLabel('trash-alt', 'Hapus')))
         ))
       )
-    )),
+    ))),
     state.login.bidang === 1 && m('.button.is-success',
       {onclick: () => state.route = 'igdVisit'},
       makeIconLabel('file-invoice', 'Kunjungi IGD')

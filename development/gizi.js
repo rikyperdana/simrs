@@ -5,7 +5,7 @@ _.assign(comp, {
   ? m('p', 'Hanya untuk user bidang Gizi')
   : m('.content',
     m('h1', 'Daftar konsumsi pasien inap'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {oncreate: () => db.patients.filter(
         i => (i.rawatInap || []).filter(
           j => j.observasi && !j.keluar
@@ -49,7 +49,7 @@ _.assign(comp, {
           hari(_.get(_.last(i.rawatInap), 'tanggal_masuk'), true)
         ]))
       ))
-    )),
+    ))),
     makeModal('modalConsume')
   )
 })

@@ -3,27 +3,46 @@
 var topMenus = _.omit(menus, ['cssd', 'gizi'])
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary.is-fixed-top',
-    m('.navbar-brand', m('a.navbar-item', {
-      onclick: () => state.route = 'dashboard'
-    }, "SIMRS.dev")),
+    m('.navbar-brand',
+      m('a.navbar-item',
+        {onclick: () => state.route = 'dashboard'},
+        "SIMRS.dev"
+      ),
+      m('.navbar-burger',
+        {
+          role: 'button', class: state.burgerMenu ? 'is-active' : '',
+          onclick: () => state.burgerMenu = !state.burgerMenu
+        },
+        _.range(3).map(i => m('span', {'aria-hidden': true}))
+      )
+    ),
     m('.navbar-menu',
+      {class: state.burgerMenu ? 'is-active' : ''},
       m('.navbar-start', _.map(topMenus, (val, key) =>
         m('a.navbar-item',
           {
             class: val.children && 'has-dropdown is-hoverable',
-            onclick: () => state.route = key
+            // onclick: () => state.route = key
+            onclick: () => [_.assign(state, {
+              route: key, burgerMenu: null
+            }), m.redraw()]
           },
           val.children ? [
             m('a.navbar-link', _.startCase(val.full)),
             m('.navbar-dropdown', _.map(val.children, (i, j) =>
               m('a.navbar-item',
-                {onclick: e => [e.stopPropagation(), state.route = j]},
+                {onclick: e => [
+                  e.stopPropagation(), _.assign(state, {
+                    route: j, burgerMenu: null
+                  })
+                ]},
                 makeIconLabel(i.icon, i.full)
                )
             ))
           ] : m('span', _.startCase(val.full))
         )
       )),
+      state.login &&
       m('.navbar-end', m('.navbar-item.has-dropdown.is-hoverable',
         m('a.navbar-link', {
           onclick: () => [state.route = 'profile', m.redraw()]
@@ -41,7 +60,10 @@ _.assign(comp, {
           m('hr.dropdown-divider'),
           m('a.navbar-item',
             {onclick: () => [
-              _.assign(state, {login: null, route: 'login', loading: false}),
+              _.assign(state, {
+                login: null, route: 'login', loading: false,
+                burgerMenu: null
+              }),
               localStorage.removeItem('login'),
               m.redraw()
             ]},
@@ -49,7 +71,7 @@ _.assign(comp, {
           )
         )
       ))
-    ),
+    )
   ),
 
   dashboard: () => m('.content',
@@ -61,12 +83,12 @@ _.assign(comp, {
     ]}, 'Dashboard'),
     m('.buttons',
       m('.button.is-info', {
-        class: state.loading && 'is-loading',
+        class: state.loading ? 'is-loading' : '',
         "data-tooltip": 'otomatis setiap beberapa menit / manual',
         onclick: () => [state.loading = true, getDifferences()]
       }, 'Sync'),
       state.lastSync && m('span',
-        'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
+        'Tersinkronisasi ' + moment(state.lastSync).fromNow()
       ),
     ),
     _.chunk(_.map(menus, (v, k) => [v, k]), 3).map(i =>
@@ -205,11 +227,11 @@ io().on('connect', socket => [
   state.login = localStorage.login &&
     JSON.parse(localStorage.login || '{}'),
   m.mount(document.body, {view: () => m('.has-background-light',
-    comp.navbar(), m('.container',
-      {style: 'min-height:100vh'}, m('br'),
+    comp.navbar(), m('section.section', m('.container',
+      {style: 'min-height:100vh'},
       state.username || _.get(state, 'login.username') ?
       comp[state.route]() : comp.login()
-    ),
+    )),
     m('footer.footer',
       {style: 'padding:0px'},
       m('.content', m('a.help', {

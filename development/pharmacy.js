@@ -8,7 +8,7 @@ _.assign(comp, {
       reports.sales()
     ],
     m('h3', 'Apotik'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Tanggal berobat', 'Cara bayar', 'Layanan']
         .map(i => m('th', i))
@@ -48,7 +48,7 @@ _.assign(comp, {
           db.goods.toArray(array => state.goodsList = array)
         ]},
         (state.pharmacyList || []).map(i => m('tr',
-          {ondblclick: () => withThis([], serahList => withThis(
+          {onclick: () => withThis([], serahList => withThis(
             { // urai jenis obat yang diminta oleh pasien
               updatedGoods: i.obats.flatMap(
                 // urai jenis obat yang tersedia di gudang
@@ -153,7 +153,9 @@ _.assign(comp, {
                     makeIconLabel('print', 'Cetak salinan resep')
                   ),
                   m('.button.is-primary',
-                    {ondblclick: () => [
+                    {onclick: () => confirm(
+                      'Yakin sudah menyerahkan barang?'
+                    ) && [
                       updateBoth('patients', updatedPatient._id, updatedPatient),
                       updatedGoods.map(j => updateBoth('goods', j._id, j)),
                       state.modalSerahObat = null, m.redraw()
@@ -161,7 +163,7 @@ _.assign(comp, {
                     makeIconLabel('check', 'Selesai')
                   ),
                   m('.button.is-danger',
-                    {ondblclick: () => updateBoth(
+                    {onclick: () => confirm('Yakin membatalkan penyerahan?') && updateBoth(
                       'patients', i.pasien._id, _.assign(i.pasien, {
                         rawatJalan: (i.pasien.rawatJalan || []).map(
                           j => j.idrawat === i.rawat.idrawat ?
@@ -202,7 +204,7 @@ _.assign(comp, {
         )),
         makeModal('modalSerahObat')
       )
-    )),
+    ))),
     m('.button.is-primary',
       {
         'data-tooltip': 'Untuk menjual obat secara manual',
@@ -298,7 +300,7 @@ _.assign(comp, {
                 makeIconLabel('print', 'Cetak salinan resep')
               ),
               m('.button.is-primary',
-                {ondblclick: () => [
+                {onclick: () => confirm('Yakin sudah menyerahkan?') && [
                   updatedGoods[0].map(
                     i => updateBoth('goods', i._id, i)
                   ),
