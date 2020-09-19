@@ -83,12 +83,12 @@ _.assign(comp, {
     ]}, 'Dashboard'),
     m('.buttons',
       m('.button.is-info', {
-        class: state.loading && 'is-loading',
+        class: state.loading ? 'is-loading' : '',
         "data-tooltip": 'otomatis setiap beberapa menit / manual',
         onclick: () => [state.loading = true, getDifferences()]
       }, 'Sync'),
       state.lastSync && m('span',
-        'Terakhir sinkronisasi ' + moment(state.lastSync).fromNow()
+        'Tersinkronisasi ' + moment(state.lastSync).fromNow()
       ),
     ),
     _.chunk(_.map(menus, (v, k) => [v, k]), 3).map(i =>

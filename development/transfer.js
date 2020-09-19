@@ -34,7 +34,7 @@ _.assign(comp, {
       )),
       m('tbody', state.transferList &&
         state.transferList.map(i => m('tr',
-        {ondblclick: () => [
+        {onclick: () => [
           state.login.bidang === 3 &&
           _.assign(state, {
             oneAmprah: i, modalResponAmprah: m('.box',

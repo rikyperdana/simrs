@@ -4,7 +4,7 @@ _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
     m('h3', 'Antrian pasien poliklinik '+look('klinik', state.login.poliklinik)),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
         .map(i => m('th', i))
@@ -28,7 +28,7 @@ _.assign(comp, {
           lastDate => lastDate(a) - lastDate(b)
         ))
         .map(i => m('tr',
-          {ondblclick: () => _.assign(state, {
+          {onclick: () => _.assign(state, {
             route: 'onePatient', onePatient: i
           })},
           tds([
@@ -39,11 +39,11 @@ _.assign(comp, {
           ])
         ))
       )
-    ))
+    )))
   ),
 
   outPatientHistory: () => m('.content',
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => dbCall({
         method: 'findOne', collection: 'patients',
         _id: state.onePatient._id
@@ -55,7 +55,7 @@ _.assign(comp, {
       )),
       m('tbody',
         (_.get(state.onePatient, 'rawatJalan') || []).map(i => m('tr',
-          {ondblclick: () => [
+          {onclick: () => [
             state.modalVisit = _.includes([2, 3, 4], state.login.peranan) &&
             ors([i.cara_bayar !== 1, i.bayar_pendaftaran]) && m('.box',
               m('h3', 'Rincian Kunjungan Rawat Jalan'),
@@ -107,9 +107,9 @@ _.assign(comp, {
             state.login.peranan === 4,
             !i.bayar_konsultasi
           ]) && m('td', m('.button.is-danger', {
-            'data-tooltip': 'klik ganda bila yakin hapus',
-            ondblclick: e => [
+            onclick: e => [
               e.stopPropagation(),
+              confirm('Yakin hapus riwayat rawat jalan ini?') &&
               updateBoth('patients', state.onePatient._id, _.assign(
                 state.onePatient, {rawatJalan:
                   state.onePatient.rawatJalan.filter(j =>
@@ -121,7 +121,7 @@ _.assign(comp, {
           }, makeIconLabel('trash-alt', 'Hapus')))
         ))
       )
-    )),
+    ))),
     m('p.help.has-text-grey-light', 'Note: Jika pasien umum belum bayar maka tidak dapat diklik'),
     makeModal('modalVisit'),
     state.login.bidang === 1 && m('.button.is-success',

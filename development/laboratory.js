@@ -6,7 +6,7 @@ _.assign(comp, {
   : m('.content',
     state.login.peranan === 4 && reports.laboratory(),
     m('h1', 'Laboratorium'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => [
         db.references.toArray(array => state.references = array),
         db.patients.filter(i => // logicnya berbeda dengan radiologi
@@ -46,7 +46,7 @@ _.assign(comp, {
       // berbeda dengan radiologi, 1 baris mewakili 1 kali rawat/observasi
       m('tbody',
         (state.laboratoryList || []).map(i => m('tr',
-          {ondblclick: () => _.assign(state, {
+          {onclick: () => _.assign(state, {
             route: 'responLaboratory',
             responLaboratory: _.assign(i, {labor: ors([
               _.get(i, 'rawat.soapDokter.labor'),
@@ -78,7 +78,7 @@ _.assign(comp, {
           ])
         ))
       )
-    ))
+    )))
   ),
   responLaboratory: () => m('.content',
     m('h2', 'Respon Laboratorium'),

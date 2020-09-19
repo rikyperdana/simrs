@@ -31,7 +31,7 @@ _.assign(comp, {
     })), m('br'),
     state.loading && m('progress.progress.is-small.is-primary'),
     state.searchPatients && m('p.help', '* Berurut berdasarkan tanggal lahir'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
         .map(i => m('th', i))
@@ -40,7 +40,7 @@ _.assign(comp, {
         (state.searchPatients || [])
         .sort((a, b) => a.identitas.tanggal_lahir - b.identitas.tanggal_lahir)
         .map(i => m('tr',
-          {ondblclick: () => _.assign(state, {
+          {onclick: () => _.assign(state, {
             route: 'onePatient', onePatient: i, searchPatients: null
           })},
           tds([
@@ -50,7 +50,7 @@ _.assign(comp, {
           ])
         ))
       )
-    )),
+    ))),
     state.searchPatients &&
     m('.button.is-primary',
       {onclick: () => _.assign(state, {

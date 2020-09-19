@@ -4,7 +4,7 @@ _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
     m('h3', 'Daftar Admisi Rawat Inap'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () =>
         db.patients.toArray(array =>
           state.admissionList = _.compact(array.flatMap(i =>
@@ -34,7 +34,7 @@ _.assign(comp, {
         )
       )
       .map(i => m('tr',
-        {ondblclick: () => [
+        {onclick: () => [
           state.admissionModal = m('.box',
             m('h4', 'Inapkan pasien'),
             m('table.table',
@@ -73,13 +73,13 @@ _.assign(comp, {
           lookUser(_.get(i.inap, 'soapDokter.dokter'))
         ])
       )))
-    )),
+    ))),
     makeModal('admissionModal'),
     m('br'),
 
     m('h3', 'Daftar Pasien Menginap'),
     m('p.help', '* Urut berdasarkan tanggal masuk terbaru'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () =>
         db.patients.toArray(array => [
           state.inpatientList = array.filter(i =>
@@ -102,7 +102,7 @@ _.assign(comp, {
         .map(i => withThis(
           _.get(_.last(i.rawatInap), 'bed'),
           bed => bed && m('tr',
-            {ondblclick: () => _.assign(state, {
+            {onclick: () => _.assign(state, {
               route: 'onePatient', onePatient: i,
               onePatientTab: 'inpatient'
             })},
@@ -119,24 +119,23 @@ _.assign(comp, {
           )
         ))
       )
-    ))
+    )))
   ),
 
   inpatientHistory: () => m('.content',
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['Tanggal masuk', 'Kelas / Kamar / Nomor']
         .map(i => m('th', i))
       )),
       m('tbody',
         (state.onePatient.rawatInap || []).map(i => m('tr',
-          {ondblclick: () =>
-             // untuk melihat 1 rekaman observasi
+          {onclick: () =>
             state.modalObservasi = _.includes([2, 3, 4], state.login.peranan) && m('.box',
               m('h3', 'Riwayat Observasi'),
               Boolean(i.observasi.length) && m(
                 'p.help.is-italic.has-text-info',
-                'klik-ganda pada salah satu observasi untuk melihat rincian'
+                'klik pada salah satu observasi untuk melihat rincian'
               ),
               m('table.table',
                 m('thead', m('tr',
@@ -144,7 +143,7 @@ _.assign(comp, {
                   .map(j => m('th', j))
                 )),
                 m('tbody', i.observasi.map(j => m('tr',
-                  {ondblclick: () => [
+                  {onclick: () => [
                     state.modalObservasi = null,
                     state.modalSoap = m('.box',
                       m('h4', 'Rincian SOAP'),
@@ -178,7 +177,8 @@ _.assign(comp, {
                   makeIconLabel('user-md', 'Tambah observasi')
                 ),
                 m('.button.is-danger',
-                  {ondblclick: () => [
+                  {onclick: () => [
+                    confirm('Yakin untuk pulangkan pasien?') &&
                     updateBoth('patients', state.onePatient._id, _.assign(
                       state.onePatient, {rawatInap:
                         state.onePatient.rawatInap.map(j =>
@@ -206,7 +206,7 @@ _.assign(comp, {
           ])
         ))
       )
-    )),
+    ))),
     makeModal('modalObservasi')
   ),
 
