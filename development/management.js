@@ -99,13 +99,71 @@ _.assign(comp, {
     m('div',comp.pagination(
       'references',
       _.get(state, 'referenceList.length') / 20
+    ))
+  ),
+
+  management: () =>
+    _.chunk(_.map(
+      menus.management.children, (v, k) => [v, k]
+    ), 3).map(i =>
+      m('.columns', i.map(j => m('.column',
+        m('a.box', m('article.media',
+          {onclick: () => [state.route = j[1], m.redraw()]},
+          m('.media-left', m('span.icon.has-text-primary',
+            m('i.fas.fa-2x.fa-'+j[0].icon))
+          ),
+          m('.media-content', m('.content',m('h3', j[0].full)))
+        ))
+      )))
+    ),
+
+  database: () => !ands([
+    state.login.bidang === 5,
+    state.login.peranan === 4
+  ]) ? m('p', 'Hanya untuk admin manajemen')
+  : m('.content', m('.columns',
+    m('.column', m('.box',
+      m('h3', 'Backup / Restore Database'),
+      m('.buttons',
+        m('.button.is-info',
+          {onclick: () => collNames.map(
+            i => db[i].toArray(array => saveAs(
+              new Blob([
+                [array.map(j => sanitize(JSON.stringify(j))+';').join('\n')],
+                {type: 'text/csv;charset=utf-8;'}
+              ]),
+              [i, hari(_.now()), '.csv'].join(' ')
+            ))
+          )},
+          makeIconLabel('download', 'Backup')
+        ),
+        m('.button.is-danger', m('.file.is-danger', m('label.file-label',
+          m('input.file-input', {
+            type: 'file', name: 'import',
+            onchange: e => Papa.parse(e.target.files[0], {
+              delimiter: ';', newline: ';',
+              complete: result => withThis(
+                (result.data || []).map(i => JSON.parse(i[0])),
+                array => ors([
+                  array[0].identitas && console.log('patients', array),
+                  array[0].username && console.log('users', array),
+                  array[0].batch && console.log('goods', array),
+                  array[0].harga && console.log('references', array)
+                ])
+              )
+            })
+          }),
+          m('span.file-cta', makeIconLabel('upload', 'Restore'))
+        )))
+      )
     )),
-    ands([
-      state.login.bidang === 5,
-      state.login.peranan === 4
-    ]) && [
+    m('.column', m('.box',
       m('h3', 'Import Data'),
-      m('.file.is-danger',
+      m('a', {
+        href: 'https://github.com/rikyperdana/simrs/wiki/Import-Master-Data',
+        target: '_blank'
+      }, 'Panduan Import Data Master'),
+      m('.file.is-warning',
         {onchange: e => Papa.parse(e.target.files[0], {
           header: true, complete: result => withThis(
             (collName, docs) => [
@@ -177,28 +235,12 @@ _.assign(comp, {
         })},
         m('label.file-label',
           m('input.file-input', {type: 'file', name: 'import'}),
-          m('span.file-cta', m('span.file-label', 'Pilih file'))
+          // m('span.file-cta', m('span.file-label', 'Pilih file'))
+          m('span.file-cta',
+            makeIconLabel('file-import', 'Pilih file')
+          )
         )
-      ),
-      m('a.help', {
-        href: 'https://github.com/rikyperdana/simrs/wiki/Import-Master-Data',
-        target: '_blank'
-      }, 'Panduan Import Data Master')
-    ]
-  ),
-
-  management: () =>
-    _.chunk(_.map(
-      menus.management.children, (v, k) => [v, k]
-    ), 3).map(i =>
-      m('.columns', i.map(j => m('.column',
-        m('.box', m('article.media',
-          {onclick: () => [state.route = j[1], m.redraw()]},
-          m('.media-left', m('span.icon.has-text-primary',
-            m('i.fas.fa-2x.fa-'+j[0].icon))
-          ),
-          m('.media-content', m('.content',m('h3', j[0].full)))
-        ))
-      )))
-    ),
+      )
+    ))
+  ))
 })

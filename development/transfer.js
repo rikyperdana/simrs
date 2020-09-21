@@ -39,7 +39,7 @@ _.assign(comp, {
           _.assign(state, {
             oneAmprah: i, modalResponAmprah: m('.box',
               m('h4', 'Respon permintaan barang'),
-              m('table.table',
+              m('.table-container', m('table.table',
                 m('thead', m('tr',
                   ['Nama barang', 'No. Batch', 'Stok gudang', 'Jumlah minta']
                   .map(j => m('th', j))
@@ -47,7 +47,7 @@ _.assign(comp, {
                 m('tbody', m('tr', tds([
                   i.nama_barang, i.no_batch, i.digudang, i.diminta
                 ])))
-              ),
+              )),
               m(autoForm({
                 id: 'formResponAmprah', schema: schemas.responAmprah,
                 action: doc =>
@@ -86,7 +86,7 @@ _.assign(comp, {
     ))),
     m('p'),
     m('h3', 'Daftar riwayat amprah'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['Nama barang', 'No. Batch', 'Peminta', 'Jumlah minta', 'Tanggal diminta', 'Penyerah', 'Jumlah serah', 'Tanggal serah']
         .map(i => m('th', i))
@@ -102,7 +102,7 @@ _.assign(comp, {
           ])
         ))
       )
-    )),
+    ))),
     m('div',comp.pagination(
       'transferList',
       _.get(state, 'transferList.length') / 100
