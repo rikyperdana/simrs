@@ -1,4 +1,4 @@
-/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io menus betaMenus makeIconLabel*/
+/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io menus betaMenus makeIconLabel ands collNames saveAs sanitize hari*/
 
 _.assign(comp, {
   management: () =>

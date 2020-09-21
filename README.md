@@ -107,11 +107,12 @@ Adalah menu yang dapat digunakan oleh user gudang, apoteker, dan tenaga medis de
 Adalah menu yang dapat digunakan oleh user apotik untuk mengeksekusi instruksi penyerahan obat dari resep dokter ke pasien dengan cara yang terotomatisasi oleh sistem. User apotik dapat memantau stok dan me-request mutasi barang dari gudang farmasi ke apotik melalui menu Storage dan Amprah. Apoteker juga dapat melakukan penjualan bebas atas pilihan obat yang tersedia melalui menu penjualan obat.
 
 ## Wiki
+- [Question and Answers](https://github.com/rikyperdana/simrs/wiki/Question-and-Answers)
 - [Code Structure](https://github.com/rikyperdana/simrs/wiki/Code-Structure)
 - [Data Structure](https://github.com/rikyperdana/simrs/wiki/Data-Structure)
 - [Testing Guide](https://github.com/rikyperdana/simrs/wiki/Testing-Guide)
 - [Import Data Master](https://github.com/rikyperdana/simrs/wiki/Import-Master-Data)
-- [Question and Answers](https://github.com/rikyperdana/simrs/wiki/Question-and-Answers)
+- [Backup and Restore](https://github.com/rikyperdana/simrs/wiki/Backup-and-Restore)
 - [Enterprise Edition](https://github.com/rikyperdana/simrs/wiki/Enterprise-edition)
 
 ## Integrasi/Bridging BPJS
