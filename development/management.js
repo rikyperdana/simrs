@@ -1,6 +1,21 @@
 /*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io menus betaMenus makeIconLabel*/
 
 _.assign(comp, {
+  management: () =>
+    _.chunk(_.map(
+      menus.management.children, (v, k) => [v, k]
+    ), 3).map(i =>
+      m('.columns', i.map(j => m('.column',
+        m('a.box', m('article.media',
+          {onclick: () => [state.route = j[1], m.redraw()]},
+          m('.media-left', m('span.icon.has-text-primary',
+            m('i.fas.fa-2x.fa-'+j[0].icon))
+          ),
+          m('.media-content', m('.content',m('h3', j[0].full)))
+        ))
+      )))
+    ),
+
   users: () => state.login.bidang !== 5 ?
   m('p', 'Hanya untuk user manajemen') : m('.content',
     m('h3', 'Manajemen Akun'),
@@ -102,21 +117,6 @@ _.assign(comp, {
     ))
   ),
 
-  management: () =>
-    _.chunk(_.map(
-      menus.management.children, (v, k) => [v, k]
-    ), 3).map(i =>
-      m('.columns', i.map(j => m('.column',
-        m('a.box', m('article.media',
-          {onclick: () => [state.route = j[1], m.redraw()]},
-          m('.media-left', m('span.icon.has-text-primary',
-            m('i.fas.fa-2x.fa-'+j[0].icon))
-          ),
-          m('.media-content', m('.content',m('h3', j[0].full)))
-        ))
-      )))
-    ),
-
   database: () => !ands([
     state.login.bidang === 5,
     state.login.peranan === 4
@@ -124,6 +124,11 @@ _.assign(comp, {
   : m('.content', m('.columns',
     m('.column', m('.box',
       m('h3', 'Backup / Restore Database'),
+      m('a', {
+        href: 'https://github.com/rikyperdana/simrs/wiki/Backup-and-Restore',
+        target: '_blank'
+      }, 'Panduan Backup dan Restore DB'),
+      _.range(2).map(() => m('br')),
       m('.buttons',
         m('.button.is-info',
           {onclick: () => collNames.map(
@@ -132,7 +137,7 @@ _.assign(comp, {
                 [array.map(j => sanitize(JSON.stringify(j))+';').join('\n')],
                 {type: 'text/csv;charset=utf-8;'}
               ]),
-              [i, hari(_.now()), '.csv'].join(' ')
+              [i, hari(_.now(), true), '.csv'].join(' ')
             ))
           )},
           makeIconLabel('download', 'Backup')
@@ -145,10 +150,22 @@ _.assign(comp, {
               complete: result => withThis(
                 (result.data || []).map(i => JSON.parse(i[0])),
                 array => ors([
-                  array[0].identitas && console.log('patients', array),
-                  array[0].username && console.log('users', array),
-                  array[0].batch && console.log('goods', array),
-                  array[0].harga && console.log('references', array)
+                  array[0].identitas && array.map(j => updateBoth(
+                    'patients', j._id, j,
+                    res => alert('Berhasil restore ' + array.length + ' pasien')
+                  )),
+                  array[0].username && array.map(j => updateBoth(
+                    'users', j._id, j,
+                    res => alert('Berhasil restore ' + array.length + ' user')
+                  )),
+                  array[0].batch && array.map(j => updateBoth(
+                    'goods', j._id, j,
+                    res => alert('Berhasil restore ' + array.length + ' barang')
+                  )),
+                  array[0].harga && array.map(j => updateBoth(
+                    'references', j._id, j,
+                    res => alert('Berhasil restore ' + array.length + ' tarif')
+                  ))
                 ])
               )
             })
@@ -163,6 +180,7 @@ _.assign(comp, {
         href: 'https://github.com/rikyperdana/simrs/wiki/Import-Master-Data',
         target: '_blank'
       }, 'Panduan Import Data Master'),
+      _.range(2).map(() => m('br')),
       m('.file.is-warning',
         {onchange: e => Papa.parse(e.target.files[0], {
           header: true, complete: result => withThis(
