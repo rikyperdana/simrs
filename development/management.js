@@ -75,10 +75,26 @@ _.assign(comp, {
       )),
       m('tbody',
         paginate(state.referenceList || [], 'references', 20)
-        .map(i => i.nama && m('tr', tds([
-          i.nama, rupiah(i.harga), i[0], i[1], i[2]
-        ])))
-      )
+        .map(i => i.nama && m('tr',
+          {onclick: () => ands([
+            state.login.bidang === 5,
+            state.login.peranan === 4
+          ]) && [state.modalEditTarif = m('.box',
+            m('h3', 'Edit Tarif'),
+            m(autoForm({
+              id: 'editTarif', doc: i,
+              schema: schemas.tarif,
+              action: doc => confirm('Yakin ubah tarif?') && [
+                updateBoth('references', i._id, _.assign(i, doc)),
+                state.modalEditTarif = null,
+                m.redraw()
+              ]
+            }))
+          )]},
+          tds([i.nama, rupiah(i.harga), i[0], i[1], i[2]])
+        ))
+      ),
+      makeModal('modalEditTarif')
     ))),
     m('div',comp.pagination(
       'references',
