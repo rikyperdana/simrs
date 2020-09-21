@@ -55,7 +55,7 @@ mongoDB.MongoClient.connect(
           obj.documents, (err, res) => res && cb(res)
         ),
         updateOne: () => coll.updateOne(
-          {_id: obj._id}, {$set: obj.document},
+          {_id: obj._id}, {$set: obj.document}, {upsert: true},
           (err, res) => res && cb(res)
         ),
         deleteOne: () => coll.deleteOne(
