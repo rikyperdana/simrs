@@ -68,6 +68,8 @@ tarifInap = (masuk, keluar, tarif) =>
 
 tarifIGD = 45000, tarifKartu = 8000,
 
+sanitize = string => string.replace(';', ''),
+
 collNames = ['patients', 'goods', 'references', 'users', 'queue'],
 
 state = {route: 'dashboard'}, comp = {},
@@ -104,7 +106,8 @@ menus = {
     full: 'Manajemen', icon: 'users',
     children: {
       users: {full: 'Pengguna', icon: 'users'},
-      references: {full: 'Referensi', icon: 'file-contract'}
+      references: {full: 'Referensi', icon: 'file-contract'},
+      database: {full: 'Database', icon: 'database'}
     }
   },
   gizi: {full: 'Gizi', icon: 'utensils'},

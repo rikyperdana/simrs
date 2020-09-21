@@ -93,7 +93,7 @@ _.assign(comp, {
     ),
     _.chunk(_.map(menus, (v, k) => [v, k]), 3).map(i =>
       m('.columns', i.map(j => m('.column',
-        m('.box', m('article.media',
+        m('a.box', m('article.media',
           {onclick: () => [state.route = j[1], m.redraw()]},
           m('.media-left', m('span.icon.has-text-primary',
             m('i.fas.fa-2x.fa-'+j[0].icon))
