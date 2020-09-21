@@ -121,108 +121,126 @@ _.assign(comp, {
     state.login.bidang === 5,
     state.login.peranan === 4
   ]) ? m('p', 'Hanya untuk admin manajemen')
-  : m('.content',
-    m('h3', 'Backup / Restore'),
-    m('.buttons',
-      m('.button.is-info',
-        {onclick: () => collNames.map(
-          i => db[i].toArray(array => saveAs(
-            new Blob([
-              [array.map(j => sanitize(JSON.stringify(j))+';').join('\n')],
-              {type: 'text/csv;charset=utf-8;'}
-            ]),
-            [i, hari(_.now()), '.csv'].join(' ')
-          ))
-        )},
-        makeIconLabel('download', 'Backup')
-      ),
-      m('.button.is-danger',
-        {onclick: () => console.log('restore')},
-        makeIconLabel('upload', 'Restore')
-      )
-    ),
-    m('h3', 'Import Data'),
-    m('.file.is-warning',
-      {onchange: e => Papa.parse(e.target.files[0], {
-        header: true, complete: result => withThis(
-          (collName, docs) => [
-            dbCall({
-              method: 'insertMany', collection: collName, documents: docs
-            }, () => ''),
-            db[collName].bulkPut(docs).then(last =>
-              last && alert('Berhasil import, silahkan refresh')
-            )
-          ],
-          updater => ors([
-            result.data[0].harga && updater(
-              'references', result.data.map(i =>
-                _.merge(i, {_id: randomId(), updated: _.now()})
+  : m('.content', m('.columns',
+    m('.column', m('.box',
+      m('h3', 'Backup / Restore Database'),
+      m('.buttons',
+        m('.button.is-info',
+          {onclick: () => collNames.map(
+            i => db[i].toArray(array => saveAs(
+              new Blob([
+                [array.map(j => sanitize(JSON.stringify(j))+';').join('\n')],
+                {type: 'text/csv;charset=utf-8;'}
+              ]),
+              [i, hari(_.now()), '.csv'].join(' ')
+            ))
+          )},
+          makeIconLabel('download', 'Backup')
+        ),
+        m('.button.is-danger', m('.file.is-danger', m('label.file-label',
+          m('input.file-input', {
+            type: 'file', name: 'import',
+            onchange: e => Papa.parse(e.target.files[0], {
+              delimiter: ';', newline: ';',
+              complete: result => withThis(
+                (result.data || []).map(i => JSON.parse(i[0])),
+                array => ors([
+                  array[0].identitas && console.log('patients', array),
+                  array[0].username && console.log('users', array),
+                  array[0].batch && console.log('goods', array),
+                  array[0].harga && console.log('references', array)
+                ])
               )
-            ),
-            result.data[0].nama_lengkap && updater(
-              'patients', result.data.map(i => _.merge(
-                {updated: _.now(), _id: randomId()},
-                {identitas: _.merge(
+            })
+          }),
+          m('span.file-cta', makeIconLabel('upload', 'Restore'))
+        )))
+      )
+    )),
+    m('.column', m('.box',
+      m('h3', 'Import Data'),
+      m('a', {
+        href: 'https://github.com/rikyperdana/simrs/wiki/Import-Master-Data',
+        target: '_blank'
+      }, 'Panduan Import Data Master'),
+      m('.file.is-warning',
+        {onchange: e => Papa.parse(e.target.files[0], {
+          header: true, complete: result => withThis(
+            (collName, docs) => [
+              dbCall({
+                method: 'insertMany', collection: collName, documents: docs
+              }, () => ''),
+              db[collName].bulkPut(docs).then(last =>
+                last && alert('Berhasil import, silahkan refresh')
+              )
+            ],
+            updater => ors([
+              result.data[0].harga && updater(
+                'references', result.data.map(i =>
+                  _.merge(i, {_id: randomId(), updated: _.now()})
+                )
+              ),
+              result.data[0].nama_lengkap && updater(
+                'patients', result.data.map(i => _.merge(
+                  {updated: _.now(), _id: randomId()},
+                  {identitas: _.merge(
+                    {
+                      keluarga: {ayah: i.ayah || '', ibu: i.ibu || '', pasangan: i.pasangan || ''},
+                      kontak: i.kontak || '', nama_lengkap: _.startCase(i.nama_lengkap),
+                      tanggal_input: i.tanggal_input ? +moment(i.tanggal_input) : '',
+                      tanggal_lahir: i.tanggal_lahir ? +moment(i.tanggal_lahir) : '',
+                      tempat_lahir: i.tempat_lahir || '', tempat_tinggal: i.tempat_tinggal || '',
+                      bayar_kartu: true
+                    },
+                    _.fromPairs(
+                      ['agama', 'alias', 'darah', 'kelamin', 'ktp',
+                       'nikah', 'no_mr', 'pekerjaan', 'pendidikan']
+                      .map(j => +i[j] ? [j, +i[j]] : ['', ''])
+                    )
+                  )}
+                ))
+              ),
+              result.data[0].no_batch && updater(
+                'goods', result.data.map(i => _.merge(
+                  {_id: randomId(), updated: _.now()},
                   {
-                    keluarga: {ayah: i.ayah || '', ibu: i.ibu || '', pasangan: i.pasangan || ''},
-                    kontak: i.kontak || '', nama_lengkap: _.startCase(i.nama_lengkap),
-                    tanggal_input: i.tanggal_input ? +moment(i.tanggal_input) : '',
-                    tanggal_lahir: i.tanggal_lahir ? +moment(i.tanggal_lahir) : '',
-                    tempat_lahir: i.tempat_lahir || '', tempat_tinggal: i.tempat_tinggal || '',
-                    bayar_kartu: true
-                  },
-                  _.fromPairs(
-                    ['agama', 'alias', 'darah', 'kelamin', 'ktp',
-                     'nikah', 'no_mr', 'pekerjaan', 'pendidikan']
-                    .map(j => +i[j] ? [j, +i[j]] : ['', ''])
-                  )
-                )}
-              ))
-            ),
-            result.data[0].no_batch && updater(
-              'goods', result.data.map(i => _.merge(
-                {_id: randomId(), updated: _.now()},
-                {
-                  nama: i.nama_barang, jenis: +i.jenis, kandungan: i.kandungan,
-                  satuan: +i.satuan, kriteria: {
-                    antibiotik: +i.antibiotik, narkotika: +i.narkotika,
-                    psikotropika: +i.psikotropika, fornas: +i.fornas
-                  },
-                  batches: [{
-                    idbatch: randomId(), no_batch: i.no_batch, merek: i.merek,
-                    masuk: i.masuk && +moment(i.masuk),
-                    kadaluarsa: i.kadaluarsa && +moment(i.kadaluarsa),
-                    stok: {gudang: +i.digudang, apotik: +i.diapotik, retur: +i.diretur},
-                    harga: {beli: +i.beli, jual: +i.jual}, returnable: !!i.returnable,
-                    sumber: {
-                      supplier: i.supplier, anggaran: +i.anggaran, no_spk: i.no_spk,
-                      tanggal_spk: i.tanggal_spk && +moment(i.tanggal_spk)
-                    }
-                  }]
-                }
-              )).reduce((acc, inc) => withThis(
-                acc.find(j => j.nama === inc.nama),
-                found => found ? acc.map(j =>
-                  j.nama === inc.nama ? _.assign(j, {
-                    batches: [...j.batches, ...inc.batches]
-                  }) : j
-                ) : [...acc, inc]
-              ), [])
-            )
-          ])
-        )
-      })},
-      m('label.file-label',
-        m('input.file-input', {type: 'file', name: 'import'}),
-        // m('span.file-cta', m('span.file-label', 'Pilih file'))
-        m('span.file-cta',
-          makeIconLabel('file-import', 'Pilih file')
+                    nama: i.nama_barang, jenis: +i.jenis, kandungan: i.kandungan,
+                    satuan: +i.satuan, kriteria: {
+                      antibiotik: +i.antibiotik, narkotika: +i.narkotika,
+                      psikotropika: +i.psikotropika, fornas: +i.fornas
+                    },
+                    batches: [{
+                      idbatch: randomId(), no_batch: i.no_batch, merek: i.merek,
+                      masuk: i.masuk && +moment(i.masuk),
+                      kadaluarsa: i.kadaluarsa && +moment(i.kadaluarsa),
+                      stok: {gudang: +i.digudang, apotik: +i.diapotik, retur: +i.diretur},
+                      harga: {beli: +i.beli, jual: +i.jual}, returnable: !!i.returnable,
+                      sumber: {
+                        supplier: i.supplier, anggaran: +i.anggaran, no_spk: i.no_spk,
+                        tanggal_spk: i.tanggal_spk && +moment(i.tanggal_spk)
+                      }
+                    }]
+                  }
+                )).reduce((acc, inc) => withThis(
+                  acc.find(j => j.nama === inc.nama),
+                  found => found ? acc.map(j =>
+                    j.nama === inc.nama ? _.assign(j, {
+                      batches: [...j.batches, ...inc.batches]
+                    }) : j
+                  ) : [...acc, inc]
+                ), [])
+              )
+            ])
+          )
+        })},
+        m('label.file-label',
+          m('input.file-input', {type: 'file', name: 'import'}),
+          // m('span.file-cta', m('span.file-label', 'Pilih file'))
+          m('span.file-cta',
+            makeIconLabel('file-import', 'Pilih file')
+          )
         )
       )
-    ),
-    m('a.help', {
-      href: 'https://github.com/rikyperdana/simrs/wiki/Import-Master-Data',
-      target: '_blank'
-    }, 'Panduan Import Data Master')
-  )
+    ))
+  ))
 })
