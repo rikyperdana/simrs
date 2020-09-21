@@ -7,7 +7,7 @@ _.assign(comp, {
   ]) ? m('p', 'Hanya untuk tenaga medis dan user pendaftaran')
   : m('.content',
     m('h1', 'Jadwal Instalasi Bedah'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {
         oncreate: () =>
           db.references.toArray(array => state.references = array),
@@ -27,6 +27,6 @@ _.assign(comp, {
         hari(i.jadwal, true),
         lookReferences(i.idtindakan).nama
       ])))
-    ))
+    )))
   )
 })

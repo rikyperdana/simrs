@@ -10,14 +10,14 @@ _.assign(comp, {
       ),
       m('.navbar-burger',
         {
-          role: 'button', class: state.burgerMenu ? 'is-active' : '',
+          role: 'button', class: state.burgerMenu && 'is-active',
           onclick: () => state.burgerMenu = !state.burgerMenu
         },
         _.range(3).map(i => m('span', {'aria-hidden': true}))
       )
     ),
     m('.navbar-menu',
-      {class: state.burgerMenu ? 'is-active' : ''},
+      {class: state.burgerMenu && 'is-active'},
       m('.navbar-start', _.map(topMenus, (val, key) =>
         m('a.navbar-item',
           {

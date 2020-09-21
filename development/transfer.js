@@ -9,7 +9,7 @@ _.assign(comp, {
   : m('.content',
     state.login.peranan === 4 && reports.transfer(),
     m('h3', 'Daftar antrian amprah'),
-    m('.box', m('table.table.is-striped',
+    m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => [
         db.users.toArray(array =>
           state.userList = array
@@ -83,7 +83,7 @@ _.assign(comp, {
         ])
       ))),
       makeModal('modalResponAmprah')
-    )),
+    ))),
     m('p'),
     m('h3', 'Daftar riwayat amprah'),
     m('.box', m('table.table.is-striped',

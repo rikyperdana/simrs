@@ -372,12 +372,14 @@ var schemas = {
     }},
     nomor: {type: Number},
   },
+
   overcharge: {
     charges: {type: Array, optional: true},
     'charges.$': {type: Object},
     'charges.$.item': {type: String, label: 'Nama item'},
     'charges.$.harga': {type: Number}
   },
+
   confirmRadiology: {
     konfirmasi: {
       type: Number, autoform: {
@@ -389,6 +391,7 @@ var schemas = {
       autoValue: () => _.now()
     }
   },
+
   responRadiology: {
     kode_berkas: {type: String},
     diagnosa: {type: String, autoform: {type: 'textarea', rows: 10}},
@@ -400,6 +403,7 @@ var schemas = {
       autoValue: () => _.get(state.login, '_id')
     }
   },
+
   responLaboratory: {
     labor: {type: Array, fixed: true},
     'labor.$': {type: Object},
@@ -418,10 +422,16 @@ var schemas = {
       autoValue: () => _.now()
     }
   },
+
   gizi: {
     konsumsi: {
       type: String, label: 'Konsumsi gizi untuk pasien',
       optional: true, autoform: {type: 'textarea'}
     }
+  },
+
+  tarif: {
+    nama: {type: String},
+    harga: {type: Number}
   }
 }
