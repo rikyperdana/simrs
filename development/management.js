@@ -253,7 +253,6 @@ _.assign(comp, {
         })},
         m('label.file-label',
           m('input.file-input', {type: 'file', name: 'import'}),
-          // m('span.file-cta', m('span.file-label', 'Pilih file'))
           m('span.file-cta',
             makeIconLabel('file-import', 'Pilih file')
           )

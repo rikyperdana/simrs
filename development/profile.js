@@ -91,9 +91,40 @@ _.assign(comp, {
           m.redraw()
         ]},
         makeIconLabel('key', 'Unlock')
+      ),
+      m('a.button.is-dark',
+        {onclick: () => state.modalThemeSelect = m('.box',
+          m('h3', 'Ganti Tema SIMRS'),
+          m('a', {
+            href: 'https://jenil.github.io/bulmaswatch/',
+            target: '_blank'
+          }, 'Lihat galeri pilihan tema'),
+          m('p', 'Tema saat ini: ' + _.startCase(localStorage.bulmaTheme)),
+          m(autoForm({
+            id: 'themeSelect',
+            schema: {theme: {
+              type: String, autoform: {
+                type: 'select', options: () => [
+                  'default', 'cerulean', 'cosmo', 'cyborg', 'darkly',
+                  'flatly', 'journal', 'litera', 'lumen', 'lux',
+                  'materia', 'minty', 'nuclear', 'pulse', 'sandstone',
+                  'simplex', 'slate', 'solar', 'spacelab', 'superhero',
+                  'united', 'yeti'
+                ].map(i => ({value: i, label: _.startCase(i)}))
+              }
+            }},
+            action: doc => [
+              localStorage.setItem('bulmaTheme', doc.theme),
+              state.modalThemeSelect = null,
+              m.redraw()
+            ]
+          }))
+        )},
+        makeIconLabel('palette', 'Ganti Tema')
       )
     ),
     makeModal('modalProfile'),
-    makeModal('modalLicense')
+    makeModal('modalLicense'),
+    makeModal('modalThemeSelect')
   )
 })

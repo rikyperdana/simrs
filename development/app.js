@@ -210,7 +210,7 @@ _.assign(comp, {
               username: doc.username, route: 'dashboard', login: res
             }),
             localStorage.setItem('login', JSON.stringify(res)),
-            m.redraw()
+            state.error = null, m.redraw()
           ] : [
             state.loading = false,
             state.error = 'Password salah',
@@ -226,7 +226,17 @@ _.assign(comp, {
 io().on('connect', socket => [
   state.login = localStorage.login &&
     JSON.parse(localStorage.login || '{}'),
-  m.mount(document.body, {view: () => m('.has-background-light',
+  m.mount(document.body, {view: () => m('div',
+    {class: ors([
+      _.includes([
+        // semua latar terang diberi background grey
+        'default', 'cerulean', 'cosmo', 'flatly',
+        'journal', 'litera', 'lumen', 'lux',
+        'materia', 'pulse', 'sandstone', 'simplex',
+        'spacelab', 'united', 'yeti'
+      ], localStorage.bulmaTheme),
+      !Boolean(localStorage.bulmaTheme)
+    ]) && 'has-background-light'},
     comp.navbar(), m('section.section', m('.container',
       {style: 'min-height:100vh'},
       state.username || _.get(state, 'login.username') ?
@@ -238,7 +248,9 @@ io().on('connect', socket => [
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank'
       }, 'Versi 2.5.1'))
-    )
+    ),
+    localStorage.bulmaTheme &&
+    m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+localStorage.bulmaTheme+'/bulmaswatch.min.css'})
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi
   io().on('datachange', (name, doc) => [
