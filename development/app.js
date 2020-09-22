@@ -247,7 +247,7 @@ io().on('connect', socket => [
       m('.content', m('a.help', {
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank'
-      }, 'Versi 2.5.1'))
+      }, 'Versi 2.5.5'))
     ),
     localStorage.bulmaTheme &&
     m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+localStorage.bulmaTheme+'/bulmaswatch.min.css'})

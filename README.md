@@ -7,9 +7,11 @@ Bismillahirrahmanirrahim,
 SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang menandakan bahwa sistem ini mencakup fungsi umum yang terdapat pada rumah sakit seperti Rawat Jalan, IGD, Rawat Inap, Apotik, Farmasi, Amprahan, Manajemen, Radiologi, Laboratorium, Gizi, dsb. Sistem ini menggunakan 1 database yang saling menghubungkan fungsi tersebut dengan otomatisasi sehingga memungkinkan rumah sakit untuk menjalankan sistem ini secara paperless maupun hybrid dengan dokumen fisiknya.
 
 ## Screenshots
-![dashboard](https://user-images.githubusercontent.com/11875540/89487820-a0d98200-d7d0-11ea-8017-f24d64aef486.png "Dashboard")
-![rekam_medis](https://user-images.githubusercontent.com/11875540/91721198-92f60180-ebc2-11ea-9d42-9ffc2c22ba67.png)
-![storage](https://user-images.githubusercontent.com/11875540/91721215-9c7f6980-ebc2-11ea-8a0c-5851498ae4b3.png)
+![dashboard](https://user-images.githubusercontent.com/11875540/93850151-b8fd5600-fcd7-11ea-982b-4813d78e20de.png)
+![rekam_medis](https://user-images.githubusercontent.com/11875540/93850166-bf8bcd80-fcd7-11ea-9e62-f353c0ae9359.png)
+![storage](https://user-images.githubusercontent.com/11875540/93850276-efd36c00-fcd7-11ea-980a-8d90ab33678c.png)
+![dark_mode](https://user-images.githubusercontent.com/11875540/93850181-c581ae80-fcd7-11ea-912c-d78f787659c8.png)
+![purple_light](https://user-images.githubusercontent.com/11875540/93850188-c9adcc00-fcd7-11ea-89f4-097be6129550.png)
 
 Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 
