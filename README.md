@@ -13,6 +13,10 @@ SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang menandakan bahw
 ![dark_mode](https://user-images.githubusercontent.com/11875540/93850181-c581ae80-fcd7-11ea-912c-d78f787659c8.png)
 ![purple_light](https://user-images.githubusercontent.com/11875540/93850188-c9adcc00-fcd7-11ea-89f4-097be6129550.png)
 
+|Default|Dark Mode|Other Themes|
+|-------|---------|------------|
+| <img src="https://user-images.githubusercontent.com/11875540/93853623-61aeb400-fcde-11ea-9d5c-5d369819ab54.png" alt="drawing" width="200"/> | <img src="https://user-images.githubusercontent.com/11875540/93853638-6a06ef00-fcde-11ea-8a2d-2bdfb7dcfefd.png" alt="drawing" width="200"/> | <img src="https://user-images.githubusercontent.com/11875540/93853746-a0dd0500-fcde-11ea-9be8-4fa6e7303ead.png" alt="drawing" width="200"/> |
+
 Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 
 |Teknologi|Keterangan|
