@@ -173,7 +173,7 @@ makePdf = {
             ['Radiologi', 'No. Berkas', 'Diagnosa'],
             ..._.get(rawat, 'soapDokter.radio').map(i => [
               _.get(lookReferences(i.idradio), 'nama'),
-              i.kode_berkas, i.diagnosa
+              i.kode_berkas || '', i.diagnosa || ''
             ])
           ]}}
         ],
