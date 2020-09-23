@@ -35,7 +35,9 @@ _.assign(comp, {
       m('.column', m('.select.is-fullwidth', m('select',
         {onchange: e => _.assign(state, {selection: {'satuan': +e.target.value}})},
         m('option', {value: ''}, 'Saring satuan'),
-        selects('satuan')().map(({value, label}) => m('option', {value}, label))
+        selects('satuan')()
+        .sort((a, b) => a.label > b.label ? 1 : -1)
+        .map(({value, label}) => m('option', {value}, label))
       ))),
       m('.column', m('.select.is-fullwidth', m('select',
         {onchange: e => _.assign(state, {selection: {'kriteria': +e.target.value}})},
