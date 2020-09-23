@@ -227,7 +227,7 @@ _.assign(comp, {
                       antibiotik: +i.antibiotik, narkotika: +i.narkotika,
                       psikotropika: +i.psikotropika, fornas: +i.fornas
                     },
-                    batches: [{
+                    batch: [{
                       idbatch: randomId(), no_batch: i.no_batch, merek: i.merek,
                       masuk: i.masuk && +moment(i.masuk),
                       kadaluarsa: i.kadaluarsa && +moment(i.kadaluarsa),

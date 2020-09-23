@@ -11,7 +11,7 @@ _.assign(comp, {
       )),
       m('tbody',
         {onupdate: () =>
-          db.patients.toArray(array =>
+          db.patients.toArray(array => [
             state.clinicQueue = array.filter(i => withThis(
               _.last(i.rawatJalan),
               lastOne => lastOne && ands([
@@ -19,8 +19,9 @@ _.assign(comp, {
                 lastOne.klinik === state.login.poliklinik,
                 !lastOne.soapDokter
               ])
-            ))
-          )
+            )),
+            m.redraw()
+          ])
         },
         (state.clinicQueue || [])
         .sort((a, b) => withThis(
