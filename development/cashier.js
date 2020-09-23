@@ -1,7 +1,6 @@
 /*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
 // TODO: pikirkan ulang tentang obj kasir dalam rawat
-// TODO: antrian bayar masih belum berurut waktu juga
 
 _.assign(comp, {
   cashier: () => state.login.bidang !== 2 ?
@@ -31,15 +30,18 @@ _.assign(comp, {
                 ...(i.emergency || []),
                 ...(i.rawatInap || [])
               ].filter(cashierFilter).length
-            ).toArray(array => state.cashierList = array.flatMap(
-              i => [
-                ...(i.rawatJalan || []),
-                ...(i.emergency || []),
-                ...(i.rawatInap || [])
-              ]
-              .filter(cashierFilter)
-              .map(j => ({pasien: i, rawat: j}))
-            ))
+            ).toArray(array => [
+              state.cashierList = array.flatMap(
+                i => [
+                  ...(i.rawatJalan || []),
+                  ...(i.emergency || []),
+                  ...(i.rawatInap || [])
+                ]
+                .filter(cashierFilter)
+                .map(j => ({pasien: i, rawat: j}))
+              ),
+              m.redraw()
+            ])
           ),
           db.references.toArray(array => state.references = array),
           db.goods.toArray(array => state.goodsList = array)
@@ -104,7 +106,7 @@ _.assign(comp, {
                     ...(_.get(rawat, 'soapDokter.obat') || []),
                     ...((rawat.observasi || []).flatMap(k => k.obat || []))
                   ].map(k => k.idbarang ? [
-                    state.goodsList.find(l => l._id === k.idbarang).nama,
+                    _.get(state.goodsList.find(l => l._id === k.idbarang), 'nama'),
                     k.harga // harga yg sudah dihitungkan logika apotik ke pasien
                   ] : []),
                   ...[ //daftar bhp terpakai saat rawatan
