@@ -143,9 +143,9 @@ var schemas = {
     'obat.$.idbarang': {
       type: String, label: 'Nama Obat',
       autoform: {type: 'select', options: () =>
-        state.drugList.map(i =>
-          ({value: i._id, label: i.nama})
-        )
+        state.drugList.map(i => ({
+          value: i._id, label: i.nama
+        }))
       }
     },
     'obat.$.jumlah': {type: Number},
