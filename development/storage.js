@@ -26,12 +26,38 @@ _.assign(comp, {
         onclick: () => state.searchGoods = null
       }, 'Show All'))
     ),
+    m('.columns',
+      m('.column', m('.select.is-fullwidth', m('select',
+        {onchange: e => _.assign(state, {selection: {'jenis': +e.target.value}})},
+        m('option', {value: ''}, 'Saring jenis'),
+        selects('jenis_barang')().map(({value, label}) => m('option', {value}, label))
+      ))),
+      m('.column', m('.select.is-fullwidth', m('select',
+        {onchange: e => _.assign(state, {selection: {'satuan': +e.target.value}})},
+        m('option', {value: ''}, 'Saring satuan'),
+        selects('satuan')().map(({value, label}) => m('option', {value}, label))
+      ))),
+      m('.column', m('.select.is-fullwidth', m('select',
+        {onchange: e => _.assign(state, {selection: {'kriteria': +e.target.value}})},
+        m('option', {value: ''}, 'Saring kategori'),
+        selects('kriteria_obat')().map(({value, label}) => m('option', {value}, label))
+      )))
+    ),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Retur']
         .map(i => m('th', i))
       )),
       m('tbody', (state.searchGoods || state.goodsList || [])
+      .filter(i => ors([
+        i.jenis === _.get(state, 'selection.jenis'),
+        i.satuan === _.get(state, 'selection.satuan'),
+        i.kriteria[_.lowerCase(look(
+          'kriteria_obat',
+          _.get(state, 'selection.kriteria')
+        ))] === 1
+      ]))
+      .sort((a, b) => a.nama > b.nama ? 1 : -1)
       .map(i => m('tr',
         {onclick: () => _.assign(state, {
           route: 'oneGood', oneGood: i
