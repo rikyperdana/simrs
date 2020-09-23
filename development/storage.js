@@ -135,12 +135,12 @@ _.assign(comp, {
         m('span.icon', m('i.fas.fa-plus-circle')),
         m('span', 'Tambah batch')
       ),
-      m('.button.is-warning',
-        {onclick: () => state.route = 'formGood'},
-        m('span.icon', m('i.fas.fa-edit')),
-        m('span', 'Edit obat')
-      ),
       state.login.peranan === 4 && [
+        m('.button.is-warning',
+          {onclick: () => state.route = 'formGood'},
+          m('span.icon', m('i.fas.fa-edit')),
+          m('span', 'Edit obat')
+        ),
         m('.button.is-danger',
           {
             "data-tooltip": 'Kosongkan semua batch barang ini',
