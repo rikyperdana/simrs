@@ -38,36 +38,7 @@ _.assign(comp, {
           selects(i[1])().map(({value, label}) => m('option', {value}, label))
         )),
         m('.icon.is-small.is-left', m('i.fas.fa-'+i[2]))
-      )))),
-      // gaya baru
-      /*
-      m('.column', m('.field', m('.control.has-icons-left',
-        m('.select.is-fullwidth', m('select',
-          {onchange: e => _.assign(state, {selection: {'jenis': +e.target.value}})},
-          m('option', {value: ''}, 'Saring jenis'),
-          selects('jenis_barang')().map(({value, label}) => m('option', {value}, label))
-        )),
-        m('.icon.is-small.is-left', m('i.fas.fa-globe'))
-      ))),
-      m('.column', m('.field', m('.control.has-icons-left',
-        m('.select.is-fullwidth', m('select',
-          {onchange: e => _.assign(state, {selection: {'satuan': +e.target.value}})},
-          m('option', {value: ''}, 'Saring satuan'),
-          selects('satuan')()
-          .sort((a, b) => a.label > b.label ? 1 : -1)
-          .map(({value, label}) => m('option', {value}, label))
-        )),
-        m('.icon.is-small.is-left', m('i.fas.fa-globe'))
-      ))),
-      m('.column', m('.field', m('.control.has-icons-left',
-        m('.select.is-fullwidth', m('select',
-          {onchange: e => _.assign(state, {selection: {'kriteria': +e.target.value}})},
-          m('option', {value: ''}, 'Saring kategori'),
-          selects('kriteria_obat')().map(({value, label}) => m('option', {value}, label))
-        )),
-        m('.icon.is-small.is-left', m('i.fas.fa-globe'))
-      )))
-      */
+      ))))
     ),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
