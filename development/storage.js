@@ -71,7 +71,7 @@ _.assign(comp, {
             _.get(k.stok, j) || 0
           )),
           stokSum => m('td', {
-            class: stokSum < i.stok_minimum[j] && 'has-text-danger'
+            class: stokSum < (_.get(i.stok_minimum, j) || 0) && 'has-text-danger'
           }, stokSum)
         ))
       )))
