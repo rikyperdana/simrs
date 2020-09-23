@@ -15,12 +15,14 @@ _.assign(comp, {
     m('.field.has-addons',
       m('.control.is-expanded', m('input.input.is-fullwidth', {
         type: 'text', placeholder: 'cari barang...',
-        onkeypress: e =>
+        onkeypress: e => [
+          state.selection = null,
           db.goods.filter(i => _.includes(
             _.lowerCase(i.nama+' '+i.kandungan), e.target.value
           )).toArray(array => [
             state.searchGoods = array, m.redraw()
           ])
+        ]
       })),
       m('.control', m('a.button.is-info', {
         onclick: () => state.searchGoods = null
@@ -46,14 +48,14 @@ _.assign(comp, {
         .map(i => m('th', i))
       )),
       m('tbody', (state.searchGoods || state.goodsList || [])
-      .filter(i => ors([
+      .filter(i => state.selection ? ors([
         i.jenis === _.get(state, 'selection.jenis'),
         i.satuan === _.get(state, 'selection.satuan'),
         i.kriteria[_.lowerCase(look(
           'kriteria_obat',
           _.get(state, 'selection.kriteria')
         ))] === 1
-      ]))
+      ]) : true)
       .sort((a, b) => a.nama > b.nama ? 1 : -1)
       .map(i => m('tr',
         {onclick: () => _.assign(state, {
