@@ -243,7 +243,7 @@ _.assign(comp, {
                   acc.find(j => j.nama === inc.nama),
                   found => found ? acc.map(j =>
                     j.nama === inc.nama ? _.assign(j, {
-                      batches: [...j.batches, ...inc.batches]
+                      batch: [...j.batch, ...inc.batch]
                     }) : j
                   ) : [...acc, inc]
                 ), [])
