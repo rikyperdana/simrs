@@ -9,7 +9,7 @@ SIMRS.dev adalah Sistem Informasi Rumah Sakit Terintegrasi, yang menandakan bahw
 ## Screenshots
 ![dashboard](https://user-images.githubusercontent.com/11875540/93850151-b8fd5600-fcd7-11ea-982b-4813d78e20de.png)
 ![rekam_medis](https://user-images.githubusercontent.com/11875540/93850166-bf8bcd80-fcd7-11ea-9e62-f353c0ae9359.png)
-![storage](https://user-images.githubusercontent.com/11875540/93850276-efd36c00-fcd7-11ea-980a-8d90ab33678c.png)
+![storage](https://user-images.githubusercontent.com/11875540/93971379-40ab9900-fd9a-11ea-86e7-a1f7879badb1.png)
 ![dark_mode](https://user-images.githubusercontent.com/11875540/93850181-c581ae80-fcd7-11ea-912c-d78f787659c8.png)
 ![purple_light](https://user-images.githubusercontent.com/11875540/93850188-c9adcc00-fcd7-11ea-89f4-097be6129550.png)
 
