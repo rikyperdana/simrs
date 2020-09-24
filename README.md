@@ -114,6 +114,7 @@ Adalah menu yang dapat digunakan oleh user apotik untuk mengeksekusi instruksi p
 
 ## Wiki
 - [Question and Answers](https://github.com/rikyperdana/simrs/wiki/Question-and-Answers)
+- [Theme Gallery](https://github.com/rikyperdana/simrs/wiki/Theme-Gallery)
 - [Code Structure](https://github.com/rikyperdana/simrs/wiki/Code-Structure)
 - [Data Structure](https://github.com/rikyperdana/simrs/wiki/Data-Structure)
 - [Testing Guide](https://github.com/rikyperdana/simrs/wiki/Testing-Guide)
