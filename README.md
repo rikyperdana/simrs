@@ -42,11 +42,13 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 [Bulma](https://bulma.io/), dan
 [DexieJS](https://dexie.org/)
 3. Paham tentang ragam prosedur operasional Rumah Sakit Umum
+4. Bila ingin menggunakan Glitch: Buat akun [Glitch](https://glitch.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+5. Bila ingin instalasi lokal (PC/Laptop): Install [Node JS](https://nodejs.org/en/download/) dan [Mongo DB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 
 ## Cara Install
 
 ### Bagian App (jika dari Glitch)
-1. Clone project ini dari halaman glitch, rename nama project bila diperlukan
+1. Clone project ini dari halaman [Glitch](https://glitch.com/~simrs), rename nama project bila diperlukan
 
 ### Bagian App (jika dari NodeJS)
 1. `git clone https://github.com/rikyperdana/simrs`
@@ -88,33 +90,66 @@ dengan alamat server database local Anda
 ### Manajemen
 
 #### Pengguna
-Adalah menu yang dapat digunakan oleh admin untuk mendaftarkan users yang akan nantinya akan menggunakan sistem. Klik tambah akun dan isikan informasi seperti nama lengkap, username, dan peranannya. Berikutnya sistem akan mengenali user berdasarkan username yang digunakan untuk login dan memberikan hak akses sesuai dengan peranan yang ditetapkan oleh admin.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94102143-a0b64400-fe5b-11ea-8e94-486d6b01badb.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh admin untuk mendaftarkan users yang akan nantinya akan menggunakan sistem. Klik tambah akun dan isikan informasi seperti nama lengkap, username, dan peranannya. Berikutnya sistem akan mengenali user berdasarkan username yang digunakan untuk login dan memberikan hak akses sesuai dengan peranan yang ditetapkan oleh admin.
 
+___
 #### Referensi
-Adalah menu yang dapat digunakan oleh admin untuk mendaftarkan tarif tindakan, laboratorium, dan radiologi ke dalam sistem dengan menggunakan file .csv seperti pada file [contoh](https://drive.google.com/open?id=1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ). Silahkan hapus seluruh baris kecuali header pertama dan ganti isinya sesuai dengan tarif pada faskes Anda. Setelah import berhasil, silahkan refresh browser.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101410-f7bb1980-fe59-11ea-9cf2-4aef66270d2b.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh admin untuk mendaftarkan tarif tindakan, laboratorium, dan radiologi ke dalam sistem dengan menggunakan file .csv seperti pada file [contoh](https://drive.google.com/open?id=1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ). Silahkan hapus seluruh baris kecuali header pertama dan ganti isinya sesuai dengan tarif pada faskes Anda. Setelah import berhasil, silahkan refresh browser.
 
+___
+#### Database
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101392-effb7500-fe59-11ea-971a-16b6b4e09de2.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh admin manajemen untuk melakukan backup secara berkala sesuai kebutuhan dan restore database untuk mengembalikan database ke kondisi tertentu. Juga tersedia menu Import data untuk pasien, barang, referensi, dan user.
+___
 ### Pendaftaran
-Adalah menu yang dapat digunakan oleh user Pendaftaran untuk melakukan pembaharuan identitas pasien, registrasi pasien baru dan mendaftarkan pasien ke poliklinik tertentu, ataupun ke layanan IGD. Tersedia tombol untuk mencetak kartu pasien dan general consent. Kepada Admin Pendaftaran dibukakan akses untuk menghapus item riwayat layanan poliklinik dan IGD (untuk skenario pasien membatalkan layanan rawatnya).
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101381-e96cfd80-fe59-11ea-9823-bcbdd4eacbc0.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh user Pendaftaran untuk melakukan pembaharuan identitas pasien, registrasi pasien baru dan mendaftarkan pasien ke poliklinik tertentu, ataupun ke layanan IGD. Tersedia tombol untuk mencetak kartu pasien dan general consent. Kepada Admin Pendaftaran dibukakan akses untuk menghapus item riwayat layanan poliklinik dan IGD (untuk skenario pasien membatalkan layanan rawatnya).
 
+___
 ### Emergency Unit
-Adalah menu yang dapat digunakan oleh seluruh tenaga medis (perawat/dokter) untuk mengisikan informasi SOAP baik khusus perawat maupun khusus dokter. Kepada level Admin disediakan menu untuk mencetak laporan kunjungan IGD.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101361-de19d200-fe59-11ea-8c84-07aeaf2cb143.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh seluruh tenaga medis (perawat/dokter) untuk mengisikan informasi SOAP baik khusus perawat maupun khusus dokter. Kepada level Admin disediakan menu untuk mencetak laporan kunjungan IGD.
 
+___
 ### Rawat Jalan
-Adalah menu yang dapat digunakan oleh seluruh tenaga medis (perawat/dokter) untuk melayani pasien yang didaftarkan pada masing-masing poliklinik yang merupakan kelompok/bidang dari tenaga medis tersebut. Tersedia daftar antrian poliklinik, halaman rekam medis, daftar riwayat layanan, form SOAP perawat & dokter, dan tombol cetak pdf SOAP. Kepada level Admin disediakan menu untuk mencetak laporan kunjungan poliklinik tersebut.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101348-d823f100-fe59-11ea-9940-740a1213f361.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh seluruh tenaga medis (perawat/dokter) untuk melayani pasien yang didaftarkan pada masing-masing poliklinik yang merupakan kelompok/bidang dari tenaga medis tersebut. Tersedia daftar antrian poliklinik, halaman rekam medis, daftar riwayat layanan, form SOAP perawat & dokter, dan tombol cetak pdf SOAP. Kepada level Admin disediakan menu untuk mencetak laporan kunjungan poliklinik tersebut.
 
+___
 ### Rawat Inap
-Adalah menu yang dapat digunakan oleh seluruh tenaga medis (perawat/dokter) untuk melayani pasien yang butuh diadmisi ke rawat inap dan yang telah ditempatkan pada bed. Pada rincian rawat inap, tersedia baris observasi yang bisa ditambah dan diisi dengan SOAP perawat/dokter, berikut dengan tombol untuk memulangkan pasien.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101265-bfb3d680-fe59-11ea-8971-0117dd154e81.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh seluruh tenaga medis (perawat/dokter) untuk melayani pasien yang butuh diadmisi ke rawat inap dan yang telah ditempatkan pada bed. Pada rincian rawat inap, tersedia baris observasi yang bisa ditambah dan diisi dengan SOAP perawat/dokter, berikut dengan tombol untuk memulangkan pasien.
 Pemetaan ketersediaan bed rawat inap dapat diubah pada file `public/inpatient.js` dalam variabel `beds`. Dengan struktur:
 `{kelas: {tarif, kamar: {nama_kamar: jumlah_bed}}}`
 
+___
 ### Kasir
-Adalah menu yang dapat digunakan oleh user Kasir untuk menerima daftar tagihan yang muncul dari poliklinik, IGD, dan Rawat Inap. Pada rincian biaya user Kasir juga dapat menambahkan biaya lainnya yang tidak tercakup didalam sistem secara otomatis. Kepada Admin disediakan menu untuk mencetak laporan penerimaan kas yang bersumber dari seluruh layanan yang disediakan.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101247-b9bdf580-fe59-11ea-9a33-b0d25ef5f317.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh user Kasir untuk menerima daftar tagihan yang muncul dari poliklinik, IGD, dan Rawat Inap. Pada rincian biaya user Kasir juga dapat menambahkan biaya lainnya yang tidak tercakup didalam sistem secara otomatis. Kepada Admin disediakan menu untuk mencetak laporan penerimaan kas yang bersumber dari seluruh layanan yang disediakan.
 
+___
 ### Storage
-Adalah menu yang dapat digunakan oleh user gudang, apoteker, dan tenaga medis dengan level akses yang berbeda-beda. Seorang user gudang dapat memperbaharui data barang, menambahkan jenis barang baru, menambah beberapa batch atas barang tersebut, melakukan retur stok, melakukan stok opname atau jenis barang tertentu, dan merespon request amprah dari apotik dan instalasi lainnya. User apotik dan tenaga medis instalasi dapat mengakses menu ini untuk meninjau ketersediaan stok, menambah request amprah atas batch tertentu, dan melihat riwayatnya.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101231-af036080-fe59-11ea-9702-ee58633fb04f.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh user gudang, apoteker, dan tenaga medis dengan level akses yang berbeda-beda. Seorang user gudang dapat memperbaharui data barang, menambahkan jenis barang baru, menambah beberapa batch atas barang tersebut, melakukan retur stok, melakukan stok opname atau jenis barang tertentu, dan merespon request amprah dari apotik dan instalasi lainnya. User apotik dan tenaga medis instalasi dapat mengakses menu ini untuk meninjau ketersediaan stok, menambah request amprah atas batch tertentu, dan melihat riwayatnya.
 
+___
+#### Amprah
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101202-a3179e80-fe59-11ea-8e62-22c72ebea4ed.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan bersama oleh petugas farmasi, apotik, dan seluruh instalasi medis lainnya untuk melakukan permintaan/penyerahan atau mutasi barang. Peminta dapat memilih barang dan batch yang diinginkan, mengetikkan jumlah yang diminta, yang akan direspon oleh gudang farmasi untuk penyerahannya.
+
+___
 ### Apotik
-Adalah menu yang dapat digunakan oleh user apotik untuk mengeksekusi instruksi penyerahan obat dari resep dokter ke pasien dengan cara yang terotomatisasi oleh sistem. User apotik dapat memantau stok dan me-request mutasi barang dari gudang farmasi ke apotik melalui menu Storage dan Amprah. Apoteker juga dapat melakukan penjualan bebas atas pilihan obat yang tersedia melalui menu penjualan obat.
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101172-93985580-fe59-11ea-88d1-e8893acef157.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh user apotik untuk mengeksekusi instruksi penyerahan obat dari resep dokter ke pasien dengan cara yang terotomatisasi oleh sistem. User apotik dapat memantau stok dan me-request mutasi barang dari gudang farmasi ke apotik melalui menu Storage dan Amprah. Apoteker juga dapat melakukan penjualan bebas atas pilihan obat yang tersedia melalui menu penjualan obat.
+
+___
+### Radiologi
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101129-782d4a80-fe59-11ea-95b6-c7facfc0d924.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh petugas radiologi untuk menerima permintaan uji radiologi bagi pasien tertentu. Proses respon terdiri dari 2 tahap, dimana yang pertama adalah untuk menyatakan bahwa pasien sudah diproses oleh instalasi radiologi, dan tahap kedua dimana proses uji selesai dan hasil diagnosa radiologist diisikan pada form untuk dicetakkan dan dilampirkan otomatis secara digital ke SOAP dokter yang meminta tersebut.
+
+___
+### Laboratorium
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94101146-83807600-fe59-11ea-890c-14cb6b9c4a37.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh petugas radiologi untuk menerima permintaan uji labor bagi pasien tertentu. Proses respon terdiri dari 2 tahapan, dimana yang pertama adalah untuk menyatakan bahwa pasien sudah diproses oleh instalasi laboratorium, dan tahap kedua dimana proses uji selesai dan hasil diagnosa laborist diisikan pada form untuk dicetakkan dan dilampirkan secara otomatis ke SOAP dokter yang meminta tersebut.
+
+___
+### ICD 10 & 9-CM
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94105244-11149380-fe63-11ea-80ac-d6b440f6469c.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh petugas kodifikasi/casemix untuk melakukan kodifikasi atas diagnosa maupun tindakan yang telah diisikan oleh dokter pada SOAP digital. Hasil SOAP yang sudah diisikan oleh petugas dapat dicetak oleh admin pendaftaran yang dapat membuka halaman rekam medis pasien tertentu.
+
+___
+### Gizi
+<img align="left" src="https://user-images.githubusercontent.com/11875540/94105032-9d728680-fe62-11ea-8c44-faf4ce7309c0.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh instalasi gizi untuk menerima informasi kebutuhan nutrisi pasien yang sedang dirawat di instalasi rawat inap rumah sakit. Pada menu ini petugas instalasi gizi tidak perlu menginputkan informasi apapun, karena sistem akan secara otomatis menunjukkan pasien mana yang sedang menginap dan pada bed mana.
+
+___
 
 ## Wiki
 - [Question and Answers](https://github.com/rikyperdana/simrs/wiki/Question-and-Answers)
