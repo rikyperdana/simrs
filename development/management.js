@@ -184,14 +184,14 @@ _.assign(comp, {
       m('.file.is-warning',
         {onchange: e => Papa.parse(e.target.files[0], {
           header: true, complete: result => withThis(
-            (collName, docs) => [
-              dbCall({
-                method: 'insertMany', collection: collName, documents: docs
-              }, () => ''),
-              db[collName].bulkPut(docs).then(last =>
-                last && alert('Berhasil import, silahkan refresh')
+            (collName, docs) => dbCall(
+              {method: 'insertMany', collection: collName, documents: docs},
+              res => res && db[collName].bulkPut(docs).then(last =>
+                last && alert([
+                  'Berhasil import', collName, docs.length, 'baris, silahkan refresh'
+                ].join(' '))
               )
-            ],
+            ),
             updater => ors([
               result.data[0].harga && updater(
                 'references', result.data.map(i =>
@@ -223,6 +223,7 @@ _.assign(comp, {
                   {_id: randomId(), updated: _.now()},
                   {
                     nama: i.nama_barang, jenis: +i.jenis, kandungan: i.kandungan,
+                    stok_minimum: {gudang: +i.min_gudang, apotik: +i.min_apotik},
                     satuan: +i.satuan, kriteria: {
                       antibiotik: +i.antibiotik, narkotika: +i.narkotika,
                       psikotropika: +i.psikotropika, fornas: +i.fornas
