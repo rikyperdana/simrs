@@ -75,7 +75,7 @@ dengan alamat server database local Anda
 1. Login dengan username 'admin' password 'admin'
 2. Segera buat akun admin baru dan non-aktifkan akun admin bawaan
 3. Unduh dan ganti isi [Daftar tarif tindakan](https://docs.google.com/spreadsheets/d/1jtkgvq5SgWsljqtk0ZxkPW4fV-eZlAy5EjkzU41flSQ/edit?usp=sharing), simpan sebagai .csv dan unggah melalui tombol Import
-4. Selamat mengikuti video tutorial pada playlist youtube berikut ini [Playlist Tutorial Pemakaian SIMRS.dev Open Source](https://www.youtube.com/playlist?list=PL4oE8OvUySlyfGzQTu8kN9sPWWfcn_wSZ)
+4. Selamat mengikuti video tutorial pada playlist youtube berikut ini [Playlist Tutorial Pemakaian SIMRS.dev Open Source](https://www.youtube.com/playlist?list=PL4oE8OvUySlyxLt2G6zROOCvrjeeXxNMR)
 
 ## Cara Menjalankan
 ### Development
