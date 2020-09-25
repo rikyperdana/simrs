@@ -50,7 +50,7 @@ _.assign(comp, {
               )),
               m(autoForm({
                 id: 'formResponAmprah', schema: schemas.responAmprah,
-                action: doc =>
+                action: doc => [
                   db.goods.get(i.idbarang, barang => [
                     updateBoth('goods', i.idbarang, _.assign(barang, {batch:
                       barang.batch.map(a =>
@@ -71,7 +71,9 @@ _.assign(comp, {
                     })),
                     state.modalResponAmprah = null,
                     m.redraw()
-                  ])
+                  ]),
+                  state.goodsList = null, m.redraw()
+                ]
               }))
             )
           }),
