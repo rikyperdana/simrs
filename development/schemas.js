@@ -261,27 +261,35 @@ var schemas = {
     jenis: {type: Number, autoform: {
       type: 'select', options: selects('jenis_barang')
     }},
-    kandungan: {type: String},
+    kandungan: {type: String, optional: true},
     satuan: {type: Number, autoform: {
       type: 'select', options: selects('satuan')
     }},
     stok_minimum: {type: Object},
     'stok_minimum.gudang': {type: Number},
     'stok_minimum.apotik': {type: Number},
-    kriteria: {type: Object},
-    'kriteria.antibiotik': {type: Number, autoform: {
-      type: 'select', options: selects('boolean')
-    }},
-    'kriteria.narkotika': {type: Number, autoform: {
-      type: 'select', options: selects('boolean')
-    }},
-    'kriteria.psikotropika': {type: Number, autoform: {
-      type: 'select', options: selects('boolean')
-    }},
-    'kriteria.fornas': {type: Number, autoform: {
-      type: 'select', options: selects('boolean')
-    }},
-    kode_rak: {type: String, optional: true},
+    kriteria: {type: Object, optional: true},
+    'kriteria.antibiotik': {
+      type: Number, optional: true, autoform: {
+        type: 'select', options: selects('boolean')
+      }
+    },
+    'kriteria.narkotika': {
+      type: Number, optional: true, autoform: {
+        type: 'select', options: selects('boolean')
+      }
+    },
+    'kriteria.psikotropika': {
+      type: Number, optional: true, autoform: {
+        type: 'select', options: selects('boolean')
+      }
+    },
+    'kriteria.fornas': {
+      type: Number, optional: true, autoform: {
+        type: 'select', options: selects('boolean')
+      }
+    },
+    kode_rak: {type: String, optional: true, label: 'Kode Rak Apotik'},
     petugas: {
       type: String, autoform: {type: 'hidden'},
       autoValue: () => _.get(state.login, '_id')

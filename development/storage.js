@@ -117,14 +117,14 @@ _.assign(comp, {
     m('.box', m('.table-container', m('table.table.is-striped', _.chunk([
       ['Nama barang', state.oneGood.nama],
       ['Jenis barang', look('jenis_barang', state.oneGood.jenis)],
-      ['Kode Rak', state.oneGood.kode_rak],
+      ['Kode Rak', _.get(state, 'oneGood.kode_rak')],
       ['Antibiotik', look('boolean', _.get(state.oneGood, 'kriteria.antibiotik'))],
       ['Narkotika', look('boolean', _.get(state.oneGood, 'kriteria.narkotika'))],
       ['Psikotropika', look('boolean', _.get(state.oneGood, 'kriteria.psikotropika'))],
       ['Fornas', look('boolean', _.get(state.oneGood, 'kriteria.fornas'))],
       ['Min. Gudang', _.get(state, 'oneGood.stok_minimum.gudang')],
       ['Min. Apotik', _.get(state, 'oneGood.stok_minimum.apotik')],
-      ['Kandungan', state.oneGood.kandungan],
+      ['Kandungan', _.get(state, 'oneGood.kandungan')],
       ['Satuan', look('satuan', state.oneGood.satuan)]
     ], 3).map(i => m('tr', i.map(j =>
       [m('th', j[0]), m('td', j[1])]

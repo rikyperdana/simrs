@@ -75,7 +75,6 @@ _.assign(comp, {
       )))
     ))),
     makeModal('admissionModal'),
-    m('br'),
 
     m('h3', 'Daftar Pasien Menginap'),
     m('p.help', '* Urut berdasarkan tanggal masuk terbaru'),
