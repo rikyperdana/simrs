@@ -76,7 +76,8 @@ _.assign(comp, {
                   ]),
                   m('.button.is-success',
                     {onclick: () =>_.assign(state, {
-                      route: 'formSoap', oneRawat: i, modalVisit: null
+                      route: 'formSoap', oneRawat: i,
+                      modalVisit: null, oneInap: null
                     })},
                     makeIconLabel(
                       'user-md',

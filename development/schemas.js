@@ -86,7 +86,7 @@ var schemas = {
       type: 'select', options: selects('rujukan')
     }},
     sumber_rujukan: {type: String, optional: true},
-    penaggungjawab: {type: String, optional: true}
+    penanggungjawab: {type: String, optional: true}
   },
 
   soapPerawat: {

@@ -140,6 +140,25 @@ _.assign(comp, {
           schemas.soapDokter
         ])
       ]),
+      arangement: ors([
+        state.login.peranan === 2 && [['anamnesa', 'tracer'], ['fisik'], ['perawat']],
+        state.login.peranan === 3 && ors([
+          state.oneInap && [
+            ['anamnesa'],
+            ['diagnosa', 'tindakan'], ['obat', 'bhp'],
+            ['radio', 'labor'], ['planning', 'konsumsi'],
+            ['tracer'], ['spm', 'dokter', 'tanggal']
+          ],
+          [
+            ['anamnesa'],
+            ['diagnosa', 'tindakan'],
+            ['obat', 'bhp'],
+            ['radio', 'labor'], ['planning'],
+            ['keluar', 'rujuk', 'tracer'],
+            ['spm', 'dokter', 'tanggal']
+          ]
+        ])
+      ]),
       action: doc => withThis(
         ands([
           !_.get(state, 'oneInap'),
