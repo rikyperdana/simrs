@@ -208,12 +208,19 @@ function autoForm(opts){return {view: function(){
     ])},
   }}
 
-  return m('form', attr.form,
-    _.map(opts.schema, function(val, key){
-      return !_.includes(key, '.') && inputTypes(key, val)[
+  var fields = _.map(opts.schema, function(val, key){
+    return !_.includes(key, '.') && {
+      [key]: () => inputTypes(key, val)[
         _.get(val, 'autoform.type') || 'standard'
       ]()
-    }),
+    }
+  }).filter(Boolean)
+
+  return m('form', attr.form,
+    opts.arangement ?
+    opts.arangement.map(i => m('.columns', i.map(
+      j => m('.column', fields.find(k => k[j])[j]())
+    ))) : fields.map(i => Object.values(i)[0]()),
     m('.row', m('button.button',
       _.assign({type: 'submit', class: 'is-info'}, opts.submit),
       (opts.submit && opts.submit.value) || 'Submit'

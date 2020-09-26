@@ -65,6 +65,13 @@ _.assign(comp, {
     m(autoForm({
       id: 'newPatient', schema: schemas.identitas,
       confirmMessage: 'Yakin ingin menambahkan pasien BARU?',
+      arangement: [
+        ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
+        ['alias', 'nama_lengkap', 'tanggal_lahir', 'tempat_lahir'],
+        ['kelamin', 'agama', 'nikah', 'pendidikan', 'darah', 'pekerjaan'],
+        ['tempat_tinggal', 'kontak'], ['keluarga'],
+        ['petugas', 'tanggal_input'] // yg hidden juga
+      ],
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
           insertBoth('patients', obj),
@@ -74,7 +81,7 @@ _.assign(comp, {
           )),
           _.assign(state, {route: 'onePatient', onePatient: obj})
         ]
-      ),
+      )
     }))
   ),
 
