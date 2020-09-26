@@ -44,7 +44,7 @@ _.assign(comp, {
     ),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
-        ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Retur']
+        ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Karantina']
         .map(i => m('th', i))
       )),
       m('tbody', (state.searchGoods || state.goodsList || [])
@@ -65,7 +65,7 @@ _.assign(comp, {
           look('jenis_barang', +i.jenis),
           i.nama, look('satuan', i.satuan)
         ]),
-        i.batch && ['gudang', 'apotik', 'retur']
+        i.batch && ['gudang', 'apotik', 'karantina']
         .map(j => withThis(
           _.sum(i.batch.map(k =>
             _.get(k.stok, j) || 0
@@ -173,7 +173,7 @@ _.assign(comp, {
     m('p'), m('h4', 'Daftar batch barang ini'),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
-        ['No. Batch', 'Merek', 'Tanggal Masuk', 'Tanggal Kadaluarsa', 'Gudang', 'Apotik', 'Retur']
+        ['No. Batch', 'Merek', 'Tanggal Masuk', 'Tanggal Kadaluarsa', 'Gudang', 'Apotik', 'Karantina']
         .map(i => m('th', i))
       )),
       m('tbody', (state.oneGood.batch || []).map(i => m('tr',
@@ -189,7 +189,7 @@ _.assign(comp, {
               ['Harga jual', rupiah(i.harga.jual)],
               ['Stok Gudang', i.stok.gudang],
               ['Stok Apotik', _.get(i, 'stok.apotik')],
-              ['Jumlah Diretur', _.get(i, 'stok.retur')],
+              ['Jumlah Dikarantina', _.get(i, 'stok.karantina')],
               ['Nama supplier', _.get(i, 'sumber.supplier')],
               ['Anggaran', _.get(i, 'sumber.anggaran')],
               ['No. SPK', _.get(i, 'sumber.no_spk')],
@@ -202,15 +202,15 @@ _.assign(comp, {
               state.login.peranan === 4,
               state.login.bidang === 3
             ]) && m('p.buttons',
-              !_.get(i, 'stok.retur') && m('.button.is-warning',
+              !_.get(i, 'stok.karantina') && m('.button.is-warning',
                 {
-                  "data-tooltip": 'Pindahkan semua stok barang ini ke Retur',
+                  "data-tooltip": 'Pindahkan semua stok barang ini ke karantina',
                   onclick: () => [
-                    confirm('Yakin untuk retur barang ini?') &&
+                    confirm('Yakin untuk karantina barang ini?') &&
                     updateBoth('goods', state.oneGood._id, _.assign(
                       state.oneGood, {batch: state.oneGood.batch.map(j =>
                         j.idbatch === i.idbatch ?
-                        _.assign(j, {stok: {gudang: 0, apotik: 0, retur:
+                        _.assign(j, {stok: {gudang: 0, apotik: 0, karantina:
                           (i.stok.gudang || 0) + (i.stok.apotik || 0)
                         }}) : j
                       )}
@@ -218,7 +218,7 @@ _.assign(comp, {
                   ]
                 },
                 m('span.icon', m('i.fas.fa-exchange-alt')),
-                m('span', 'Retur batch')
+                m('span', 'Karantina batch')
               ),
               m('.button.is-danger',
                 {onclick: e => [
@@ -277,7 +277,7 @@ _.assign(comp, {
         },
         tds([
           i.no_batch, i.merek, hari(i.masuk), hari(i.kadaluarsa),
-          i.stok.gudang || 0, i.stok.apotik || 0, i.stok.retur || 0
+          i.stok.gudang || 0, i.stok.apotik || 0, i.stok.karantina || 0
         ])
       )))
     ))),

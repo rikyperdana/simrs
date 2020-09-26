@@ -77,7 +77,7 @@ _.assign(comp, {
                           // kurangi stok diapotik sebanyak minim
                           d.stok, {apotik: d.stok.apotik - minim}
                         )})]
-                      // jika minim 0 maka lewatkan (bisa jadi habis, belum amprah, atau sudah retur)
+                      // jika minim 0 maka lewatkan (bisa jadi habis, belum amprah, atau sudah karantina)
                       ]) : [...c, d]
                     ), [])
                   })

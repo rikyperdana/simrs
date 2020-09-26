@@ -232,7 +232,7 @@ _.assign(comp, {
                       idbatch: randomId(), no_batch: i.no_batch, merek: i.merek,
                       masuk: i.masuk && +moment(i.masuk),
                       kadaluarsa: i.kadaluarsa && +moment(i.kadaluarsa),
-                      stok: {gudang: +i.digudang, apotik: +i.diapotik, retur: +i.diretur},
+                      stok: {gudang: +i.digudang, apotik: +i.diapotik, karantina: +i.karantina},
                       harga: {beli: +i.beli, jual: +i.jual}, returnable: !!i.returnable,
                       sumber: {
                         supplier: i.supplier, anggaran: +i.anggaran, no_spk: i.no_spk,
