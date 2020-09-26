@@ -105,6 +105,11 @@ _.assign(comp, {
       id: 'poliVisit', autoReset: true,
       schema: schemas.rawatJalan,
       confirmMessage: 'Yakin untuk mendaftarkan pasien ke klinik?',
+      arangement: [
+        ['no_antrian', 'cara_bayar', 'no_sep'],
+        ['klinik', 'rujukan', 'sumber_rujukan', 'penanggungjawab'],
+        ['idrawat', 'tanggal']
+      ],
       action: doc => db.patients.filter(i =>
         i.rawatJalan && i.rawatJalan.filter(j => ands([
           j.klinik === 1,

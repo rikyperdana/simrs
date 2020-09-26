@@ -91,6 +91,12 @@ _.assign(comp, {
       id: 'formGood', schema: schemas.barang,
       confirmMessage: 'Yakin untuk menyimpan JENIS barang baru?',
       doc: state.oneGood,
+      arangement: [
+        ['nama', 'kandungan'],
+        ['jenis', 'satuan', 'kode_rak'],
+        ['stok_minimum', 'kriteria'],
+        ['petugas']
+      ],
       action: doc => withThis(
         _.assign(state.oneGood || {}, doc, {
           _id: _.get(state, 'oneGood._id') || randomId()
@@ -289,6 +295,11 @@ _.assign(comp, {
     m(autoForm({
       id: 'formBatch', schema: schemas.batch,
       confirmMessage: 'Yakin untuk menambahkan batch obat ini?',
+      arangement: [
+        ['no_batch', 'merek', 'masuk', 'kadaluarsa'],
+        ['stok', 'harga', 'sumber'],
+        ['idbatch', 'petugas']
+      ],
       action: doc => [
         updateBoth('goods', state.oneGood._id, _.assign(state.oneGood, {
           batch: [...(state.oneGood.batch || []), doc]
