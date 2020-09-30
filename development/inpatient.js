@@ -47,7 +47,7 @@ _.assign(comp, {
             ),
             m(autoForm({
               id: 'formBed', schema: schemas.beds,
-              arangement: [['kelas', 'kamar', 'nomor']],
+              arangement: {top: [['kelas', 'kamar', 'nomor']]},
               action: doc => [
                 updateBoth(
                   'patients', i.pasien._id, _.assign(i.pasien, {rawatInap: [

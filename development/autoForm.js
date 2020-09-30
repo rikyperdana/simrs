@@ -2,6 +2,7 @@ var m, _, afState = {arrLen: {}, form: {}}
 
 function autoForm(opts){return {view: function(){
   function normal(name){return name.replace(/\d/g, '$')}
+  function withThis(obj, cb){return cb(obj)}
   function ors(array){return array.find(Boolean)}
   function dateValue(timestamp, hour){
     var date = new Date(timestamp),
@@ -147,20 +148,32 @@ function autoForm(opts){return {view: function(){
     standard: function(){return ors([
       schema.type === Object && m('.box',
         attr.label(name, schema),
-        _.map(opts.schema, function(val, key){
-          return _.merge(val, {name: key})
-        }).filter(function(i){
-          function getLen(str){return _.size(_.split(str, '.'))};
-          return _.every([
-            _.includes(i.name, normal(name)+'.'),
-            getLen(name)+1 === getLen(i.name)
-          ])
-        }).map(function(i){
-          var childSchema = opts.schema[normal(i.name)];
-          return inputTypes(
-            name+'.'+_.last(i.name.split('.')), childSchema
-          )[_.get(childSchema, 'autoform.type') || 'standard']()
-        }),
+        withThis(
+          _.map(opts.schema, function(val, key){
+            return _.merge(val, {name: key})
+          }).filter(function(i){
+            function getLen(str){return _.size(_.split(str, '.'))};
+            return _.every([
+              _.includes(i.name, normal(name)+'.'),
+              getLen(name)+1 === getLen(i.name)
+            ])
+          }).map(function(i){
+            var childSchema = opts.schema[normal(i.name)],
+            fieldName = name+'.'+_.last(i.name.split('.'))
+            return {
+              [fieldName]: () => inputTypes(fieldName, childSchema)[
+                _.get(childSchema, 'autoform.type') || 'standard'
+              ]()
+            }
+          }),
+          fields =>
+            _.get(opts.arangement, name) ?
+            opts.arangement[name].map(i => m('.columns',
+              i.map(j => m('.column',
+                fields.find(k => k[name+'.'+j])[name+'.'+j]()
+              ))
+            )) : fields.map(i => _.values(i)[0]())
+        ),
         m('p.help', _.get(schema, 'autoform.help'))
       ),
 
@@ -217,8 +230,8 @@ function autoForm(opts){return {view: function(){
   }).filter(Boolean)
 
   return m('form', attr.form,
-    opts.arangement ?
-    opts.arangement.map(i => m('.columns', i.map(
+    _.get(opts, 'arangement.top') ?
+    opts.arangement.top.map(i => m('.columns', i.map(
       j => m('.column', fields.find(k => k[j])[j]())
     ))) : fields.map(i => Object.values(i)[0]()),
     m('.row', m('button.button',
