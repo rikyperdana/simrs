@@ -140,25 +140,33 @@ _.assign(comp, {
           schemas.soapDokter
         ])
       ]),
-      arangement: ors([
-        state.login.peranan === 2 && [['anamnesa', 'tracer'], ['fisik'], ['perawat']],
-        state.login.peranan === 3 && ors([
-          state.oneInap && [
-            ['anamnesa'],
-            ['diagnosa', 'tindakan'], ['obat', 'bhp'],
-            ['radio', 'labor'], ['planning', 'konsumsi'],
-            ['tracer'], ['spm', 'dokter', 'tanggal']
-          ],
-          [
-            ['anamnesa'],
-            ['diagnosa', 'tindakan'],
-            ['obat', 'bhp'],
-            ['radio', 'labor'], ['planning'],
-            ['keluar', 'rujuk', 'tracer'],
-            ['spm', 'dokter', 'tanggal']
-          ]
-        ])
-      ]),
+      arangement: {
+        top: ors([
+          state.login.peranan === 2 && [['anamnesa', 'tracer'], ['fisik'], ['perawat']],
+          state.login.peranan === 3 && ors([
+            state.oneInap && [
+              ['anamnesa'],
+              ['diagnosa', 'tindakan'], ['obat', 'bhp'],
+              ['radio', 'labor'], ['planning', 'konsumsi'],
+              ['tracer'], ['spm', 'dokter', 'tanggal']
+            ],
+            [
+              ['anamnesa'],
+              ['diagnosa', 'tindakan'],
+              ['obat', 'bhp'],
+              ['radio', 'labor'], ['planning'],
+              ['keluar', 'rujuk', 'tracer'],
+              ['spm', 'dokter', 'tanggal']
+            ]
+          ])
+        ]),
+        fisik: [
+          ['tekanan_darah'],
+          ['nadi', 'suhu', 'pernapasan'],
+          ['tinggi', 'berat', 'lila']
+        ],
+        'fisik.tekanan_darah': [['systolic', 'diastolic']]
+      },
       action: doc => withThis(
         ands([
           !_.get(state, 'oneInap'),

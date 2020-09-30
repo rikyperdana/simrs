@@ -25,10 +25,10 @@ _.assign(comp, {
           m('h3', 'Tambah Akun'),
           m(autoForm({
             id: 'createAccount', schema: schemas.account,
-            arangement: [
+            arangement: {top: [
               ['nama'], ['username', 'password'],
               ['peranan', 'bidang'], ['poliklinik', 'keaktifan']
-            ],
+            ]},
             action: doc =>
               !(state.userList || []).find(i => i.username === doc.username) &&
               io().emit('bcrypt', doc.password, res => [
@@ -103,7 +103,7 @@ _.assign(comp, {
             m(autoForm({
               id: 'editTarif', doc: i,
               schema: schemas.tarif,
-              arangement: [['nama', 'harga']],
+              arangement: {top: [['nama', 'harga']]},
               action: doc => confirm('Yakin ubah tarif?') && [
                 updateBoth('references', i._id, _.assign(i, doc)),
                 state.modalEditTarif = null,

@@ -65,13 +65,16 @@ _.assign(comp, {
     m(autoForm({
       id: 'newPatient', schema: schemas.identitas,
       confirmMessage: 'Yakin ingin menambahkan pasien BARU?',
-      arangement: [
-        ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
-        ['alias', 'nama_lengkap', 'tanggal_lahir', 'tempat_lahir'],
-        ['kelamin', 'agama', 'nikah', 'pendidikan', 'darah', 'pekerjaan'],
-        ['tempat_tinggal', 'kontak'], ['keluarga'],
-        ['petugas', 'tanggal_input'] // yg hidden juga
-      ],
+      arangement: {
+        top: [
+          ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
+          ['alias', 'nama_lengkap', 'tanggal_lahir', 'tempat_lahir'],
+          ['kelamin', 'agama', 'nikah', 'pendidikan', 'darah', 'pekerjaan'],
+          ['tempat_tinggal', 'kontak'], ['keluarga'],
+          ['petugas', 'tanggal_input'] // yg hidden juga
+        ],
+        keluarga: [['ayah', 'ibu', 'pasangan']]
+      },
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
           insertBoth('patients', obj),
@@ -90,6 +93,16 @@ _.assign(comp, {
     m(autoForm({
       id: 'updatePatient', schema: schemas.identitas,
       doc: state.onePatient.identitas,
+      arangement: {
+        top: [
+          ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
+          ['alias', 'nama_lengkap', 'tanggal_lahir', 'tempat_lahir'],
+          ['kelamin', 'agama', 'nikah', 'pendidikan', 'darah', 'pekerjaan'],
+          ['tempat_tinggal', 'kontak'], ['keluarga'],
+          ['petugas', 'tanggal_input'] // yg hidden juga
+        ],
+        keluarga: [['ayah', 'ibu', 'pasangan']]
+      },
       action: doc => [
         updateBoth(
           'patients', state.onePatient._id,
@@ -105,11 +118,11 @@ _.assign(comp, {
       id: 'poliVisit', autoReset: true,
       schema: schemas.rawatJalan,
       confirmMessage: 'Yakin untuk mendaftarkan pasien ke klinik?',
-      arangement: [
+      arangement: {top: [
         ['no_antrian', 'cara_bayar', 'no_sep'],
         ['klinik', 'rujukan', 'sumber_rujukan', 'penanggungjawab'],
         ['idrawat', 'tanggal']
-      ],
+      ]},
       action: doc => db.patients.filter(i =>
         i.rawatJalan && i.rawatJalan.filter(j => ands([
           j.klinik === 1,
