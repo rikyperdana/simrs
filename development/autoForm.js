@@ -97,7 +97,7 @@ function autoForm(opts){return {view: function(){
     readonly: function(){return m('.field',
       attr.label(name, schema),
       m('input.input', {
-        readonly: true, name: !schema.exclude ? name : '',
+        readonly: true, name: !schema.exclude ? name : '', disabled: true,
         value: schema.autoValue(name, afState.form[opts.id], opts)
       })
     )},

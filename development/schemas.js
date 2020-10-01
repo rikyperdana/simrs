@@ -158,15 +158,18 @@ var schemas = {
     'obat.$.aturan.dosis': {type: String},
     radio: {type: Array, optional: true, label: 'Radiologi'},
     'radio.$': {type: Object},
-    'radio.$.grup': {type: String, optional: true, autoform: {
-      help: 'Saring berdasarkan kategori',
-      type: 'select', options: () => _.uniq(
-        state.references
-        .filter(i => i[0] === 'radiologi')
-        .map(i => i[1])
-      ).map(i => ({value: i, label: _.startCase(i)}))
-    }},
-    'radio.$.idradio': {type: String, autoRedraw: true, autoform: {
+    'radio.$.grup': {
+      type: String, optional: true, autoRedraw: true,
+      autoform: {
+        help: 'Saring berdasarkan kategori',
+        type: 'select', options: () => _.uniq(
+          state.references
+          .filter(i => i[0] === 'radiologi')
+          .map(i => i[1])
+        ).map(i => ({value: i, label: _.startCase(i)}))
+      }
+    },
+    'radio.$.idradio': {type: String, autoform: {
       type: 'select', options: (name, doc) =>
         _.sortBy(
           state.references.filter(i => ands([
@@ -184,15 +187,18 @@ var schemas = {
     'radio.$.catatan': {type: String, optional: true},
     labor: {type: Array, optional: true, label: 'Laboratorium'},
     'labor.$': {type: Object},
-    'labor.$.grup': {type: String, optional: true, autoform: {
-      help: 'Saring berdasarkan kategori',
-      type: 'select', options: () => _.uniq(
-        state.references
-        .filter(i => i[0] === 'laboratorium')
-        .map(i => i[1])
-      ).map(i => ({value: i, label: _.startCase(i)}))
-    }},
-    'labor.$.idlabor': {type: String, autoRedraw: true, autoform: {
+    'labor.$.grup': {
+      type: String, optional: true, autoRedraw: true,
+      autoform: {
+        help: 'Saring berdasarkan kategori',
+        type: 'select', options: () => _.uniq(
+          state.references
+          .filter(i => i[0] === 'laboratorium')
+          .map(i => i[1])
+        ).map(i => ({value: i, label: _.startCase(i)}))
+      }
+    },
+    'labor.$.idlabor': {type: String, autoform: {
       type: 'select', options: (name, doc) =>
         _.sortBy(
           state.references.filter(i => ands([
