@@ -165,7 +165,13 @@ _.assign(comp, {
           ['nadi', 'suhu', 'pernapasan'],
           ['tinggi', 'berat', 'lila']
         ],
-        'fisik.tekanan_darah': [['systolic', 'diastolic']]
+        'fisik.tekanan_darah': [['systolic', 'diastolic']],
+        'tindakan.$': [['idtindakan', 'jadwal']],
+        'obat.$': [['idbarang'], ['jumlah', 'puyer'], ['aturan']],
+        'bhp.$': [['idbarang', 'jumlah']],
+        'radio.$': [['grup', 'idradio'], ['catatan']],
+        'labor.$': [['grup', 'idlabor']],
+        'obat.$.aturan': [['kali', 'dosis']]
       },
       action: doc => withThis(
         ands([

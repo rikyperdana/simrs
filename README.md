@@ -66,7 +66,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 5. Klik Copy pada Connection String Only
 6. Pada halaman MongoDB Atlas Cluster, create database "simrs" (atau nama lainnya).
 7. Masih pada halaman Cluster, tambahkan dibawah db tersebut 5 collection `goods, patients, references, users, queue`
-8. Buat file pada folder project (jika belum ada) bernama `.env`. Ketikkan
+8. Buat file pada folder project bernama `.env` (jika belum ada). Isikan dengan:
 ```
 MONGO="isikan dengan connection string, dan ganti <username> dan <password>"
 dbname="nama databasenya"

@@ -99,7 +99,8 @@ function autoForm(opts){return {view: function(){
       m('input.input', {
         readonly: true, name: !schema.exclude ? name : '', disabled: true,
         value: schema.autoValue(name, afState.form[opts.id], opts)
-      })
+      }),
+      m('p.help', _.get(schema, 'autoform.help'))
     )},
     "datetime-local": function(){return m('.field',
       attr.label(name, schema),
@@ -108,7 +109,9 @@ function autoForm(opts){return {view: function(){
         name: !schema.exclude ? name: '',
         required: !schema.optional,
         value: dateValue(_.get(afState.form, [opts.id, name]), true),
-      }))
+        onchange: schema.autoRedraw && function(){}
+      })),
+      m('p.help', _.get(schema, 'autoform.help'))
     )},
     textarea: function(){return m('.field',
       attr.label(name, schema),
@@ -118,14 +121,18 @@ function autoForm(opts){return {view: function(){
         value: _.get(afState.form, [opts.id, name]),
         placeholder: _.get(schema, 'autoform.placeholder'),
         rows: _.get(schema, 'autoform.rows') || 6,
-      })
+        onchange: schema.autoRedraw && function(){}
+      }),
+      m('p.help', _.get(schema, 'autoform.help'))
     )},
     password: function(){return m('.field',
       attr.label(name, schema), m('input.input', {
-        name: !schema.exclude ? name : '',
+        name: !schema.exclude ? name : '', pattern: schema.regExp,
         required: !schema.optional, type: 'password',
-        placeholder: _.get(schema, 'autoform.placeholder')
-      })
+        placeholder: _.get(schema, 'autoform.placeholder'),
+        onchange: schema.autoRedraw && function(){}
+      }),
+      m('p.help', _.get(schema, 'autoform.help'))
     )},
     select: function(){return m('.field.is-expanded',
       attr.label(name, schema),
@@ -160,15 +167,15 @@ function autoForm(opts){return {view: function(){
           }).map(function(i){
             var childSchema = opts.schema[normal(i.name)],
             fieldName = name+'.'+_.last(i.name.split('.'))
-            return {
-              [fieldName]: () => inputTypes(fieldName, childSchema)[
-                _.get(childSchema, 'autoform.type') || 'standard'
-              ]()
+            return {[fieldName]: () =>
+              inputTypes(fieldName, childSchema)
+              [_.get(childSchema, 'autoform.type') || 'standard']()
             }
           }),
           fields =>
-            _.get(opts.arangement, name) ?
-            opts.arangement[name].map(i => m('.columns',
+            _.get(opts.arangement, name.replace(/[0-9]/g, '$')) ?
+            opts.arangement[name.replace(/[0-9]/g, '$')]
+            .map(i => m('.columns',
               i.map(j => m('.column',
                 fields.find(k => k[name+'.'+j])[name+'.'+j]()
               ))
