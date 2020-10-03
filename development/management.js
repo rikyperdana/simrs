@@ -25,10 +25,7 @@ _.assign(comp, {
           m('h3', 'Tambah Akun'),
           m(autoForm({
             id: 'createAccount', schema: schemas.account,
-            arangement: {top: [
-              ['nama'], ['username', 'password'],
-              ['peranan', 'bidang'], ['poliklinik', 'keaktifan']
-            ]},
+            arangement: arangements.account,
             action: doc =>
               !(state.userList || []).find(i => i.username === doc.username) &&
               io().emit('bcrypt', doc.password, res => [
@@ -58,7 +55,9 @@ _.assign(comp, {
             state.modalAccount = m('.box',
               m('h4', 'Profil Pengguna'),
               m(autoForm({
-                id: 'updateAccount', schema: schemas.account, doc: i,
+                id: 'updateAccount', doc: i,
+                schema: schemas.account,
+                arangement: arangements.account,
                 action: doc =>
                   io().emit('bcrypt', doc.password, res => [
                     updateBoth('users', i._id, _.assign(doc, {password: res})),

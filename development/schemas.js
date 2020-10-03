@@ -448,4 +448,68 @@ var schemas = {
     nama: {type: String},
     harga: {type: Number}
   }
+},
+
+arangements = {
+  soap: () => ({
+    top: ors([
+      state.login.peranan === 2 && [['anamnesa', 'tracer'], ['fisik'], ['perawat']],
+      state.login.peranan === 3 && ors([
+       state.oneInap && [
+          ['anamnesa'],
+          ['diagnosa', 'tindakan'], ['obat', 'bhp'],
+          ['radio', 'labor'], ['planning', 'konsumsi'],
+          ['tracer'], ['spm', 'dokter', 'tanggal']
+        ],
+        [
+          ['anamnesa'],
+          ['diagnosa', 'tindakan'],
+          ['obat', 'bhp'],
+          ['radio', 'labor'], ['planning'],
+          ['keluar', 'rujuk', 'tracer'],
+          ['spm', 'dokter', 'tanggal']
+        ]
+      ])
+    ]),
+    fisik: [
+      ['tekanan_darah'],
+      ['nadi', 'suhu', 'pernapasan'],
+      ['tinggi', 'berat', 'lila']
+    ],
+    'fisik.tekanan_darah': [['systolic', 'diastolic']],
+    'tindakan.$': [['idtindakan', 'jadwal']],
+    'obat.$': [['idbarang'], ['jumlah', 'puyer'], ['aturan']],
+    'bhp.$': [['idbarang', 'jumlah']],
+    'radio.$': [['grup', 'idradio'], ['catatan']],
+    'labor.$': [['grup', 'idlabor']],
+    'obat.$.aturan': [['kali', 'dosis']]
+  }),
+
+  barang: {
+    top: [
+      ['nama', 'kandungan'],
+      ['jenis', 'satuan', 'kode_rak'],
+      ['stok_minimum', 'kriteria'],
+      ['petugas']
+    ],
+    stok_minimum: [['gudang', 'apotik']],
+    kriteria: [
+      ['antibiotik', 'narkotika'],
+      ['psikotropika', 'fornas']
+    ]
+  },
+
+  batch: {
+    top: [
+      ['no_batch', 'merek', 'masuk', 'kadaluarsa'],
+      ['stok', 'harga', 'sumber'],
+      ['idbatch', 'petugas']
+    ],
+    harga: [['beli', 'jual']]
+  },
+
+  account: {top: [
+    ['nama'], ['username', 'password'],
+    ['peranan', 'bidang'], ['poliklinik', 'keaktifan']
+  ]},
 }
