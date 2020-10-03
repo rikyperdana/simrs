@@ -502,10 +502,11 @@ arangements = {
   batch: {
     top: [
       ['no_batch', 'merek', 'masuk', 'kadaluarsa'],
-      ['stok', 'harga', 'sumber'],
+      ['stok', 'harga'], ['sumber'],
       ['idbatch', 'petugas']
     ],
-    harga: [['beli', 'jual']]
+    harga: [['beli', 'jual']],
+    sumber: [['supplier', 'anggaran', 'no_spk', 'tanggal_spk']]
   },
 
   account: {top: [
