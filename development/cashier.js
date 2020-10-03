@@ -220,6 +220,7 @@ _.assign(comp, {
 
   overcharge: () => m('.content', m(autoForm({
     id: 'overcharge', schema: schemas.overcharge,
+    arangement: {'charges.$': [['item', 'harga']]},
     action: doc => updateBoth(
       'patients', state.onePatient._id, _.assign(state.onePatient, {
         rawatJalan: (state.onePatient.rawatJalan || []).map(

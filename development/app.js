@@ -112,6 +112,7 @@ _.assign(comp, {
         rawatInap: ['Rawat Inap', 'bed'],
         radiology: ['Radiologi', 'radiation'],
         laboratory: ['Laboratorium', 'flask'],
+        storage: ['Gudang', 'flask'],
         management: ['Management', 'users']
       }, (val, key) => m('li',
         {class: key === state.dashboardTab && 'is-active'},
@@ -149,6 +150,13 @@ _.assign(comp, {
             ...(i.rawatInap || []).flatMap(i => i.observasi) || []
           ].map(j => _.get(j, 'soapDokter.labor')).filter(Boolean))).length
         }})),
+        db.goods.toArray(array => _.merge(state, {stats: {
+          barang: {
+            obat: array.filter(i => i.jenis === 1).length,
+            bhp: array.filter(i => i.jenis === 2).length,
+            batch: array.flatMap(i => i.batch).length
+          }
+        }})),
         db.users.toArray(array => _.merge(state, {stats: {
           management: {
             petugas: array.filter(i => i.peranan === 1).length,
@@ -172,6 +180,11 @@ _.assign(comp, {
       rawatInap: ['Total pasien pernah inap: '+_.get(state, 'stats.rawatInap') ],
       radiology: ['Total riwayat layanan radiologi: '+_.get(state, 'stats.radiology')],
       laboratory: ['Total riwayat layanan laboratorium: '+_.get(state, 'stats.laboratory')],
+      storage: [
+        'Jumlah obat terdaftar: '+_.get(state, 'stats.barang.obat'),
+        'Jumlah BHP terdaftar: '+_.get(state, 'stats.barang.bhp'),
+        'Jumlah batch terdaftar: '+_.get(state, 'stats.barang.batch')
+      ],
       management: [
         'Jumlah petugas: '+_.get(state, 'stats.management.petugas'),
         'Jumlah perawat: '+_.get(state, 'stats.management.perawat'),
@@ -247,7 +260,7 @@ io().on('connect', socket => [
       m('.content', m('a.help', {
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank'
-      }, 'Versi 2.8.7'))
+      }, 'Versi 2.9.1'))
     ),
     localStorage.bulmaTheme &&
     m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+localStorage.bulmaTheme+'/bulmaswatch.min.css'})
