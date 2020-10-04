@@ -112,7 +112,7 @@ _.assign(comp, {
         rawatInap: ['Rawat Inap', 'bed'],
         radiology: ['Radiologi', 'radiation'],
         laboratory: ['Laboratorium', 'flask'],
-        storage: ['Gudang', 'flask'],
+        storage: ['Gudang', 'cubes'],
         management: ['Management', 'users']
       }, (val, key) => m('li',
         {class: key === state.dashboardTab && 'is-active'},
@@ -199,8 +199,10 @@ _.assign(comp, {
   login: () => m('.content', m('.columns',
     m('.column'),
     m('.column',
-      !window.chrome && m('.notification.is-warning.is-light',
-        'Mohon gunakan Chrome versi terbaru'
+      !ors([
+        window.chrome, typeof(InstallTrigger) === 'object'
+      ]) && m('.notification.is-warning.is-light',
+        'Mohon gunakan Chrome/Firefox versi terbaru'
       ),
       state.error && m('.notification.is-danger.is-light', [
         m('button.delete', {onclick: () => state.error = false}),
