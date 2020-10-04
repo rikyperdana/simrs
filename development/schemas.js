@@ -512,5 +512,5 @@ arangements = {
   account: {top: [
     ['nama'], ['username', 'password'],
     ['peranan', 'bidang'], ['poliklinik', 'keaktifan']
-  ]},
+  ]}
 }

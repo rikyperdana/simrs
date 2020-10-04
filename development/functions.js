@@ -24,7 +24,7 @@ startOfTheDay = timestamp => +moment(
   moment(timestamp).format('YYYY-MM-DD')
 ),
 
-tomorrow = timestamp => timestamp + 86400000,
+tomorrow = timestamp => timestamp + 864e5,
 
 rupiah = num =>
   'Rp '+numeral(num || 0).format('0,0'),

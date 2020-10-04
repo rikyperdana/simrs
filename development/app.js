@@ -202,7 +202,7 @@ _.assign(comp, {
       !ors([
         window.chrome, typeof(InstallTrigger) === 'object'
       ]) && m('.notification.is-warning.is-light',
-        'Mohon gunakan Chrome/Firefox versi terbaru'
+        'Mohon gunakan Chrome/Firefox terbaru'
       ),
       state.error && m('.notification.is-danger.is-light', [
         m('button.delete', {onclick: () => state.error = false}),
