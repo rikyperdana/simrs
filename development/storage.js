@@ -37,7 +37,8 @@ _.assign(comp, {
         m('.select.is-fullwidth.is-'+i[3], m('select',
           {onchange: e => _.assign(state, {selection: {[i[0]]: +e.target.value}})},
           m('option', {value: ''}, 'Saring '+i[0]),
-          selects(i[1])().map(({value, label}) => m('option', {value}, label))
+          selects(i[1])().sort((a, b) => a.label > b.label ? 1 : -1)
+          .map(({value, label}) => m('option', {value}, label))
         )),
         m('.icon.is-small.is-left', m('i.fas.fa-'+i[2]))
       ))))
