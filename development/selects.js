@@ -16,7 +16,7 @@ var selects = name => _.reduce(
     rujukan: ['datang_sendiri', 'rs_lain', 'puskesmas', 'faskes_lainnya'],
     keluar: ['pulang', 'konsultasikan_ke_poli_lain', 'inap'],
     jenis_barang: ['Obat', 'BHP', 'Logistik'],
-    satuan: ['botol', 'vial', 'ampul', 'pcs', 'sachet', 'tube', 'supp', 'tablet', 'minidose', 'pot', 'turbuhaler', 'kaplet', 'kapsul', 'bag', 'pen', 'rectal', 'flash', 'cream', 'nebu', 'galon', 'lembar', 'roll', 'liter', 'cup', 'pasang', 'bungkus', 'box', 'syringe'],
+    satuan: ['botol', 'vial', 'ampul', 'pcs', 'sachet', 'tube', 'supp', 'tablet', 'minidose', 'pot', 'turbuhaler', 'kaplet', 'kapsul', 'bag', 'pen', 'rectal', 'flash', 'cream', 'nebu', 'galon', 'lembar', 'roll', 'liter', 'cup', 'pasang', 'bungkus', 'box', 'suntik'],
     kriteria_obat: ['antibiotik', 'narkotika', 'psikotropika', 'fornas'],
     boolean: ['ya', 'tidak'],
     konfirmasi: ['proses', 'tolak'],
