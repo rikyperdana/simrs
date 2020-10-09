@@ -64,17 +64,8 @@ _.assign(comp, {
     m('h3', 'Pendaftaran Pasien Baru'),
     m(autoForm({
       id: 'newPatient', schema: schemas.identitas,
+      arangement: arangements.patientForm,
       confirmMessage: 'Yakin ingin menambahkan pasien BARU?',
-      arangement: {
-        top: [
-          ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
-          ['alias', 'nama_lengkap', 'tanggal_lahir', 'tempat_lahir'],
-          ['kelamin', 'agama', 'nikah', 'pendidikan', 'darah', 'pekerjaan'],
-          ['tempat_tinggal', 'kontak'], ['keluarga'],
-          ['petugas', 'tanggal_input'] // yg hidden juga
-        ],
-        keluarga: [['ayah', 'ibu', 'pasangan']]
-      },
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
           insertBoth('patients', obj),
@@ -92,17 +83,8 @@ _.assign(comp, {
     m('h3', 'Update identitas pasien'),
     m(autoForm({
       id: 'updatePatient', schema: schemas.identitas,
+      arangement: arangements.patientForm,
       doc: state.onePatient.identitas,
-      arangement: {
-        top: [
-          ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
-          ['alias', 'nama_lengkap', 'tanggal_lahir', 'tempat_lahir'],
-          ['kelamin', 'agama', 'nikah', 'pendidikan', 'darah', 'pekerjaan'],
-          ['tempat_tinggal', 'kontak'], ['keluarga'],
-          ['petugas', 'tanggal_input'] // yg hidden juga
-        ],
-        keluarga: [['ayah', 'ibu', 'pasangan']]
-      },
       action: doc => [
         updateBoth(
           'patients', state.onePatient._id,
@@ -117,12 +99,8 @@ _.assign(comp, {
     m('.box', m(autoForm({
       id: 'poliVisit', autoReset: true,
       schema: schemas.rawatJalan,
+      arangement: arangements.poliVisit,
       confirmMessage: 'Yakin untuk mendaftarkan pasien ke klinik?',
-      arangement: {top: [
-        ['no_antrian', 'cara_bayar', 'no_sep'],
-        ['klinik', 'rujukan', 'sumber_rujukan', 'penanggungjawab'],
-        ['idrawat', 'tanggal']
-      ]},
       action: doc => db.patients.filter(i =>
         i.rawatJalan && i.rawatJalan.filter(j => ands([
           j.klinik === 1,

@@ -157,6 +157,16 @@ makePdf = {
             )
           ]}}
         ],
+        _.get(rawat, 'soapDokter.bhp') && [
+          {text: '\nBHP', alignment: 'center'},
+          {table: {widths: ['*', 'auto'], body: [
+            ['Nama BHP', 'Jumlah'],
+            ..._.get(rawat, 'soapDokter.bhp').map(i => [
+              _.get(lookGoods(i.idbarang), 'nama'),
+              i.jumlah
+            ])
+          ]}}
+        ],
         _.get(rawat, 'soapDokter.obat') && [
           {text: '\nObat', alignment: 'center'},
           {table: {widths: ['*', 'auto', 'auto'], body: [
@@ -228,7 +238,6 @@ makePdf = {
         {text: title, alignment: 'center', bold: true},
         info && {text: info+'\n\n', alignment: 'center', bold: true},
         {table: {
-          // widths: _.range(rows[0].length).map(() => 'auto'),
           widths: [..._.range(rows[0].length-1).map(() => 'auto'), '*'],
           body: rows
         }}

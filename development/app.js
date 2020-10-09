@@ -22,7 +22,6 @@ _.assign(comp, {
         m('a.navbar-item',
           {
             class: val.children && 'has-dropdown is-hoverable',
-            // onclick: () => state.route = key
             onclick: () => [_.assign(state, {
               route: key, burgerMenu: null
             }), m.redraw()]

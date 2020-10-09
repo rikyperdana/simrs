@@ -15,7 +15,7 @@ _.assign(comp, {
             state.clinicQueue = array.filter(i => withThis(
               _.last(i.rawatJalan),
               lastOne => lastOne && ands([
-                // cari pasien yang belum diurus dokter klinik ini
+                // cari pasien yang belum dilayani dokter klinik ini
                 lastOne.klinik === state.login.poliklinik,
                 !lastOne.soapDokter
               ])

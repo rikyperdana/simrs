@@ -289,8 +289,10 @@ _.assign(comp, {
             m('.buttons',
               /*
                 pasien datang pesan obat ke apotik, apoteker isi form obat & cetak resep,
-                pasien bayar ke kasir, pasien tunjukkan bukti bayar ke apotik
-                apoteker isi/ubah form obat, selesaikan mutasi barang
+                pasien bayar ke kasir atau langsung di apotik,
+                pasien tunjukkan bukti bayar ke apotik,
+                apoteker isi/ubah form obat,
+                jalankan mutasi barang.
                 TODO: sesuaikan keys serahList ini dengan serahList apotik
               */
               m('.button.is-info',
