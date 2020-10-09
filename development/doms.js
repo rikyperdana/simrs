@@ -75,16 +75,19 @@ makeRincianSoapPerawat = soapPerawat => soapPerawat && [
 makeRincianSoapDokter = soapDokter => soapDokter && [
   m('tr', m('th', 'Anamnesa Dokter'), m('td', soapDokter.anamnesa)),
   _.map(soapDokter.diagnosa, (j, k) =>
-    m('tr', m('th', 'Diagnosa '+(k+1)), m('td', j.text+' / ICD X: '+(j.code || '?')))
+    m('tr', m('th', 'Diagnosa: '+(k+1)), m('td', j.text+' / ICD X: '+(j.code || '?')))
   ),
   (soapDokter.tindakan || []).map(j => j && m('tr',
-    m('th', _.get(lookReferences(j.idtindakan), 'nama')),
+    m('th', 'Tindakan: ' + _.get(lookReferences(j.idtindakan), 'nama')),
     m('td', rupiah(_.get(lookReferences(j.idtindakan), 'harga')))
   )),
-  // bhp sementara ini belum ditampilkan
+  (soapDokter.bhp || []).map(j => j && m('tr',
+    m('th', 'BHP: ' + _.get(lookGoods(j.idbarang), 'nama')),
+    m('td', j.jumlah)
+  )),
   (soapDokter.obat || []).map(j => j && m('tr',
-    m('th', _.get(lookGoods(j.idbarang), 'nama')),
-    m('td', j.harga)
+    m('th', 'Obat: ' + _.get(lookGoods(j.idbarang), 'nama')),
+    m('td', j.jumlah +' @ '+rupiah(j.harga))
   )),
   soapDokter.planning && m('tr',
     m('th', 'Planning'),
@@ -103,7 +106,7 @@ makeRincianSoapDokter = soapDokter => soapDokter && [
     m('td', soapDokter.tracer)
   ),
   (soapDokter.radio || []).map((j, k) => m('tr',
-    m('th', 'Cek radiologi '+(k+1)),
+    m('th', 'Radiologi: '+(k+1)),
     m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idradio).nama),
     j.diagnosa && m('td', m('.button.is-info', {
       "data-tooltip": 'Cetak lembar hasil diagnosa radiologi',
@@ -111,7 +114,7 @@ makeRincianSoapDokter = soapDokter => soapDokter && [
     }, makeIconLabel('print', '')))
   )),
   (soapDokter.labor || []).map((j, k) => m('tr',
-    m('th', 'Cek labor '+(k+1)),
+    m('th', 'Laboratorium: '+(k+1)),
     m('td', {"data-tooltip": j.diagnosa}, lookReferences(j.idlabor).nama),
     m('td', j.hasil)
   ))

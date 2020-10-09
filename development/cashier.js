@@ -176,10 +176,12 @@ _.assign(comp, {
                         )
                       })),
                       [
+                        // cetak billing konsultasi
                         ors([rawat.soapDokter, rawat.observasi]) &&
                         makePdf.bayar_konsultasi(
                           pasien, rawat, [...bills, ...(rawat.charges || [])]
                         ),
+                        // cetak billing pendaftaran poliklinik
                         makePdf.bayar_pendaftaran(pasien, rawat, [
                           ...(pasien.rawatJalan || []),
                           ...(pasien.emergency || [])
@@ -222,6 +224,7 @@ _.assign(comp, {
     id: 'overcharge', schema: schemas.overcharge,
     arangement: {'charges.$': [['item', 'harga']]},
     action: doc => updateBoth(
+      // selipkan catatan tambahan biaya pada rawat
       'patients', state.onePatient._id, _.assign(state.onePatient, {
         rawatJalan: (state.onePatient.rawatJalan || []).map(
           i => i.idrawat === state.oneRawat.idrawat ?

@@ -157,6 +157,16 @@ makePdf = {
             )
           ]}}
         ],
+        _.get(rawat, 'soapDokter.bhp') && [
+          {text: '\nBHP', alignment: 'center'},
+          {table: {widths: ['*', 'auto'], body: [
+            ['Nama BHP', 'Jumlah'],
+            ..._.get(rawat, 'soapDokter.bhp').map(i => [
+              _.get(lookGoods(i.idbarang), 'nama'),
+              i.jumlah
+            ])
+          ]}}
+        ],
         _.get(rawat, 'soapDokter.obat') && [
           {text: '\nObat', alignment: 'center'},
           {table: {widths: ['*', 'auto', 'auto'], body: [
