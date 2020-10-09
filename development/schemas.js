@@ -222,7 +222,7 @@ var schemas = {
     }},
     rujuk: {
       type: Number, optional: true, label: 'Konsultasikan ke',
-      autoform: { // hanya munculkan bila pilihan keluar 'rujuk'
+      autoform: {
         type: 'select',
         help: 'Hanya diisi bila pilihan keluar adalah Konsultasikan ke Poliklinik lain',
         options: selects('klinik')
@@ -451,6 +451,21 @@ var schemas = {
 },
 
 arangements = {
+  patientForm: {
+    top: [
+      ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
+      ['alias', 'nama_lengkap', 'tanggal_lahir', 'tempat_lahir'],
+      ['kelamin', 'agama', 'nikah', 'pendidikan', 'darah', 'pekerjaan'],
+      ['tempat_tinggal', 'kontak'], ['keluarga'],
+      ['petugas', 'tanggal_input'] // yg hidden juga
+    ],
+    keluarga: [['ayah', 'ibu', 'pasangan']]
+  },
+  poliVisit: {top: [
+    ['no_antrian', 'cara_bayar', 'no_sep'],
+    ['klinik', 'rujukan', 'sumber_rujukan', 'penanggungjawab'],
+    ['idrawat', 'tanggal']
+  ]},
   soap: () => ({
     top: ors([
       state.login.peranan === 2 && [['anamnesa', 'tracer'], ['fisik'], ['perawat']],
