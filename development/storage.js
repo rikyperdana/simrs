@@ -14,20 +14,24 @@ _.assign(comp, {
     m('h1', 'Gudang Farmasi'),
     m('.field.has-addons',
       m('.control.is-expanded', m('input.input.is-fullwidth', {
-        type: 'text', placeholder: 'cari barang...',
+        type: 'text', placeholder: 'Cari barang berdasarkan nama / kandungan',
         onkeypress: e => [
-          state.selection = null,
-          db.goods.filter(i => _.includes(
-            _.lowerCase(i.nama+' '+i.kandungan), e.target.value
-          )).toArray(array => [
-            state.searchGoods = array, m.redraw()
-          ])
+          ands([e.key === 'Enter', e.target.value.length > 3]) && [
+            _.assign(state, {loading: true, selection: null}),
+            db.goods.filter(i => _.includes(
+              _.lowerCase(i.nama+' '+i.kandungan), e.target.value
+            )).toArray(array => [
+              _.assign(state, {searchGoods: array, loading: false}),
+              m.redraw()
+            ])
+          ]
         ]
       })),
       m('.control', m('a.button.is-info', {
         onclick: () => state.searchGoods = null
       }, 'Show All'))
     ),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.columns',
       [
         ['jenis', 'jenis_barang', 'briefcase-medical', 'info'],
