@@ -6,11 +6,6 @@ _.assign(comp, {
   _.includes([2, 3], state.login.peranan)
   ]) ? m('p', 'Hanya untuk user farmasi, apotik dan petugas medis')
   : m('.content',
-    {onupdate: () =>
-      db.goods.toArray(array => [
-        state.goodsList = array, m.redraw()
-      ])
-    },
     m('h1', 'Gudang Farmasi'),
     m('.field.has-addons',
       m('.control.is-expanded', m('input.input.is-fullwidth', {
@@ -21,8 +16,10 @@ _.assign(comp, {
             db.goods.filter(i => _.includes(
               _.lowerCase(i.nama+' '+i.kandungan), e.target.value
             )).toArray(array => [
-              _.assign(state, {searchGoods: array, loading: false}),
-              m.redraw()
+              _.assign(state, {
+                searchGoods: array.sort((a, b) => a.nama > b.nama ? 1 : -1),
+                loading: false
+              }), m.redraw()
             ])
           ]
         ]
@@ -47,40 +44,56 @@ _.assign(comp, {
         m('.icon.is-small.is-left', m('i.fas.fa-'+i[2]))
       ))))
     ),
-    m('.box', m('.table-container', m('table.table.is-striped',
-      m('thead', m('tr',
-        ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Karantina']
-        .map(i => m('th', i))
+    m('.box',
+      {onupdate: () =>
+        db.goods.toArray(array => [
+          state.goodsList = array
+          .sort((a, b) => a.nama > b.nama ? 1 : -1),
+          m.redraw()
+        ])
+      },
+      m('.table-container', m('table.table.is-striped',
+        m('thead', m('tr',
+          ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Karantina']
+          .map(i => m('th', i))
+        )),
+        m('tbody',
+          paginate(
+            (state.searchGoods || state.goodsList || []),
+            'goods', 10
+          ).filter(i => state.selection ? ors([
+            i.jenis === _.get(state, 'selection.jenis'),
+            i.satuan === _.get(state, 'selection.satuan'),
+            i.kriteria[_.lowerCase(look(
+              'kriteria_obat',
+              _.get(state, 'selection.kriteria')
+            ))] === 1
+          ]) : true)
+          .map(i => m('tr',
+            {onclick: () => _.assign(state, {
+              route: 'oneGood', oneGood: i
+            })},
+            tds([
+              look('jenis_barang', +i.jenis),
+              i.nama, look('satuan', i.satuan)
+            ]),
+            i.batch && ['gudang', 'apotik', 'karantina']
+            .map(j => withThis(
+              _.sum(i.batch.map(k =>
+                _.get(k.stok, j) || 0
+              )),
+              stokSum => m('td', {
+                class: stokSum < (_.get(i.stok_minimum, j) || 0) && 'has-text-danger'
+              }, stokSum)
+            ))
+          ))
+        )
       )),
-      m('tbody', (state.searchGoods || state.goodsList || [])
-      .filter(i => state.selection ? ors([
-        i.jenis === _.get(state, 'selection.jenis'),
-        i.satuan === _.get(state, 'selection.satuan'),
-        i.kriteria[_.lowerCase(look(
-          'kriteria_obat',
-          _.get(state, 'selection.kriteria')
-        ))] === 1
-      ]) : true)
-      .sort((a, b) => a.nama > b.nama ? 1 : -1)
-      .map(i => m('tr',
-        {onclick: () => _.assign(state, {
-          route: 'oneGood', oneGood: i
-        })},
-        tds([
-          look('jenis_barang', +i.jenis),
-          i.nama, look('satuan', i.satuan)
-        ]),
-        i.batch && ['gudang', 'apotik', 'karantina']
-        .map(j => withThis(
-          _.sum(i.batch.map(k =>
-            _.get(k.stok, j) || 0
-          )),
-          stokSum => m('td', {
-            class: stokSum < (_.get(i.stok_minimum, j) || 0) && 'has-text-danger'
-          }, stokSum)
-        ))
-      )))
-    ))),
+      !state.searchGoods && m('div', comp.pagination(
+        'goods',
+        _.get(state, 'goodsList.length') / 10
+      ))
+    ),
     state.login.bidang === 3 &&
     m('.button.is-primary',
       {onclick: () => _.assign(state, {

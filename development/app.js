@@ -259,10 +259,11 @@ io().on('connect', socket => [
     )),
     m('footer.footer',
       {style: 'padding:0px'},
-      m('.content', m('a.help', {
+      m('.content', m('a.help.has-text-grey', {
         href: 'https://github.com/rikyperdana/simrs',
-        target: '_blank'
-      }, 'Versi 3.1.9'))
+        target: '_blank',
+        style: 'text-align:center'
+      }, 'Hak Cipta: SIMRS.dev (2018); Versi 3.2.9'))
     ),
     localStorage.bulmaTheme &&
     m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+localStorage.bulmaTheme+'/bulmaswatch.min.css'})
