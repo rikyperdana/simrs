@@ -262,7 +262,7 @@ io().on('connect', socket => [
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank',
         style: 'text-align:center'
-      }, 'Hak Cipta: SIMRS.dev (2019); Versi 3.3.7'))
+      }, 'Hak Cipta: SIMRS.dev (2019); Versi 3.5.0'))
     ),
     localStorage.bulmaTheme &&
     m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+localStorage.bulmaTheme+'/bulmaswatch.min.css'})
