@@ -140,18 +140,24 @@ var schemas = {
     'bhp.$.jumlah': {type: Number},
     obat: {type: Array, optional: true},
     'obat.$': {type: Object},
+    'obat.$.search': {
+      type: String, optional: true,
+      autoRedraw: true, label: 'Pencarian obat',
+      autoform: {placeholder: 'Gunakan huruf kecil'}
+    },
     'obat.$.idbarang': {
-      type: String, label: 'Nama Obat',
-      autoform: {type: 'select', options: () =>
-        state.drugList.map(i => ({
-          value: i._id, label: i.nama
-        }))
+      type: String, label: 'Nama Obat', autoform: {
+        type: 'select', options: (name, doc) =>
+          state.drugList.filter(i => withThis(
+            _.get(doc, _.initial(name.split('.')).join('.')+'.search'),
+            search => search ? _.includes(_.lowerCase(i.nama), search) : true
+          )).map(i => ({value: i._id, label: i.nama}))
       }
     },
     'obat.$.jumlah': {type: Number},
     'obat.$.puyer': {
       type: Number, optional: true,
-      autoform: {help: 'kode unik puyer'}
+      autoform: {help: 'Kode unik puyer'}
     },
     'obat.$.aturan': {type: Object, optional: true},
     'obat.$.aturan.kali': {type: Number},
@@ -493,7 +499,7 @@ arangements = {
     ],
     'fisik.tekanan_darah': [['systolic', 'diastolic']],
     'tindakan.$': [['idtindakan', 'jadwal']],
-    'obat.$': [['idbarang'], ['jumlah', 'puyer'], ['aturan']],
+    'obat.$': [['search', 'idbarang'], ['jumlah', 'puyer'], ['aturan']],
     'bhp.$': [['idbarang', 'jumlah']],
     'radio.$': [['grup', 'idradio'], ['catatan']],
     'labor.$': [['grup', 'idlabor']],
