@@ -12,7 +12,9 @@ _.assign(comp, {
         type: 'text', placeholder: 'Cari barang berdasarkan nama / kandungan',
         onkeypress: e => [
           ands([e.key === 'Enter', e.target.value.length > 3]) && [
-            _.assign(state, {loading: true, selection: null}),
+            _.assign(state, {
+              loading: true, selection: null, pagination: {goods: 0}
+            }),
             db.goods.filter(i => _.includes(
               _.lowerCase(i.nama+' '+i.kandungan), e.target.value
             )).toArray(array => [
