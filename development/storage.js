@@ -63,10 +63,10 @@ _.assign(comp, {
             .filter(i => state.selection ? ors([
               i.jenis === _.get(state, 'selection.jenis'),
               i.satuan === _.get(state, 'selection.satuan'),
-              i.kriteria[_.lowerCase(look(
+              _.get(i.kriteria, _.lowerCase(look(
                 'kriteria_obat',
                 _.get(state, 'selection.kriteria')
-              ))] === 1
+              ))) === 1
             ]) : true),
             'goods', 20
           ).map(i => m('tr',
