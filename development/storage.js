@@ -90,8 +90,10 @@ _.assign(comp, {
         )
       )),
       !state.searchGoods && m('div', comp.pagination(
-        'goods',
-        _.get(state, 'goodsList.length') / 20
+        'goods', ors([
+          _.get(state, 'searchGoods'),
+          _.get(state, 'goodsList'), []
+        ]).length / 20
       ))
     ),
     state.login.bidang === 3 &&
