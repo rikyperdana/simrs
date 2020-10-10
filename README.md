@@ -1,5 +1,5 @@
 # SIMRS.dev
-> SIMRS Open Source Terintegrasi untuk seluruh Faskes
+> SIMRS Open Source Terintegrasi Pertama yang menggunakan NodeJS + MongoDB
 
 Bismillahirrahmanirrahim,
 

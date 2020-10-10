@@ -60,7 +60,7 @@ _.assign(comp, {
         m('tbody',
           paginate(
             (state.searchGoods || state.goodsList || []),
-            'goods', 10
+            'goods', 20
           ).filter(i => state.selection ? ors([
             i.jenis === _.get(state, 'selection.jenis'),
             i.satuan === _.get(state, 'selection.satuan'),
@@ -91,7 +91,7 @@ _.assign(comp, {
       )),
       !state.searchGoods && m('div', comp.pagination(
         'goods',
-        _.get(state, 'goodsList.length') / 10
+        _.get(state, 'goodsList.length') / 20
       ))
     ),
     state.login.bidang === 3 &&
