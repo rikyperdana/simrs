@@ -25,7 +25,11 @@ _.assign(comp, {
         ]
       })),
       m('.control', m('a.button.is-info', {
-        onclick: () => state.searchGoods = null
+        onclick: () => [
+          _.assign(state, {
+            searchGoods: null, selection: null
+          }), m.redraw()
+        ]
       }, 'Show All'))
     ),
     state.loading && m('progress.progress.is-small.is-primary'),
