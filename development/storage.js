@@ -59,17 +59,17 @@ _.assign(comp, {
         )),
         m('tbody',
           paginate(
-            (state.searchGoods || state.goodsList || []),
+            (state.searchGoods || state.goodsList || [])
+            .filter(i => state.selection ? ors([
+              i.jenis === _.get(state, 'selection.jenis'),
+              i.satuan === _.get(state, 'selection.satuan'),
+              i.kriteria[_.lowerCase(look(
+                'kriteria_obat',
+                _.get(state, 'selection.kriteria')
+              ))] === 1
+            ]) : true),
             'goods', 20
-          ).filter(i => state.selection ? ors([
-            i.jenis === _.get(state, 'selection.jenis'),
-            i.satuan === _.get(state, 'selection.satuan'),
-            i.kriteria[_.lowerCase(look(
-              'kriteria_obat',
-              _.get(state, 'selection.kriteria')
-            ))] === 1
-          ]) : true)
-          .map(i => m('tr',
+          ).map(i => m('tr',
             {onclick: () => _.assign(state, {
               route: 'oneGood', oneGood: i
             })},
