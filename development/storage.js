@@ -27,7 +27,8 @@ _.assign(comp, {
       m('.control', m('a.button.is-info', {
         onclick: () => [
           _.assign(state, {
-            searchGoods: null, selection: null
+            searchGoods: null, selection: null,
+            pagination: {goods: 0}
           }), m.redraw()
         ]
       }, 'Show All'))
