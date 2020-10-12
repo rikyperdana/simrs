@@ -42,7 +42,7 @@ autoForm = opts => ({view: () => {
         afState.form[opts.id] = afState.form[opts.id] || {},
         afState.form[opts.id][e.target.name] = e.target.value
       ],
-      onsubmit: function(e){
+      onsubmit: e => {
         e.preventDefault()
         afState.form[opts.id] = opts.autoReset && null
         var submit = () => opts.action(
@@ -159,7 +159,7 @@ autoForm = opts => ({view: () => {
       m('p.help', _.get(schema, 'autoform.help'))
     ),
 
-    standard: function(){return ors([
+    standard: () => ors([
       schema.type === Object && m('.box',
         attr.label(name, schema),
         withThis(
@@ -232,7 +232,7 @@ autoForm = opts => ({view: () => {
         })),
         m('p.help', _.get(schema, 'autoform.help'))
       )
-    ])},
+    ])
   }),
 
   fields = _.map(opts.schema, (val, key) =>
