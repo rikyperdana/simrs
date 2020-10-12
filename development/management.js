@@ -39,6 +39,21 @@ _.assign(comp, {
       makeIconLabel('user-plus', 'Tambah akun')
     ), m('br'), m('br'),
     makeModal('modalAccount'),
+    m('.columns',
+      [
+        ['peranan', 'peranan', 'user-tag', 'info'],
+        ['bidang', 'bidang', 'shapes', 'success'],
+        ['poliklinik', 'klinik', 'clinic-medical', 'warning']
+      ].map(i => m('.column', m('.field', m('.control.has-icons-left',
+        m('.select.is-fullwidth.is-'+i[3], m('select',
+          {onchange: e => _.assign(state, {selection: {[i[0]]: +e.target.value}})},
+          m('option', {value: ''}, 'Saring '+i[0]),
+          selects(i[1])().sort((a, b) => a.label > b.label ? 1 : -1)
+          .map(({value, label}) => m('option', {value}, label))
+        )),
+        m('.icon.is-small.is-left', m('i.fas.fa-'+i[2]))
+      ))))
+    ),
     m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => db.users.toArray(array => [
         state.userList = array, m.redraw()
@@ -47,9 +62,10 @@ _.assign(comp, {
         ['Nama lengkap', 'Username', 'Peranan', 'Bidang', 'Poliklinik', 'Keaktifan']
         .map(i => m('th', i)))
       ),
-      m('tbody', (state.userList.filter(i =>
-        i.keaktifan === 1
-      ) || []).map(i =>
+      m('tbody', (state.userList.filter(i => ands([
+        i.keaktifan === 1, !state.selection ? true :
+        i[_.keys(state.selection)[0]] === _.values(state.selection)[0]
+      ])) || []).map(i =>
         m('tr',
           {onclick: () =>
             state.modalAccount = m('.box',
