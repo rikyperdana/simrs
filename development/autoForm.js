@@ -180,8 +180,8 @@ autoForm = opts => ({view: () => {
             }
           }),
           fields =>
-            _.get(opts.arangement, name.replace(/[0-9]/g, '$')) ?
-            opts.arangement[name.replace(/[0-9]/g, '$')]
+            _.get(opts.layout, name.replace(/[0-9]/g, '$')) ?
+            opts.layout[name.replace(/[0-9]/g, '$')]
             .map(i => m('.columns',
               i.map(j => m('.column',
                 fields.find(k => k[name+'.'+j])[name+'.'+j]()
@@ -244,8 +244,8 @@ autoForm = opts => ({view: () => {
   ).filter(Boolean)
 
   return m('form', attr.form,
-    _.get(opts, 'arangement.top') ?
-    opts.arangement.top.map(i => m('.columns', i.map(
+    _.get(opts, 'layout.top') ?
+    opts.layout.top.map(i => m('.columns', i.map(
       j => m('.column', fields.find(k => k[j])[j]())
     ))) : fields.map(i => Object.values(i)[0]()),
     m('.row', m('button.button',

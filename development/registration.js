@@ -64,7 +64,7 @@ _.assign(comp, {
     m('h3', 'Pendaftaran Pasien Baru'),
     m(autoForm({
       id: 'newPatient', schema: schemas.identitas,
-      arangement: arangements.patientForm,
+      layout: layouts.patientForm,
       confirmMessage: 'Yakin ingin menambahkan pasien BARU?',
       action: doc => withThis(
         {identitas: doc, _id: randomId()}, obj => [
@@ -83,7 +83,7 @@ _.assign(comp, {
     m('h3', 'Update identitas pasien'),
     m(autoForm({
       id: 'updatePatient', schema: schemas.identitas,
-      arangement: arangements.patientForm,
+      layout: layouts.patientForm,
       doc: state.onePatient.identitas,
       action: doc => [
         updateBoth(
@@ -99,7 +99,7 @@ _.assign(comp, {
     m('.box', m(autoForm({
       id: 'poliVisit', autoReset: true,
       schema: schemas.rawatJalan,
-      arangement: arangements.poliVisit,
+      layout: layouts.poliVisit,
       confirmMessage: 'Yakin untuk mendaftarkan pasien ke klinik?',
       action: doc => db.patients.filter(i =>
         i.rawatJalan && i.rawatJalan.filter(j => ands([

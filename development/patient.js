@@ -140,7 +140,7 @@ _.assign(comp, {
           schemas.soapDokter
         ])
       ]),
-      arangement: arangements.soap(),
+      layout: layouts.soap(),
       action: doc => withThis(
         ands([
           !_.get(state, 'oneInap'),
