@@ -531,9 +531,10 @@ layouts = {
   },
 
   sales: {
-    top: [['obat', 'bhp'], ['idpenjualan']],
+    top: [['obat'], ['bhp'], ['idpenjualan']],
     'bhp.$': [['idbarang', 'jumlah']],
     'obat.$': [['search', 'idbarang'], ['jumlah', 'puyer'], ['aturan']],
+    'obat.$.aturan': [['kali', 'dosis']]
   },
 
   account: {top: [
