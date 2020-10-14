@@ -244,7 +244,7 @@ io().on('connect', socket => [
     {class: ors([
       _.includes([
         // semua latar terang diberi background grey
-        'default', 'cerulean', 'cosmo', 'flatly',
+        'default', 'cerulean', 'cosmo',
         'journal', 'litera', 'lumen', 'lux',
         'materia', 'pulse', 'sandstone', 'simplex',
         'spacelab', 'united', 'yeti'
