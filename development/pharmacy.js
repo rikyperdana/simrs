@@ -240,6 +240,7 @@ _.assign(comp, {
         ]) && {[k]: v}).filter(Boolean)
         .reduce((res, inc) => _.merge(res, inc), {})
       ),
+      layout: layouts.sales,
       action: doc => withThis(
         {serahList: [], updatedGoods: []},
         ({serahList, updatedGoods}) => [

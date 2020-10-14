@@ -530,6 +530,12 @@ layouts = {
     sumber: [['supplier', 'anggaran', 'no_spk', 'tanggal_spk']]
   },
 
+  sales: {
+    top: [['obat', 'bhp'], ['idpenjualan']],
+    'bhp.$': [['idbarang', 'jumlah']],
+    'obat.$': [['search', 'idbarang'], ['jumlah', 'puyer'], ['aturan']],
+  },
+
   account: {top: [
     ['nama'], ['username', 'password'],
     ['peranan', 'bidang'], ['poliklinik', 'keaktifan']
