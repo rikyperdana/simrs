@@ -265,7 +265,7 @@ var schemas = {
     }},
     keaktifan: {type: Number, autoform: {
       type: 'select', options: selects('keaktifan')
-    }},
+    }}
   },
 
   barang: {
@@ -390,7 +390,7 @@ var schemas = {
         _.flatten(_.values(beds).map(j => _.keys(j.kamar)))
         .map(j => ({value: j, label: _.startCase(j)}))
     }},
-    nomor: {type: Number},
+    nomor: {type: Number}
   },
 
   overcharge: {
@@ -456,7 +456,7 @@ var schemas = {
   }
 },
 
-arangements = {
+layouts = {
   patientForm: {
     top: [
       ['no_mr', 'no_antrian', 'ktp', 'bpjs'],
@@ -528,6 +528,12 @@ arangements = {
     ],
     harga: [['beli', 'jual']],
     sumber: [['supplier', 'anggaran', 'no_spk', 'tanggal_spk']]
+  },
+
+  sales: {
+    top: [['obat', 'bhp'], ['idpenjualan']],
+    'bhp.$': [['idbarang', 'jumlah']],
+    'obat.$': [['search', 'idbarang'], ['jumlah', 'puyer'], ['aturan']],
   },
 
   account: {top: [

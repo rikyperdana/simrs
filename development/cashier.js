@@ -222,7 +222,7 @@ _.assign(comp, {
 
   overcharge: () => m('.content', m(autoForm({
     id: 'overcharge', schema: schemas.overcharge,
-    arangement: {'charges.$': [['item', 'harga']]},
+    layout: {'charges.$': [['item', 'harga']]},
     action: doc => updateBoth(
       // selipkan catatan tambahan biaya pada rawat
       'patients', state.onePatient._id, _.assign(state.onePatient, {
