@@ -100,7 +100,7 @@ var schemas = {
     'fisik.pernapasan': {type: Number, optional: true},
     'fisik.tinggi': {type: Number, optional: true},
     'fisik.berat': {type: Number, optional: true},
-    'fisik.lila': {type: Number, optional: true},
+    'fisik.lila': {type: Number, optional: true, label: 'Lingkar lengan atas'},
     tracer: {type: String, optional: true, label: 'File Tracer'},
     perawat: {
       type: String, autoform: {type: 'hidden'},
@@ -470,6 +470,11 @@ layouts = {
   poliVisit: {top: [
     ['no_antrian', 'cara_bayar', 'no_sep'],
     ['klinik', 'rujukan', 'sumber_rujukan', 'penanggungjawab'],
+    ['idrawat', 'tanggal']
+  ]},
+  igdVisit: {top: [
+    ['no_antrian', 'cara_bayar', 'no_sep'],
+    ['rujukan', 'sumber_rujukan', 'penanggungjawab'],
     ['idrawat', 'tanggal']
   ]},
   soap: () => ({

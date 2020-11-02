@@ -121,6 +121,7 @@ _.assign(comp, {
     m('.box', m(autoForm({
       id: 'igdVisit', autoReset: true,
       schema: _.omit(schemas.rawatJalan, 'klinik'),
+      layout: layouts.igdVisit,
       confirmMessage: 'Yakin untuk mendaftarkan pasien ke IGD?',
       action: doc => [
         updateBoth('patients', state.onePatient._id, _.assign(
