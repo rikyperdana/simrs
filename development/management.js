@@ -181,7 +181,7 @@ _.assign(comp, {
                 },
                 ({docs, collName}) => dbCall(
                   {method: 'updateMany', collection: collName, documents: docs},
-                  res => console.log('Berhasil backup ' + docs.length + ' data. Silahkan refresh.')
+                  res => alert('Berhasil backup ' + docs.length + ' data ' + collName + '. Silahkan refresh.')
                 )
               )
             })

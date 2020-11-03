@@ -1,5 +1,4 @@
-var
-dotenv = require('dotenv').config(),
+var dotenv = require('dotenv').config(),
 express = require('express'),
 mongoDB = require('mongodb'),
 io = require('socket.io'),
@@ -92,7 +91,7 @@ mongoDB.MongoClient.connect(
           username: 'admin', nama: 'admin',
           bidang: 5, peranan: 4, keaktifan: 1,
           password: '$2b$10$xZ22.NIdyoSP65nPTRUf2uN9.Dd4gkCbChwD5fOCjTm4kSPHylS4a',
-          updated: 1590416308426
+          updated: 1590416308426 // password: 123456
         })
       )
     )
