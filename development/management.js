@@ -170,22 +170,10 @@ _.assign(comp, {
               complete: result => withThis(
                 (result.data || []).map(i => JSON.parse(i[0])),
                 array => ors([
-                  array[0].identitas && array.map(j => updateBoth(
-                    'patients', j._id, j,
-                    res => alert('Berhasil restore ' + array.length + ' pasien')
-                  )),
-                  array[0].username && array.map(j => updateBoth(
-                    'users', j._id, j,
-                    res => alert('Berhasil restore ' + array.length + ' user')
-                  )),
-                  array[0].batch && array.map(j => updateBoth(
-                    'goods', j._id, j,
-                    res => alert('Berhasil restore ' + array.length + ' barang')
-                  )),
-                  array[0].harga && array.map(j => updateBoth(
-                    'references', j._id, j,
-                    res => alert('Berhasil restore ' + array.length + ' tarif')
-                  ))
+                  array[0].identitas && array.map(j => updateBoth('patients', j._id, j)),
+                  array[0].username && array.map(j => updateBoth('users', j._id, j)),
+                  array[0].batch && array.map(j => updateBoth('goods', j._id, j)),
+                  array[0].harga && array.map(j => updateBoth('references', j._id, j))
                 ])
               )
             })
