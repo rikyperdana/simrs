@@ -168,13 +168,21 @@ _.assign(comp, {
             onchange: e => Papa.parse(e.target.files[0], {
               delimiter: ';', newline: ';',
               complete: result => withThis(
-                (result.data || []).map(i => JSON.parse(i[0])),
-                array => ors([
-                  array[0].identitas && array.map(j => updateBoth('patients', j._id, j)),
-                  array[0].username && array.map(j => updateBoth('users', j._id, j)),
-                  array[0].batch && array.map(j => updateBoth('goods', j._id, j)),
-                  array[0].harga && array.map(j => updateBoth('references', j._id, j))
-                ])
+                {
+                  docs: (result.data || []).map(i => JSON.parse(i[0])),
+                  collName: withThis(
+                    JSON.parse(result.data[0][0]),
+                    doc => ors([
+                      doc.identitas && 'patients',
+                      doc.username && 'users',
+                      doc.batch && 'goods',
+                    ])
+                  )
+                },
+                ({docs, collName}) => dbCall(
+                  {method: 'updateMany', collection: collName, documents: docs},
+                  res => console.log('Berhasil backup ' + docs.length + ' data. Silahkan refresh.')
+                )
               )
             })
           }),

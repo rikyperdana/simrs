@@ -58,6 +58,12 @@ mongoDB.MongoClient.connect(
           {_id: obj._id}, {$set: obj.document}, {upsert: true},
           (err, res) => res && cb(res)
         ),
+        updateMany: () => (obj.documents || []).map(
+          doc => coll.updateOne(
+            {_id: doc._id}, {$set: doc}, {upsert: true},
+            (err, res) => res && cb(res)
+          )
+        ),
         deleteOne: () => coll.deleteOne(
           {_id: obj._id}, (err, res) => res && cb(res)
         ),
