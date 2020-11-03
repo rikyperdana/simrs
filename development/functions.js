@@ -68,7 +68,7 @@ tarifInap = (masuk, keluar, tarif) =>
 
 tarifIGD = 45000, tarifKartu = 8000,
 
-sanitize = string => string.replace(';', ''),
+sanitize = string => string.replace(/\;/g, ''),
 
 collNames = ['patients', 'goods', 'references', 'users', 'queue'],
 
