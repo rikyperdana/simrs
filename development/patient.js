@@ -23,9 +23,9 @@ _.assign(comp, {
         ['Pekerjaan', look('pekerjaan', id.pekerjaan)],
         ['Tempat tinggal', id.tempat_tinggal],
         ['Umur', moment().diff(id.tanggal_lahir, 'years')+' tahun'],
-        ['Nama Bapak', id.keluarga.ayah],
-        ['Nama Ibu', id.keluarga.ibu],
-        ['Nama Suami/Istri', id.keluarga.pasangan],
+        ['Nama Bapak', _.get(id, 'keluarga.ayah')],
+        ['Nama Ibu', _.get(id, 'keluarga.ibu')],
+        ['Nama Suami/Istri', _.get(id, 'keluarga.pasangan')],
         ['No. Handphone', id.kontak]
       ], 4).map(i => m('tr', i.map(j =>
         [m('th', j[0]), m('td', j[1])]
