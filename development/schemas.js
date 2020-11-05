@@ -132,9 +132,9 @@ var schemas = {
     'bhp.$.idbarang': {
       type: String, label: 'Nama Barang',
       autoform: {type: 'select', options: () =>
-        state.bhpList.map(i =>
-          ({value: i._id, label: i.nama})
-        )
+        state.bhpList
+        .sort((a, b) => a.nama > b.nama ? 1 : -1)
+        .map(i => ({value: i._id, label: i.nama}))
       }
     },
     'bhp.$.jumlah': {type: Number},
@@ -151,7 +151,9 @@ var schemas = {
           state.drugList.filter(i => withThis(
             _.get(doc, _.initial(name.split('.')).join('.')+'.search'),
             search => search ? _.includes(_.lowerCase(i.nama), search) : true
-          )).map(i => ({value: i._id, label: i.nama}))
+          ))
+          .sort((a, b) => a.nama > b.nama ? 1 : -1)
+          .map(i => ({value: i._id, label: i.nama}))
       }
     },
     'obat.$.jumlah': {type: Number},
