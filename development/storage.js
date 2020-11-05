@@ -59,6 +59,7 @@ _.assign(comp, {
           m.redraw()
         ])
       },
+      m('p.help', '* Angka merah berarti total jumlah batch barang tersebut dibawah jumlah stok minimum'),
       m('.table-container', m('table.table.is-striped',
         m('thead', m('tr',
           ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Karantina']
@@ -199,109 +200,115 @@ _.assign(comp, {
       ]
     ),
     m('p'), m('h4', 'Daftar batch barang ini'),
+    m('p.help', '* Merah berarti kadaluarsa, kuning gelap berarti sudah masuk 3 bulan menjelang kadaluarsa'),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. Batch', 'Merek', 'Tanggal Masuk', 'Tanggal Kadaluarsa', 'Gudang', 'Apotik', 'Karantina']
         .map(i => m('th', i))
       )),
       m('tbody', (state.oneGood.batch || []).map(i => m('tr',
-        {class: +moment() > i.kadaluarsa && 'has-text-danger',
-        onclick: () => _.assign(state, {
-          oneBatch: i, modalBatch: m('.box',
-            m('h4', 'Rincian batch'),
-            m('.table-container', m('table.table', _.chunk([
-              ['No. Batch', i.no_batch], ['Merek', i.merek],
-              ['Tanggal masuk', hari(i.masuk)],
-              ['Tanggal kadaluarsa', hari(i.kadaluarsa)],
-              ['Harga beli', rupiah(i.harga.beli)],
-              ['Harga jual', rupiah(i.harga.jual)],
-              ['Stok Gudang', i.stok.gudang],
-              ['Stok Apotik', _.get(i, 'stok.apotik')],
-              ['Jumlah Dikarantina', _.get(i, 'stok.karantina')],
-              ['Nama supplier', _.get(i, 'sumber.supplier')],
-              ['Anggaran', _.get(i, 'sumber.anggaran')],
-              ['No. SPK', _.get(i, 'sumber.no_spk')],
-              ['Tanggal SPK', hari(_.get(i, 'sumber.tanggal_spk'))],
-              ['Petugas', lookUser(i.petugas)],
-            ], 2).map(j => m('tr', j.map(k =>
-              [m('th', k[0]), m('td', k[1])]
-            ))))),
-            ands([
-              state.login.peranan === 4,
-              state.login.bidang === 3
-            ]) && m('p.buttons',
-              !_.get(i, 'stok.karantina') && m('.button.is-warning',
-                {
-                  "data-tooltip": 'Pindahkan semua stok barang ini ke karantina',
-                  onclick: () => [
-                    confirm('Yakin untuk karantina barang ini?') &&
+        {
+          class: ors([
+            +moment() > (i.kadaluarsa - (864e5 * 90)) && 'has-text-warning-dark',
+            +moment() > i.kadaluarsa && 'has-text-danger-dark'
+          ]),
+          onclick: () => _.assign(state, {
+            oneBatch: i, modalBatch: m('.box',
+              m('h4', 'Rincian batch'),
+              m('.table-container', m('table.table', _.chunk([
+                ['No. Batch', i.no_batch], ['Merek', i.merek],
+                ['Tanggal masuk', hari(i.masuk)],
+                ['Tanggal kadaluarsa', hari(i.kadaluarsa)],
+                ['Harga beli', rupiah(i.harga.beli)],
+                ['Harga jual', rupiah(i.harga.jual)],
+                ['Stok Gudang', i.stok.gudang],
+                ['Stok Apotik', _.get(i, 'stok.apotik')],
+                ['Jumlah Dikarantina', _.get(i, 'stok.karantina')],
+                ['Nama supplier', _.get(i, 'sumber.supplier')],
+                ['Anggaran', _.get(i, 'sumber.anggaran')],
+                ['No. SPK', _.get(i, 'sumber.no_spk')],
+                ['Tanggal SPK', hari(_.get(i, 'sumber.tanggal_spk'))],
+                ['Petugas', lookUser(i.petugas)],
+              ], 2).map(j => m('tr', j.map(k =>
+                [m('th', k[0]), m('td', k[1])]
+              ))))),
+              ands([
+                state.login.peranan === 4,
+                state.login.bidang === 3
+              ]) && m('p.buttons',
+                !_.get(i, 'stok.karantina') && m('.button.is-warning',
+                  {
+                    "data-tooltip": 'Pindahkan semua stok barang ini ke karantina',
+                    onclick: () => [
+                      confirm('Yakin untuk karantina barang ini?') &&
+                      updateBoth('goods', state.oneGood._id, _.assign(
+                        state.oneGood, {batch: state.oneGood.batch.map(j =>
+                          j.idbatch === i.idbatch ?
+                          _.assign(j, {stok: {gudang: 0, apotik: 0, karantina:
+                            (i.stok.gudang || 0) + (i.stok.apotik || 0)
+                          }}) : j
+                        )}
+                      )), state.modalBatch = null, m.redraw()
+                    ]
+                  },
+                  m('span.icon', m('i.fas.fa-exchange-alt')),
+                  m('span', 'Karantina batch')
+                ),
+                m('.button.is-danger',
+                  {onclick: e => [
+                    confirm('Yakin hapus batch ini?') &&
                     updateBoth('goods', state.oneGood._id, _.assign(
-                      state.oneGood, {batch: state.oneGood.batch.map(j =>
-                        j.idbatch === i.idbatch ?
-                        _.assign(j, {stok: {gudang: 0, apotik: 0, karantina:
-                          (i.stok.gudang || 0) + (i.stok.apotik || 0)
-                        }}) : j
+                      state.oneGood, {batch: state.oneGood.batch.filter(j =>
+                        j.idbatch !== i.idbatch
                       )}
                     )), state.modalBatch = null, m.redraw()
-                  ]
-                },
-                m('span.icon', m('i.fas.fa-exchange-alt')),
-                m('span', 'Karantina batch')
+                  ]},
+                  m('span.icon', m('i.fas.fa-trash')),
+                  m('span', 'Hapus batch')
+                )
               ),
-              m('.button.is-danger',
-                {onclick: e => [
-                  confirm('Yakin hapus batch ini?') &&
-                  updateBoth('goods', state.oneGood._id, _.assign(
-                    state.oneGood, {batch: state.oneGood.batch.filter(j =>
-                      j.idbatch !== i.idbatch
-                    )}
-                  )), state.modalBatch = null, m.redraw()
-                ]},
-                m('span.icon', m('i.fas.fa-trash')),
-                m('span', 'Hapus batch')
-              )
-            ),
-            m('br'),
-            i.amprah && m('div',
-              m('h4', 'Riwayat Amprah'),
-              m('.table-container', m('table.table',
-                m('thead', m('tr',
-                  ['Peminta', 'Asal', 'Diminta', 'Diserah', 'Penyerah']
-                  .map(j => m('th', j))
+              m('br'),
+              i.amprah && m('div',
+                m('h4', 'Riwayat Amprah'),
+                m('.table-container', m('table.table',
+                  m('thead', m('tr',
+                    ['Peminta', 'Asal', 'Diminta', 'Diserah', 'Penyerah']
+                    .map(j => m('th', j))
+                  )),
+                  m('tbody', i.amprah.map(j => m('tr', tds([
+                    lookUser(j.peminta), look('bidang', j.ruangan), j.diminta,
+                    j.diserah, lookUser(j.penyerah),
+                  ]))))
                 )),
-                m('tbody', i.amprah.map(j => m('tr', tds([
-                  lookUser(j.peminta), look('bidang', j.ruangan), j.diminta,
-                  j.diserah, lookUser(j.penyerah),
-                ]))))
-              )),
-            ), m('br'),
-            ands([
-              ors([
-                _.includes([4], state.login.bidang),
-                _.includes([2, 3], state.login.peranan)
+              ), m('br'),
+              ands([
+                ors([
+                  _.includes([4], state.login.bidang),
+                  _.includes([2, 3], state.login.peranan)
+                ]),
+                // tutup form amprah kalau di gudang 0
+                i.stok.gudang > 1,
+                [
+                  m('h4', 'Form amprah batch'),
+                  m(autoForm({
+                    id: 'formAmprah', schema: schemas.amprah,
+                    action: doc => [
+                      updateBoth('goods', state.oneGood._id,
+                        _.assign(state.oneGood, {batch:
+                          state.oneGood.batch.map(j =>
+                            j.idbatch === state.oneBatch.idbatch ?
+                            _.assign(state.oneBatch, {
+                              amprah: [...(state.oneBatch.amprah || []), doc]
+                            }) : j
+                          )
+                        })
+                      ), state.modalBatch = null, m.redraw()
+                    ]
+                  }))
+                ]
               ]),
-              // tutup form amprah kalau di gudang 0
-              i.stok.gudang > 1,
-              [
-                m('h4', 'Form amprah batch'),
-                m(autoForm({
-                  id: 'formAmprah', schema: schemas.amprah,
-                  action: doc => [
-                    updateBoth('goods', state.oneGood._id,
-                      _.assign(state.oneGood, {batch:
-                        state.oneGood.batch.map(j =>
-                          j.idbatch === state.oneBatch.idbatch ?
-                          _.assign(state.oneBatch, {
-                            amprah: [...(state.oneBatch.amprah || []), doc]
-                          }) : j
-                        )
-                      })
-                    ), state.modalBatch = null, m.redraw()
-                  ]
-                }))
-              ]
-            ]),
-          )})
+            )
+          })
         },
         tds([
           i.no_batch, i.merek, hari(i.masuk), hari(i.kadaluarsa),
