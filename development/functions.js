@@ -7,10 +7,9 @@ ands = array =>
   array.reduce((res, inc) => res && inc, true)
   && array[array.length-1],
 
-randomId = () =>
-  [1, 1].map(() =>
-    Math.random().toString(36).slice(2)
-  ).join(''),
+randomId = () => [1, 1].map(() =>
+  Math.random().toString(36).slice(2)
+).join(''),
 
 hari = (timestamp, hour) =>
   timestamp && moment(timestamp)
@@ -26,42 +25,37 @@ startOfTheDay = timestamp => +moment(
 
 tomorrow = timestamp => timestamp + 864e5,
 
-rupiah = num =>
-  'Rp '+numeral(num || 0).format('0,0'),
+rupiah = num => 'Rp '+numeral(num || 0).format('0,0'),
 
-dbCall = (body, action) =>
-  io().emit('dbCall', body, action),
+dbCall = (body, action) => io().emit('dbCall', body, action),
 
 insertBoth = (collName, doc, cb) => withThis(
   _.merge(doc, {_id: randomId(), updated: _.now()}),
-  obj => dbCall({
-    method: 'insertOne', collection: collName, document: obj
-  }, res => res && [
-    cb && cb(res),
-    db[collName].put(obj),
-    io().emit('datachange', collName, doc)
-  ])
+  obj => dbCall(
+    {method: 'insertOne', collection: collName, document: obj},
+    res => res && [
+      cb && cb(res), db[collName].put(obj),
+      io().emit('datachange', collName, doc)
+    ]
+  )
 ),
 
 updateBoth = (collName, _id, doc, cb) => withThis(
   _.merge(doc, {_id, updated: _.now()}),
   // pastikan di server terupdate dulu, baru client
-  obj => dbCall({
-    method: 'updateOne', collection: collName,
-    document: obj, _id
-  }, res => res && [
-    cb && cb(res),
-    db[collName].put(obj),
-    io().emit('datachange', collName, doc)
-  ])
+  obj => dbCall(
+    {method: 'updateOne', collection: collName, document: obj, _id},
+    res => res && [
+      cb && cb(res), db[collName].put(obj),
+      io().emit('datachange', collName, doc)
+    ]
+  )
 ),
 
-deleteBoth = (collName, _id, cb) => dbCall({
-  method: 'deleteOne', collection: collName, _id
-}, res => res && [
-  cb && cb(res),
-  db[collName].delete(_id)
-]),
+deleteBoth = (collName, _id, cb) => dbCall(
+  {method: 'deleteOne', collection: collName, _id},
+  res => res && [cb && cb(res), db[collName].delete(_id)]
+),
 
 tarifInap = (masuk, keluar, tarif) =>
   (daysDifference(keluar - masuk) || 1) * 1000 * +tarif,
@@ -116,23 +110,21 @@ menus = {
 
 db = new Dexie('simrs'),
 
-getDifference = name =>
-  db[name].toArray(array =>
-    dbCall({
-      method: 'getDifference', collection: name,
-      clientColl: array.map(i =>
-        _.pick(i, ['_id', 'updated'])
-      )
-    }, res => res && [
-      db[name].bulkPut(res),
-      state.lastSync = +moment(),
-      state.loading = false,
-      m.redraw()
-    ])
-  ),
+getDifference = name => db[name].toArray(array => dbCall(
+  {
+    method: 'getDifference', collection: name,
+    clientColl: array.map(i =>
+      _.pick(i, ['_id', 'updated'])
+    )
+  },
+  res => res && [
+    db[name].bulkPut(res),
+    _.assign(state, {lastSync: _.now(), loading: false}),
+    m.redraw()
+  ])
+),
 
-getDifferences = () =>
-  collNames.map(name => getDifference(name))
+getDifferences = () => collNames.map(name => getDifference(name))
 
 db.version(1).stores(collNames.reduce((res, inc) =>
   _.merge(res, {[inc]: '_id'})
