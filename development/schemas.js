@@ -454,7 +454,13 @@ var schemas = {
 
   tarif: {
     nama: {type: String},
-    harga: {type: Number}
+    harga: {type: Number},
+    grupI: {type: String},
+    grupII: {type: String},
+    grupIII: {type: String},
+    keaktifan: {type: Number, autoform: {
+      type: 'select', options: selects('keaktifan')
+    }}
   }
 },
 
@@ -547,5 +553,10 @@ layouts = {
   account: {top: [
     ['nama'], ['username', 'password'],
     ['peranan', 'bidang'], ['poliklinik', 'keaktifan']
+  ]},
+
+  tarif: {top: [
+    ['nama'], ['harga', 'keaktifan'],
+    ['grupI', 'grupII', 'grupIII']
   ]}
 }

@@ -97,14 +97,36 @@ _.assign(comp, {
   // referensi harus terbuka untuk seluruh pihak
   references: () => m('.content',
     m('h3', 'Daftar Tarif'),
-    m('p.help', '* Tersusun alfabetis'),
+    m('.button.is-success',
+      {onclick: () => state.modalTambahTarif = m('.box',
+        m('h4', 'Tambah Tarif Baru'),
+        m('p.help.has-text-danger', 'WARNING: Pastikan tarif baru yang akan diisikan memang belum pernah ada di Database.'),
+        m('p.help.has-text-danger', 'WARNING: Pelajari cara penulisan kode Grup 1, 2, 3. Ketidakcocokan isian kode berakibat fatal.'),
+        m(autoForm({
+          id: 'formTambahTarif',
+          schema: schemas.tarif,
+          layout: layouts.tarif,
+          action: doc => confirm('Yakin tambah tarif baru?') && insertBoth(
+            'references',
+            _.assign({},
+              _.pick(doc, ['nama', 'harga', 'keaktifan']),
+              {0: doc.grupI, 1: doc.grupII, 2: doc.grupIII}
+            ),
+            res => [state.modalTambahTarif = null, m.redraw()]
+          )
+        }))
+      )},
+      makeIconLabel('plus', 'Tambah Tarif')
+    ),
+    makeModal('modalTambahTarif'),
+    m('p.help.has-text-right', '* Tersusun alfabetis'),
     m('.box', m('.table-container', m('table.table.is-striped',
       {oncreate: () => db.references.toArray(array => [
         state.referenceList = _.sortBy(array, ['nama']),
         m.redraw()
       ])},
       m('thead', m('tr',
-        ['Nama item', 'Harga', 'Grup 1', 'Grup 2', 'Grup 3']
+        ['Nama item', 'Harga', 'Grup 1', 'Grup 2', 'Grup 3', 'Keaktifan']
         .map(i => m('th', i))
       )),
       m('tbody',
@@ -115,18 +137,29 @@ _.assign(comp, {
             state.login.peranan === 4
           ]) && [state.modalEditTarif = m('.box',
             m('h3', 'Edit Tarif'),
+            m('p.help.has-text-danger', 'WARNING: Pelajari cara penulisan kode Grup 1, 2, 3. Ketidakcocokan isian kode berakibat fatal.'),
             m(autoForm({
-              id: 'editTarif', doc: i,
-              schema: schemas.tarif,
-              layout: {top: [['nama', 'harga']]},
+              id: 'editTarif', doc: _.assign(i, {
+                grupI: i[0], grupII: i[1], grupIII: i[2]
+              }),
+              schema: schemas.tarif, layout: layouts.tarif,
               action: doc => confirm('Yakin ubah tarif?') && [
-                updateBoth('references', i._id, _.assign(i, doc)),
+                updateBoth(
+                  'references', i._id, _.assign(
+                    _.pick(i, ['nama', 'harga', 'keaktifan']),
+                    {0: doc.grupI, 1: doc.grupII, 2: doc.grupIII},
+                    _.pick(doc, ['nama', 'harga', 'keaktifan'])
+                  )
+                ),
                 state.modalEditTarif = null,
                 m.redraw()
               ]
             }))
           )]},
-          tds([i.nama, rupiah(i.harga), i[0], i[1], i[2]])
+          tds([
+            i.nama, rupiah(i.harga), i[0], i[1], i[2],
+            i.keaktifan === 2 ? 'Non-aktif' : 'Aktif'
+          ])
         ))
       ),
       makeModal('modalEditTarif')

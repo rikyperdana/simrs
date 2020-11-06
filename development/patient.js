@@ -115,10 +115,11 @@ _.assign(comp, {
           bhpList: array.filter(i => i.jenis === 2),
         })),
         db.references.filter(i => _.every([
+          i.keaktifan !== 2, // ambil yg aktif saja
           i[0] === 'rawatJalan',
           i[1] === _.snakeCase(look(
             'klinik', state.login.poliklinik
-          ))
+          )) // saring sesuai poliklinik tenaga medisnya
         ]))
         .toArray(array => state.daftarTindakan = array),
         db.references.filter(i => i[0] === 'radiologi')
