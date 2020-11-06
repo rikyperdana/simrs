@@ -63,7 +63,7 @@ _.assign(comp, {
   newPatient: () => m('.content',
     m('h3', 'Pendaftaran Pasien Baru'),
     m('.buttons',
-      m('.button.is-info',
+      m('.button.is-primary',
         {
           'data-tooltip': 'Ambil No. MR terakhir + 1',
           onclick: () => db.patients.toArray(array => [
