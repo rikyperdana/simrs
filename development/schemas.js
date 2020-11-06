@@ -5,7 +5,6 @@ var schemas = {
     no_antrian: {type: String, optional: true, exclude: true},
     no_mr: {
       type: Number, label: 'No. MR',
-      autoform: {help: 'random dari sistem and boleh diubah'},
       autoValue: (name, doc, opts) =>
         // jika update, gunakan No. MR yg sudah ada
         opts.id === 'updatePatient' ?
