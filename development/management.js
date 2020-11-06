@@ -97,9 +97,9 @@ _.assign(comp, {
   // referensi harus terbuka untuk seluruh pihak
   references: () => m('.content',
     m('h3', 'Daftar Tarif'),
-    m('.button.is-success',
+    m('.button.is-primary',
       {onclick: () => state.modalTambahTarif = m('.box',
-        m('h4', 'Tambah Tarif Baru'),
+        m('h3', 'Form Tambah Tarif Baru'),
         m('p.help.has-text-danger', 'WARNING: Pastikan tarif baru yang akan diisikan memang belum pernah ada di Database.'),
         m('p.help.has-text-danger', 'WARNING: Pelajari cara penulisan kode Grup 1, 2, 3. Ketidakcocokan isian kode berakibat fatal.'),
         m(autoForm({
@@ -136,7 +136,7 @@ _.assign(comp, {
             state.login.bidang === 5,
             state.login.peranan === 4
           ]) && [state.modalEditTarif = m('.box',
-            m('h3', 'Edit Tarif'),
+            m('h3', 'Form Edit Tarif'),
             m('p.help.has-text-danger', 'WARNING: Pelajari cara penulisan kode Grup 1, 2, 3. Ketidakcocokan isian kode berakibat fatal.'),
             m(autoForm({
               id: 'editTarif', doc: _.assign(i, {
