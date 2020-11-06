@@ -62,6 +62,23 @@ _.assign(comp, {
 
   newPatient: () => m('.content',
     m('h3', 'Pendaftaran Pasien Baru'),
+    m('.buttons',
+      m('.button.is-info',
+        {
+          'data-tooltip': 'Ambil No. MR terakhir + 1',
+          onclick: () => db.patients.toArray(array => [
+            state.new_no_mr = array.reduce(
+              (acc, inc) => withThis(
+                _.get(inc, 'identitas.no_mr'),
+                no_mr => no_mr > acc ? no_mr : acc
+              ), 0
+            ) + 1,
+            m.redraw()
+          ])
+        },
+        makeIconLabel('plus', 'Auto No.MR')
+      ),
+    ),
     m(autoForm({
       id: 'newPatient', schema: schemas.identitas,
       layout: layouts.patientForm,

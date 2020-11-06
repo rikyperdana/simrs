@@ -10,8 +10,8 @@ var schemas = {
         // jika update, gunakan No. MR yg sudah ada
         opts.id === 'updatePatient' ?
         _.get(state, 'onePatient.identitas.no_mr')
-        // No. MR otomatis 6 angka, silahkan naikkan jika perlu
-        : Math.floor(Math.random() * 1e6)
+        // No. MR baru bisa digenerate dengan tombol Auto No.MR
+        : state.new_no_mr || ''
     },
     alias: {
       type: Number, optional: true,
