@@ -10,8 +10,8 @@ var schemas = {
         // jika update, gunakan No. MR yg sudah ada
         opts.id === 'updatePatient' ?
         _.get(state, 'onePatient.identitas.no_mr')
-        // No. MR otomatis 6 angka, silahkan naikkan jika perlu
-        : Math.floor(Math.random() * 1e6)
+        // No. MR baru bisa digenerate dengan tombol Auto No.MR
+        : state.new_no_mr || ''
     },
     alias: {
       type: Number, optional: true,
@@ -454,7 +454,13 @@ var schemas = {
 
   tarif: {
     nama: {type: String},
-    harga: {type: Number}
+    harga: {type: Number},
+    grupI: {type: String},
+    grupII: {type: String},
+    grupIII: {type: String},
+    keaktifan: {type: Number, autoform: {
+      type: 'select', options: selects('keaktifan')
+    }}
   }
 },
 
@@ -547,5 +553,10 @@ layouts = {
   account: {top: [
     ['nama'], ['username', 'password'],
     ['peranan', 'bidang'], ['poliklinik', 'keaktifan']
+  ]},
+
+  tarif: {top: [
+    ['nama'], ['harga', 'keaktifan'],
+    ['grupI', 'grupII', 'grupIII']
   ]}
 }
