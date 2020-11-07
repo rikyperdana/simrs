@@ -95,13 +95,15 @@ _.assign(comp, {
               }, stokSum)
             )),
             tds([
-              (i.batch || []).filter(
-                j => ands([
-                  _.now() > (j.kadaluarsa - (864e5 * 90)),
-                  _.now() < j.kadaluarsa
-                ])
-              ).length || '', // menjelang ED
-              (i.batch || []).filter(j => _.now() > j.kadaluarsa).length || '' // sudah ED
+              (i.batch || []).filter(j => ands([
+                (j.stok.gudang + j.stok.apotik) !== 0,
+                _.now() > (j.kadaluarsa - (864e5 * 90)),
+                _.now() < j.kadaluarsa
+              ])).length || '', // menjelang ED
+              (i.batch || []).filter(j => ands([
+                (j.stok.gudang + j.stok.apotik) !== 0,
+                _.now() > j.kadaluarsa
+              ])).length || '' // sudah ED
             ])
           ))
         )
