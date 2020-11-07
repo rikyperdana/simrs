@@ -62,7 +62,7 @@ _.assign(comp, {
       m('p.help', '* Angka merah berarti total jumlah batch barang tersebut dibawah jumlah stok minimum'),
       m('.table-container', m('table.table.is-striped',
         m('thead', m('tr',
-          ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Karantina']
+          ['Jenis', 'Nama', 'Satuan', 'Gudang', 'Apotik', 'Karantina', 'Menjelang ED', 'Sudah ED']
           .map(i => m('th', i))
         )),
         m('tbody',
@@ -85,15 +85,24 @@ _.assign(comp, {
               look('jenis_barang', +i.jenis),
               i.nama, look('satuan', i.satuan)
             ]),
-            i.batch && ['gudang', 'apotik', 'karantina']
+            ['gudang', 'apotik', 'karantina']
             .map(j => withThis(
-              _.sum(i.batch.map(k =>
+              _.sum((i.batch || []).map(k =>
                 _.get(k.stok, j) || 0
               )),
               stokSum => m('td', {
                 class: stokSum < (_.get(i.stok_minimum, j) || 0) && 'has-text-danger'
               }, stokSum)
-            ))
+            )),
+            tds([
+              (i.batch || []).filter(
+                j => ands([
+                  _.now() > (j.kadaluarsa - (864e5 * 90)),
+                  _.now() < j.kadaluarsa
+                ])
+              ).length || '', // menjelang ED
+              (i.batch || []).filter(j => _.now() > j.kadaluarsa).length || '' // sudah ED
+            ])
           ))
         )
       )),
@@ -209,8 +218,8 @@ _.assign(comp, {
       m('tbody', (state.oneGood.batch || []).map(i => m('tr',
         {
           class: ors([
-            +moment() > (i.kadaluarsa - (864e5 * 90)) && 'has-text-warning-dark',
-            +moment() > i.kadaluarsa && 'has-text-danger-dark'
+            _.now() > i.kadaluarsa && 'has-text-danger-dark',
+            _.now() > (i.kadaluarsa - (864e5 * 90)) && 'has-text-warning-dark'
           ]),
           onclick: () => _.assign(state, {
             oneBatch: i, modalBatch: m('.box',
