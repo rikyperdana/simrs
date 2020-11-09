@@ -183,3 +183,10 @@ Lampiran [Hak Cipta](https://drive.google.com/file/d/1WvzHdWEZrsszxUD1txK-30fEta
 
 ## Pengembangan
 - Aplikasi khusus untuk diakses oleh pasien
+
+## Term of Service and Disclaimer
+- Dengan menggunakan software ini maka pengguna menyetujui ketentuan penggunaan sebagaimana yang dinyatakan pada video panduan maupun yang tertulis pada halaman ini.
+- Menggunakan software ini tidak sesuai dengan panduan merupakan tanggungjawab dari masing-masing pengguna.
+- Penyalahgunaan sistem ini baik secara sengaja maupun tidak sengaja merupakan tanggungjawab dari pengguna.
+- Seluruh data yang diinput oleh user ke database melalui software ini merupakan tanggungjawab masing-masing pengguna.
+- Ketentuan ini dapat diubah sewaktu-waktu baik dengan atau tanpa pemberitahuan terlebih dahulu kepada pengguna.
