@@ -1,4 +1,4 @@
-/*global _ m comp tds*/
+/*global _ m comp tds state db withThis hari lookUser makeModal*/
 
 _.assign(comp, {
   gizi: () => state.login.bidang !== 10

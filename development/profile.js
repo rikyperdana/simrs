@@ -1,4 +1,4 @@
-/*global m _ comp state look makeModal autoForm updateBoth io makeIconLabel*/
+/*global m _ comp state look makeModal autoForm updateBoth io makeIconLabel withThis*/
 
 _.assign(comp, {
   profile: () => m('.content',

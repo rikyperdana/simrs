@@ -1,4 +1,4 @@
-/*global m _ comp db state tds lookUser look makeModal autoForm schemas moment lookReferences hari ors makePdf updateBoth*/
+/*global m _ comp db state tds lookUser look makeModal autoForm schemas moment lookReferences hari ors makePdf updateBoth reports*/
 
 _.assign(comp, {
   radiology: () => state.login.bidang !== 9

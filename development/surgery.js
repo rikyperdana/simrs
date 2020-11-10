@@ -1,4 +1,4 @@
-/*global _ m comp state db tds hari lookReferences moment*/
+/*global _ m comp state db tds hari lookReferences moment ors*/
 
 _.assign(comp, {
   surgery: () => !ors([

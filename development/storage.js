@@ -1,4 +1,4 @@
-/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands deleteBoth makeIconLabel*/
+/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands deleteBoth makeIconLabel selects paginate layouts*/
 
 _.assign(comp, {
   storage: () => !ors([
@@ -249,7 +249,7 @@ _.assign(comp, {
               ]) && m('p.buttons',
                 !_.get(i, 'stok.karantina') && m('.button.is-warning',
                   {
-                    "data-tooltip": 'Pindahkan semua stok barang ini ke karantina',
+                    "data-tooltip": 'Pindahkan stok batch ini ke karantina',
                     onclick: () => [
                       confirm('Yakin untuk karantina barang ini?') &&
                       updateBoth('goods', state.oneGood._id, _.assign(

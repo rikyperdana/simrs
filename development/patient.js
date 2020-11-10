@@ -1,4 +1,4 @@
-/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withThis makeModal makeIconLabel*/
+/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withThis makeModal makeIconLabel layouts*/
 
 _.assign(comp, {
   onePatient: () => withThis(
