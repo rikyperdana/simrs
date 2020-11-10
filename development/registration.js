@@ -90,7 +90,7 @@ _.assign(comp, {
             arr.find(i => i.no_antrian === doc.no_antrian),
             obj => updateBoth('queue', obj._id, _.merge(obj, {done: true}))
           )),
-          _.assign(state, {route: 'onePatient', onePatient: obj})
+          _.assign(state, {route: 'onePatient', onePatient: obj, new_no_mr: null})
         ]
       )
     }))

@@ -69,7 +69,8 @@ _.assign(comp, {
                     1000*+look('tarif_klinik', rawat.klinik)
                   ],
                   rawat.bed && [
-                    'Biaya Kamar', tarifInap(
+                    'Biaya Kamar ' + _.values(rawat.bed).map(_.startCase).join('/'),
+                    tarifInap(
                       rawat.tanggal_masuk, rawat.keluar,
                       beds[_.get(rawat.bed, 'kelas')].tarif
                     )
