@@ -1,7 +1,6 @@
 /*global moment numeral _ m Dexie selects io*/
 
-var
-withThis = (obj, cb) => cb(obj),
+var withThis = (obj, cb) => cb(obj),
 ors = array => array.find(Boolean),
 ands = array =>
   array.reduce((res, inc) => res && inc, true)
@@ -10,6 +9,10 @@ ands = array =>
 randomId = () => [1, 1].map(() =>
   Math.random().toString(36).slice(2)
 ).join(''),
+
+between = (start, middle, end) => ands([
+  start < middle, middle < end
+]),
 
 hari = (timestamp, hour) =>
   timestamp && moment(timestamp)
