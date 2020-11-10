@@ -4,6 +4,15 @@ _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
     m('h3', 'Antrian pasien poliklinik '+look('klinik', state.login.poliklinik)),
+    m('.buttons',
+      m('.button.is-primary',
+        {onclick: () => [
+          state.todayPoliFilter = !state.todayPoliFilter,
+          m.redraw()
+        ]},
+        makeIconLabel('filter', state.todayPoliFilter ? 'Seluruh antrian' : 'Saring hari ini')
+      )
+    ),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
@@ -24,6 +33,13 @@ _.assign(comp, {
           ])
         },
         (state.clinicQueue || [])
+        .filter(i => state.todayPoliFilter ? withThis(
+          _.last(i.rawatJalan).tanggal,
+          tanggal => ands([
+            tanggal > startOfTheDay(_.now()),
+            tanggal < tomorrow(startOfTheDay(_.now()))
+          ])
+        ) : true)
         .sort((a, b) => withThis(
           obj => _.get(_.last(obj.rawatJalan), 'tanggal'),
           lastDate => lastDate(a) - lastDate(b)
