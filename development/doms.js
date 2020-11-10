@@ -1,4 +1,4 @@
-/*global _ m state comp lookReferences makePdf withThis look lookGoods*/
+/*global _ m state comp lookReferences makePdf withThis look lookGoods rupiah*/
 
 var tds = array =>
   array.map(i => m('td', i)),

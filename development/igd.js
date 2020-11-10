@@ -1,4 +1,4 @@
-/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter*/
+/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter layouts*/
 
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?

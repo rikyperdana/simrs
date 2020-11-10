@@ -1,4 +1,4 @@
-/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay moment makeIconLabel*/
+/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay moment makeIconLabel reports layouts*/
 
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?

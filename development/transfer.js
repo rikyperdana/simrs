@@ -1,4 +1,4 @@
-/*global _ m comp db state autoForm schemas updateBoth lookUser hari makeModal tds ands ors look*/
+/*global _ m comp db state autoForm schemas updateBoth lookUser hari makeModal tds ands ors look reports paginate*/
 
 _.assign(comp, {
   transfer: () => !ors([
