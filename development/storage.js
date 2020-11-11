@@ -16,7 +16,8 @@ _.assign(comp, {
               loading: true, selection: null, pagination: {goods: 0}
             }),
             db.goods.filter(i => _.includes(
-              _.lowerCase(i.nama+' '+i.kandungan), e.target.value
+              _.lowerCase(i.nama+' '+i.kandungan),
+              _.lowerCase(e.target.value)
             )).toArray(array => [
               _.assign(state, {
                 searchGoods: array.sort((a, b) => a.nama > b.nama ? 1 : -1),

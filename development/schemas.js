@@ -257,7 +257,7 @@ var schemas = {
     peranan: {type: Number, autoform: {
       type: 'select', options: selects('peranan')
     }},
-    bidang: {type: Number, optional: true, autoform: {
+    bidang: {type: Number, autoform: {
       type: 'select', options: selects('bidang')
     }},
     poliklinik: {type: Number, optional: true, autoform: {
