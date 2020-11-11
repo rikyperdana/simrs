@@ -29,8 +29,7 @@ var reports = {
                 ) : [])
               ].map(j => ands([
                 +obj.selection ? j.cara_bayar === +obj.selection : true,
-                (j.tanggal || j.tanggal_masuk) > obj.start,
-                (j.tanggal || j.tanggal_masuk) < obj.end,
+                between(obj.start, j.tanggal || j.masuk, obj.end),
                 +obj.selection === 1 ? j.bayar_konsultasi : true,
                 {pasien: i, rawat: j}
               ])).filter(Boolean)
@@ -221,7 +220,7 @@ var reports = {
             pasien.rawatJalan.map(rawat =>
               _.every([
                 rawat.soapDokter,
-                rawat.tanggal > date.start && rawat.tanggal < date.end
+                between(date.start, rawat.tanggal, date.end)
               ]) && [
                 hari(rawat.tanggal),
                 pasien.identitas.no_mr.toString(),
@@ -254,8 +253,7 @@ var reports = {
             pasien.rawatInap.map(rawat =>
               _.every([
                 rawat.keluar,
-                rawat.tanggal_masuk > date.start &&
-                rawat.tanggal_masuk < date.end
+                between(date.start, rawat.tanggal_masuk, date.end)
               ]) && [
                 hari(rawat.tanggal_masuk),
                 pasien.identitas.no_mr.toString(),
@@ -293,8 +291,7 @@ var reports = {
             .map(i => ({pasien, rawat: i}))
           ).filter(({pasien, rawat}) => ands([
             rawat.soapDokter,
-            rawat.tanggal > obj.start &&
-            rawat.tanggal < obj.end,
+            between(obj.start, rawat.tanggal, obj.end),
             +obj.selection ? rawat.klinik === +obj.selection : true
           ]))
           .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
@@ -327,9 +324,9 @@ var reports = {
             ..._.flattenDeep(array.map(i => [
               ...i.rawatJalan || []
             ].flatMap(j => _.get(j, 'soapDokter.radio') &&
-              j.soapDokter.radio.map(k => ands([
-                j.tanggal > date.start, j.tanggal < date.end
-              ]) && {pasien: i, rawat: j, radio: k})
+              j.soapDokter.radio.map(k => between(
+                date.start, j.tanggal, date.end
+              ) && {pasien: i, rawat: j, radio: k})
             ))).filter(Boolean)
             .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [
@@ -363,9 +360,9 @@ var reports = {
             ..._.flattenDeep(array.map(i => [
               ...i.rawatJalan || []
             ].flatMap(j => _.get(j, 'soapDokter.labor') &&
-              j.soapDokter.labor.map(k => ands([
-                j.tanggal > date.start, j.tanggal < date.end
-              ]) && {pasien: i, rawat: j, labor: k})
+              j.soapDokter.labor.map(k => between(
+                date.start, j.tanggal, date.end
+              ) && {pasien: i, rawat: j, labor: k})
             ))).filter(Boolean)
             .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [

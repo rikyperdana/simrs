@@ -35,10 +35,10 @@ _.assign(comp, {
         (state.clinicQueue || [])
         .filter(i => state.todayPoliFilter ? withThis(
           _.last(i.rawatJalan).tanggal,
-          tanggal => ands([
-            tanggal > startOfTheDay(_.now()),
-            tanggal < tomorrow(startOfTheDay(_.now()))
-          ])
+          tanggal => between(
+            startOfTheDay(_.now()), tanggal,
+            tomorrow(startOfTheDay(_.now()))
+          )
         ) : true)
         .sort((a, b) => withThis(
           obj => _.get(_.last(obj.rawatJalan), 'tanggal'),

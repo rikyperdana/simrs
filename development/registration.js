@@ -19,7 +19,7 @@ _.assign(comp, {
           state.loading = true, m.redraw(),
           db.patients.filter(i => _.includes(
             _.lowerCase(i.identitas.nama_lengkap)+i.identitas.no_mr,
-            e.target.value
+            _.lowerCase(e.target.value)
           )).toArray(array => [
             _.assign(state, {
               searchPatients: array,
