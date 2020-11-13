@@ -75,10 +75,10 @@ _.assign(comp, {
                 schema: schemas.account,
                 layout: layouts.account,
                 action: doc =>
-                  io().emit('bcrypt', doc.password, res => [
-                    updateBoth('users', i._id, _.assign(doc, {password: res})),
-                    state.modalAccount = null, m.redraw()
-                  ])
+                  io().emit('bcrypt', doc.password, res => updateBoth(
+                    'users', i._id, _.assign(doc, {password: res}),
+                    done => done && [state.modalAccount = null, m.redraw()]
+                  ))
               }))
             )
           },
