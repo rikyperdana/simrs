@@ -180,9 +180,8 @@ autoForm = opts => ({view: () => {
             }
           }),
           fields =>
-            _.get(opts.layout, name.replace(/[0-9]/g, '$')) ?
-            opts.layout[name.replace(/[0-9]/g, '$')]
-            .map(i => m('.columns',
+            _.get(opts.layout, normal(name)) ?
+            opts.layout[normal(name)].map(i => m('.columns',
               i.map(j => m('.column',
                 fields.find(k => k[name+'.'+j])[name+'.'+j]()
               ))
