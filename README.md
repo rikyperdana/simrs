@@ -1,5 +1,5 @@
 # SIMRS.dev
-> SIMRS Open Source Terintegrasi Pertama yang menggunakan NodeJS + MongoDB
+> SIMRS Open Source Terintegrasi Pertama yang menggunakan NodeJS + MongoDB/RedisDB
 
 Bismillahirrahmanirrahim,
 
@@ -32,12 +32,12 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 |Server|Node 12.18.1|
 |Paradigma|Functional|
 |Backend|Express 4.16.4|
-|Database|MongoDB 3.3.3|
+|Database|MongoDB 3.5.9 / RedisDB 3.0.2|
 |Frontend|Mithril JS 2.0.4|
 |CSS|Bulma 0.7.5|
 
 ## Persiapan Pra-install
-1. Paham tentang [MongoDB](https://docs.mongodb.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+1. Paham tentang [MongoDB](https://docs.mongodb.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) atau [RedisDB](https://redis.io/)
 2. Paham tentang paradigma
 [Functional](https://eloquentjavascript.net/1st_edition/chapter6.html)
 [Javascript ES6](http://es6-features.org/#DefaultParameterValues),
@@ -46,7 +46,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 [DexieJS](https://dexie.org/)
 3. Paham tentang ragam prosedur operasional Rumah Sakit Umum
 4. Bila ingin menggunakan Glitch: Buat akun [Glitch](https://glitch.com/) dan [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-5. Bila ingin instalasi lokal (PC/Laptop): Install [Node JS](https://nodejs.org/en/download/) dan [Mongo DB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
+5. Bila ingin instalasi lokal (PC/Laptop): Install [Node JS](https://nodejs.org/en/download/) dan [Mongo DB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/) atau [RedisDB](https://redis.io/)
 
 ## Cara Install
 
@@ -58,7 +58,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 2. `npm install`
 3. `node server.js`
 
-### Bagian DB
+### Bagian MongoDB
 1. Login MongoDB Atlas, create Free cluster, klik create cluster
 2. Pada halaman MongoDB Atlas, bagian Cluster, klik Connect
 3. Klik Connect your Application
@@ -72,7 +72,8 @@ MONGO="isikan dengan connection string, dan ganti <username> dan <password>"
 dbname="nama databasenya"
 ```
 Bila tidak ingin menggunakan Atlas, silahkan ganti nilai variabel `MONGO="alamat lokal"`
-dengan alamat server database local Anda
+dengan alamat server database local Anda. Bila ingin menggunakan RedisDB sebagai alternatif MongoDB,
+silahkan ikuti panduan khusus pada halaman [SIMRS.dev dengan RedisDB](https://github.com/rikyperdana/simrs/wiki/RedisDB)
 
 ### Bagian Manajemen
 1. Login dengan username 'admin' password 'admin'

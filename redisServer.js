@@ -111,6 +111,6 @@ redis.lrange( // buat user admin pertama jika masih kosong
 /*redis.lrange(
   'users', 0, -1,
   (err, data) => console.log(parse(
-    data.find(i => parse(i).nama === 'Marsudi X')
+    data.find(i => parse(i)._id === '0a8sfha08se7fhaas08df')
   ))
 )*/
