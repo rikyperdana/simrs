@@ -7,9 +7,7 @@ io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 ors = array => array.find(Boolean),
-ands = array =>
-  array.reduce((res, inc) => res && inc, true)
-  && array[array.length-1],
+ands = array => array.reduce((res, inc) => res && inc, true)
 
 app = express()
 .use(express.static(
