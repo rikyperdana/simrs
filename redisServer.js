@@ -38,10 +38,9 @@ io(app).on('connection', socket => [
   )),
   socket.on('dbCall', (obj, cb) => ({
     find: () => redis.lrange(
-      obj.collection, 0, -1,
-      (err, data) => cb(data.filter(
-        sift(obj.projection)
-      ).map(parse))
+      obj.collection, 0, -1, (err, data) => cb(
+        data.map(parse).filter(sift(obj.projection))
+      )
     ),
     findOne: () => redis.lrange(
       obj.collection, 0, -1,
