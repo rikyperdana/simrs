@@ -52,22 +52,24 @@ autoForm = opts => ({view: () => {
             return _.reduceRight(
               obj.name.split('.'),
               (res, inc) => ({[inc]: res}),
-              obj.value && [ // value conversion
+              obj.value && ors([ // value conversion
                 ((type === String) && obj.value),
                 ((type === Number) && +(obj.value)),
                 ((type === Date) && (new Date(obj.value)).getTime())
-              ].find(i => !!i)
+              ])
             )
           }).reduce((res, inc) => {
-            var recursive = inc => ors([
-              typeof(inc) === 'object' && ors([
-                +_.keys(inc)[0]+1 &&
-                _.range(+_.keys(inc)[0]+1).map(i =>
-                  i === +_.keys(inc)[0] ?
-                  recursive(_.values(inc)[0]) : undefined
-                ),
-                {[_.keys(inc)[0]]: recursive(_.values(inc)[0])}
-              ]), inc
+            var recursive = data => ors([
+              typeof(data) === 'object' && withThis(
+                {key: _.keys(data)[0], val: _.values(data)[0]},
+                ({key, val}) => ors([
+                  +key+1 && _.range(+key+1).map(
+                    i => i === +key ? recursive(val) : undefined
+                  ),
+                  {[key]: recursive(val)}
+                ])
+              ),
+              data
             ])
             return _.merge(res, recursive(inc))
           }, {})
@@ -182,9 +184,9 @@ autoForm = opts => ({view: () => {
           fields =>
             _.get(opts.layout, normal(name)) ?
             opts.layout[normal(name)].map(i => m('.columns',
-              i.map(j => m('.column',
-                fields.find(k => k[name+'.'+j])[name+'.'+j]()
-              ))
+              i.map(j => m('.column', fields.find(
+                k => k[name+'.'+j]
+              )[name+'.'+j]()))
             )) : fields.map(i => _.values(i)[0]())
         ),
         m('p.help', _.get(schema, 'autoform.help'))
@@ -246,10 +248,10 @@ autoForm = opts => ({view: () => {
     _.get(opts, 'layout.top') ?
     opts.layout.top.map(i => m('.columns', i.map(
       j => m('.column', fields.find(k => k[j])[j]())
-    ))) : fields.map(i => Object.values(i)[0]()),
+    ))) : fields.map(i => _.values(i)[0]()),
     m('.row', m('button.button',
       _.assign({type: 'submit', class: 'is-info'}, opts.submit),
-      (opts.submit && opts.submit.value) || 'Submit'
+      _.get(opts, 'submit.value') || 'Submit'
     ))
   )
 }})
