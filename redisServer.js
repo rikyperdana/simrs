@@ -7,9 +7,7 @@ io = require('socket.io'),
 bcrypt = require('bcrypt'),
 withThis = (obj, cb) => cb(obj),
 ors = array => array.find(Boolean),
-ands = array =>
-  array.reduce((res, inc) => res && inc, true)
-  && array[array.length-1],
+ands = array => array.reduce((res, inc) => res && inc, true)
 
 app = express()
 .use(express.static(
@@ -40,10 +38,9 @@ io(app).on('connection', socket => [
   )),
   socket.on('dbCall', (obj, cb) => ({
     find: () => redis.lrange(
-      obj.collection, 0, -1,
-      (err, data) => cb(data.filter(
-        sift(obj.projection)
-      ).map(parse))
+      obj.collection, 0, -1, (err, data) => cb(
+        data.map(parse).filter(sift(obj.projection))
+      )
     ),
     findOne: () => redis.lrange(
       obj.collection, 0, -1,

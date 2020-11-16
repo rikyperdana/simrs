@@ -97,7 +97,10 @@ _.assign(comp, {
   // referensi harus terbuka untuk seluruh pihak
   references: () => m('.content',
     m('h3', 'Daftar Tarif'),
-    m('.button.is-primary',
+    ands([
+      state.login.bidang === 5,
+      state.login.peranan === 4
+    ]) && m('.button.is-primary',
       {onclick: () => state.modalTambahTarif = m('.box',
         m('h3', 'Form Tambah Tarif Baru'),
         m('p.help.has-text-danger', 'WARNING: Pastikan tarif baru yang akan diisikan memang belum pernah ada di Database.'),

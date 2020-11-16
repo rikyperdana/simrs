@@ -9,7 +9,7 @@ makePdf = {
         'No. MR: '+identitas.no_mr
       ],
       pageSize: 'B8',
-      pageMargins: [110, 50, 0, 0],
+      pageMargins: [30, 50, 0, 0],
       pageOrientation: 'landscape'
     })).download('kartu_peserta_'+identitas.no_mr),
 

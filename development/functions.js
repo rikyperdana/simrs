@@ -2,9 +2,7 @@
 
 var withThis = (obj, cb) => cb(obj),
 ors = array => array.find(Boolean),
-ands = array =>
-  array.reduce((res, inc) => res && inc, true)
-  && array[array.length-1],
+ands = array => array.reduce((a, b) => a && b, true),
 
 randomId = () => [1, 1].map(() =>
   Math.random().toString(36).slice(2)
