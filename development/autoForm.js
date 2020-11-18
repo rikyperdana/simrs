@@ -3,7 +3,7 @@ var m, _, afState = {arrLen: {}, form: {}},
 autoForm = opts => ({view: () => {
   var normal = name => name.replace(/\d/g, '$'),
   withThis = (obj, cb) => cb(obj),
-  ors = array => array.find(Boolean)
+  ors = array => array.find(Boolean),
   dateValue = (timestamp, hour) => {
     var date = new Date(timestamp),
     zeros = num => num < 10 ? '0'+num : ''+num,
