@@ -204,8 +204,9 @@ autoForm = opts => ({view: () => {
           afState.arrLen[name]
         ).map(i => {
           var childSchema = opts.schema[normal(name)+'.$']
-          return inputTypes(name+'.'+i, childSchema)
-          [_.get(childSchema, 'autoform.type') || 'standard']()
+          return inputTypes(name+'.'+i, childSchema)[
+            _.get(childSchema, 'autoform.type') || 'standard'
+          ]()
         }),
         m('p.help', _.get(schema, 'autoform.help'))
       ),
@@ -228,7 +229,7 @@ autoForm = opts => ({view: () => {
           onchange: schema.autoRedraw && function(){},
           type: _.get(
             [[Date, 'date'], [String, 'text'], [Number, 'number']]
-            .filter(i => i[0] === schema.type)[0], '1'
+            .find(i => i[0] === schema.type), '1'
           ),
         })),
         m('p.help', _.get(schema, 'autoform.help'))
