@@ -222,7 +222,7 @@ _.assign(comp, {
           goodsList: array,
           drugList: array.filter(i => ands([
             i.jenis === 1,
-            i.batch.filter(j => ands([
+            (i.batch || []).filter(j => ands([
               j.stok.apotik > i.stok_minimum.apotik,
               j.kadaluarsa > _.now()
             ])).length

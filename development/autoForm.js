@@ -7,23 +7,19 @@ autoForm = opts => ({view: () => {
   dateValue = (timestamp, hour) => {
     var date = new Date(timestamp),
     zeros = num => num < 10 ? '0'+num : ''+num,
-    dateStamp = [
-      date.getFullYear(),
-      zeros(date.getMonth()+1),
-      zeros(date.getDate())
-    ].join('-'),
+    dateStamp = [date.getFullYear(), zeros(date.getMonth()+1), zeros(date.getDate())].join('-'),
     hourStamp = 'T'+zeros(date.getHours())+':'+zeros(date.getMinutes())
     return !hour ? dateStamp : dateStamp+hourStamp
   },
 
   linearize = obj => {
-    var recurse = doc => {
-      var value = doc[_.keys(doc)[0]]
-      return typeof(value) === 'object' ?
+    var recurse = doc => withThis(
+      doc[_.keys(doc)[0]],
+      value => typeof(value) === 'object' ?
       _.map(value, (val, key) => recurse(
         {[_.keys(doc)[0]+'.'+key]: val}
       )) : doc
-    }
+    )
     return _.fromPairs(
       _.flattenDeep(recurse({doc: obj}))
       .map(i => [_.keys(i)[0].substr(4), _.values(i)[0]])
@@ -47,9 +43,9 @@ autoForm = opts => ({view: () => {
         afState.form[opts.id] = opts.autoReset && null
         var submit = () => opts.action(
           _.filter(e.target, i => i.name && i.value)
-          .map(obj => {
-            var type = opts.schema[normal(obj.name)].type
-            return _.reduceRight(
+          .map(obj => withThis(
+            opts.schema[normal(obj.name)].type,
+            type => _.reduceRight(
               obj.name.split('.'),
               (res, inc) => ({[inc]: res}),
               obj.value && ors([ // value conversion
@@ -58,7 +54,7 @@ autoForm = opts => ({view: () => {
                 ((type === Date) && (new Date(obj.value)).getTime())
               ])
             )
-          }).reduce((res, inc) => {
+          )).reduce((res, inc) => {
             var recursive = data => ors([
               typeof(data) === 'object' && withThis(
                 {key: _.keys(data)[0], val: _.values(data)[0]},
@@ -167,20 +163,22 @@ autoForm = opts => ({view: () => {
         withThis(
           _.map(opts.schema, (val, key) =>
             _.merge(val, {name: key})
-          ).filter(i => {
-            var getLen = str => _.size(_.split(str, '.'))
-            return _.every([
+          ).filter(i => withThis(
+            str => _.size(_.split(str, '.')),
+            getLen => _.every([
               _.includes(i.name, normal(name)+'.'),
               getLen(name)+1 === getLen(i.name)
             ])
-          }).map(i => {
-            var childSchema = opts.schema[normal(i.name)],
-            fieldName = name+'.'+_.last(i.name.split('.'))
-            return {[fieldName]: () =>
+          )).map(i => withThis(
+            {
+              childSchema: opts.schema[normal(i.name)],
+              fieldName: name+'.'+_.last(i.name.split('.'))
+            },
+            ({childSchema, fieldName}) => ({[fieldName]: () =>
               inputTypes(fieldName, childSchema)
               [_.get(childSchema, 'autoform.type') || 'standard']()
-            }
-          }),
+            })
+          )),
           fields =>
             _.get(opts.layout, normal(name)) ?
             opts.layout[normal(name)].map(i => m('.columns',
@@ -202,12 +200,12 @@ autoForm = opts => ({view: () => {
         _.range(
           _.get(opts.doc, name) && opts.doc[name].length,
           afState.arrLen[name]
-        ).map(i => {
-          var childSchema = opts.schema[normal(name)+'.$']
-          return inputTypes(name+'.'+i, childSchema)[
+        ).map(i => withThis(
+          opts.schema[normal(name)+'.$'],
+          childSchema => inputTypes(name+'.'+i, childSchema)[
             _.get(childSchema, 'autoform.type') || 'standard'
           ]()
-        }),
+        )),
         m('p.help', _.get(schema, 'autoform.help'))
       ),
 
