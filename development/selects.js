@@ -32,18 +32,18 @@ var selects = name => _.reduce(
 )[name],
 
 look = (category, value) => _.get(
-  selects(category)().filter((i, j) =>
+  selects(category)().find((i, j) =>
     j+1 === value
-  )[0], 'label'
+  ), 'label'
 ) || '-',
 
 lookGoods = _id =>
   _id && state.goodsList
-  .filter(i => i._id === _id)[0],
+  .find(i => i._id === _id),
 
 lookReferences = _id =>
   _id && state.references
-  .filter(i => i._id === _id)[0],
+  .find(i => i._id === _id),
 
 lookUser = id =>
   !id ? '-' : _.get(state.userList.find(
