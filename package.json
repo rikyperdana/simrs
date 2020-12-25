@@ -16,7 +16,7 @@
     "crypto-js": "^3.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongodb": "^3.5.9",
+    "mongodb": "^3.6.3",
     "nodemon": "^2.0.6",
     "redis": "^3.0.2",
     "sift": "^13.4.0",
@@ -33,6 +33,6 @@
   "author": "Riky Perdana",
   "devDependencies": {
     "concat": "^1.0.3",
-    "minify": "^5.1.1"
+    "minify": "^5.2.0"
   }
 }
