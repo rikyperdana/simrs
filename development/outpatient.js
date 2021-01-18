@@ -1,4 +1,4 @@
-/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage lookReferences reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter*/
+/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter*/
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?

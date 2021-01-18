@@ -4,6 +4,7 @@
 Bismillahirrahmanirrahim,
 
 ## Update!
+- Nov 2021: Fitur My Logbook untuk Dokter di menu profil
 - Des 2020: Sudah tersedia [Buku Petunjuk Teknis](https://github.com/rikyperdana/simrs/wiki/Manual-Guide) untuk diunduh/dicetak
 - Nov 2020: Sudah mendukung RedisDB sebagai alternatif MongoDB
 - Sept 2020: Pembagian kolom pada seluruh form seperti di [screenshots](https://github.com/rikyperdana/simrs/issues/118)
