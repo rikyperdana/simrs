@@ -1,7 +1,26 @@
 /*global m _ comp state look makeModal autoForm updateBoth io makeIconLabel withThis*/
 
+var logbook = (histories, idDokter) =>
+  _.compact(_.flattenDeep(histories.map(
+    i => i.rawatJalan && i.rawatJalan.map(
+      j => ands([
+        j.soapDokter,
+        _.get(j, 'soapDokter.dokter') === idDokter,
+        _.merge({rawat: j}, {identitas: i.identitas}, {soap: j.soapDokter})
+      ])
+    )
+  )))
+  .sort((a, b) => a.rawat.tanggal > b.rawat.tanggal ? 1 : -1)
+
 _.assign(comp, {
   profile: () => m('.content',
+    {onupdate: () => [
+      db.references.toArray(array => state.references = array),
+      db.goods.toArray(array => state.goodsList = array),
+      state.login.peranan === 3 && db.patients.toArray(
+        array => state.logbook = logbook(array, state.login._id)
+      )
+    ]},
     m('h1', 'Profil Pengguna'),
     m('.columns',
       m('.column', m('.box', m('table.table.is-striped', m('tbody',
@@ -127,6 +146,33 @@ _.assign(comp, {
     ),
     makeModal('modalProfile'),
     makeModal('modalLicense'),
-    makeModal('modalThemeSelect')
+    makeModal('modalThemeSelect'),
+    state.login.peranan === 3 && [
+      m('br'), m('br'),
+      m('h4', 'Logbook Dokter'),
+      m('.box', m('table.table',
+        m('thead', m('tr',
+          ['No. MR', 'Nama Pasien', 'Tanggal', 'Anamnesa', 'Diagnosa', 'Tindakan', 'SOAP']
+          .map(i => m('th', i))
+        )),
+        withThis(
+          _.get(state, 'logbook'),
+          logbook => logbook && m('tbody',
+            logbook.map(i => m('tr', tds([
+              i.identitas.no_mr,
+              i.identitas.nama_lengkap,
+              hari(i.rawat.tanggal),
+              i.soap.anamnesa,
+              (i.soap.diagnosa || []).map(j => j.text).join(''),
+              (i.soap.tindakan || []).length,
+              m('.button.is-info',
+                {onclick: () => makePdf.soap(i.identitas, i.rawat)},
+                makeIconLabel('print', 'Cetak')
+              )
+            ])))
+          )
+        )
+      ))
+    ]
   )
 })
