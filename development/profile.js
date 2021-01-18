@@ -17,9 +17,9 @@ _.assign(comp, {
     {onupdate: () => [
       db.references.toArray(array => state.references = array),
       db.goods.toArray(array => state.goodsList = array),
-      db.patients.toArray(array => state.logbook = logbook(
-        array, 'f5u3anfrr2p26ldyfp4g18'
-      ))
+      state.login.peranan === 3 && db.patients.toArray(
+        array => state.logbook = logbook(array, state.login._id)
+      )
     ]},
     m('h1', 'Profil Pengguna'),
     m('.columns',
