@@ -49,8 +49,10 @@ _.assign(comp, {
               id: 'formBed', schema: schemas.beds,
               layout: {top: [['kelas', 'kamar', 'nomor']]},
               action: doc => [
-                updateBoth(
-                  'patients', i.pasien._id, _.assign(i.pasien, {rawatInap: [
+                // Pastikan dulu pilihan kamarnya valid, baru update
+                _.get(beds, [doc.kelas, 'kamar', doc.kamar]) && updateBoth(
+                  'patients', i.pasien._id,
+                  _.assign(i.pasien, {rawatInap: [
                     ...(i.pasien.rawatInap || []),
                     {
                       // buatkan record rawatInap dengan observasi kosong
@@ -58,12 +60,15 @@ _.assign(comp, {
                       observasi: [], idinap: randomId(), idrawat: i.inap.idrawat,
                       cara_bayar: i.inap.cara_bayar, bed: doc
                     }
-                  ]})
-                ),
-                _.assign(state, {admissionList: null, admissionModal: null}),
-                m.redraw()
+                  ]}),
+                  res => res && [
+                    _.assign(state, {admissionList: null, admissionModal: null}),
+                    m.redraw()
+                  ]
+                )
               ]
-            }))
+            })),
+            m('p.help', '* Pastikan pilihan Kelas/Kamar/Bed valid.')
           ), m.redraw()
         ]},
         tds([
