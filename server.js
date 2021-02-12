@@ -16,6 +16,14 @@ mongoDB.MongoClient.connect(
   {useNewUrlParser: true, useUnifiedTopology: true},
   (err, client) => err ? console.log(err)
   : io(app).on('connection', socket => [
+    withThis(
+      client.db(process.env.dbname),
+      db => ['patients', 'goods', 'users', 'references', 'queue'].map(
+        i => db.collection(i).findOne({}, (err, res) =>
+          res === null && db.createCollection(i)
+        )
+      )
+    ),
     socket.on('datachange', (name, doc) =>
       socket.broadcast.emit('datachange', name, doc)
     ),

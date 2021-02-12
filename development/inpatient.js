@@ -50,7 +50,8 @@ _.assign(comp, {
               layout: {top: [['kelas', 'kamar', 'nomor']]},
               action: doc => [
                 // Pastikan dulu pilihan kamarnya valid, baru update
-                _.get(beds, [doc.kelas, 'kamar', doc.kamar]) && updateBoth(
+                +_.get(beds, [doc.kelas, 'kamar', doc.kamar])+1 > doc.nomor &&
+                updateBoth(
                   'patients', i.pasien._id,
                   _.assign(i.pasien, {rawatInap: [
                     ...(i.pasien.rawatInap || []),

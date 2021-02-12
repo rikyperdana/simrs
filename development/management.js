@@ -94,8 +94,9 @@ _.assign(comp, {
     )))
   ),
 
-  // referensi harus terbuka untuk seluruh pihak
-  references: () => m('.content',
+  // referensi hanya untuk kasir dan manajemen
+  references: () => !_.includes([2, 5], state.login.bidang) ?
+  m('p', 'Hanya untuk kasir dan manajemen') : m('.content',
     m('h3', 'Daftar Tarif'),
     ands([
       state.login.bidang === 5,
