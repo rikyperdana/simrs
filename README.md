@@ -61,7 +61,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 2. `npm install`
 3. `node server.js`
 
-### Bagian MongoDB
+### Bagian Database (jika dari Atlas Cloud)
 1. Login MongoDB Atlas, create Free cluster, klik create cluster
 2. Pada halaman MongoDB Atlas, bagian Cluster, klik Connect
 3. Klik Connect your Application
@@ -74,8 +74,18 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 MONGO="isikan dengan connection string, dan ganti <username> dan <password>"
 dbname="nama databasenya"
 ```
-Bila tidak ingin menggunakan Atlas, silahkan ganti nilai variabel `MONGO="alamat lokal"`
-dengan alamat server database local Anda. Bila ingin menggunakan RedisDB sebagai alternatif MongoDB,
+
+### Bagian Database (jika dari MongoDB lokal)
+Khusus untuk MongoDB lokal, tidak perlu create collection secara manual (sudah dihandle otomatis oleh sistem).
+Tapi tetap perlu dibuatkan file `.env` untuk menghubungkan antara aplikasi dan databasenya. Maka pada file `.env`
+isikan variabel `MONGO=xxx` dan `dbname=xxx` sesuai dengan database yang di-create secara lokal. Contoh:
+```
+MONGO=http://localhost:27017
+dbname=simrsKami
+```
+
+### Bagian Database (jika ingin menggunakan RedisDB)
+Bila ingin menggunakan RedisDB sebagai alternatif MongoDB,
 silahkan ikuti panduan khusus pada halaman [SIMRS.dev dengan RedisDB](https://github.com/rikyperdana/simrs/wiki/RedisDB)
 
 ### Bagian Manajemen
