@@ -1,6 +1,6 @@
 /*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor makeIconLabel*/
 
-var topMenus = _.omit(menus, ['cssd', 'gizi'])
+var topMenus = _.omit(menus, ['gizi', 'telemed'])
 _.assign(comp, {
   navbar: () => m('nav.navbar.is-primary.is-fixed-top',
     m('.navbar-brand',

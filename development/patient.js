@@ -33,16 +33,49 @@ _.assign(comp, {
       m('p.buttons',
         [
           {
+            label: 'Update pasien', icon: 'edit', color: 'warning',
+            click: () => state.route = 'updatePatient'
+          },
+          {
+            label: 'Telemedic', icon: 'headset', color: 'warning',
+            click: () => state.modalKredensial = m('.box',
+              m('h4', 'Akses Pasien Telemedic'),
+              m(autoForm({
+                id: 'kredensialForm',
+                layout: {top: [
+                  ['username', 'password'], ['keaktifan']
+                ]},
+                schema: {
+                  username: {type: String}, // TODO: dibuat auto saja
+                  password: {type: String, autoform: {type: 'password'}},
+                  keaktifan: {type: Number, autoform: {
+                    type: 'select', options: selects('keaktifan')
+                  }}
+                },
+                action: doc => io().emit('bcrypt', doc.password,
+                  res => res && updateBoth(
+                    'patients', state.onePatient._id,
+                    _.assign(state.onePatient, {identitas: _.assign(
+                      state.onePatient.identitas, {kredensial: _.assign(
+                        doc, {password: res}
+                      )}
+                    )}),
+                    res => [
+                      state.modalKredensial = null,
+                      m.redraw()
+                    ]
+                  )
+                )
+              }))
+            )
+          },
+          {
             label: 'Cetak kartu', icon: 'id-card', color: 'info',
             click: () => makePdf.card(id)
           },
           {
             label: 'General consent', icon: 'file-contract', color: 'info',
             click: () => makePdf.consent(id)
-          },
-          {
-            label: 'Update pasien', icon: 'edit', color: 'warning',
-            click: () => state.route = 'updatePatient'
           },
           {
             label: 'Riwayat SOAP', icon: 'bars', color: 'info',
@@ -69,6 +102,7 @@ _.assign(comp, {
         ))
       ),
       makeModal('modalRekapSoap'),
+      makeModal('modalKredensial'),
       m('.tabs.is-boxed', m('ul',
         {style: 'margin-left: 0%'},
         _.map({
