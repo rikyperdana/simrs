@@ -20,12 +20,20 @@ _.assign(comp, {
               m('h4', 'Mulai proses Telemedic'),
               m('.buttons',
                 m('.button.is-primary',
+                  {onclick: () => [
+                    _.assign(state, {route: 'onePatient', onePatient: i}),
+                    m.redraw()
+                  ]},
                   makeIconLabel('book-medical', 'Rekam Medis')
                 ),
                 m('.button.is-warning',
                   makeIconLabel('headset', 'Mulai Streaming')
                 ),
                 m('.button.is-info',
+                  {onclick: () => [
+                    _.assign(state, {route: 'formSoap', onePatient: i, oneRawat: j}),
+                    m.redraw()
+                  ]},
                   makeIconLabel('file-medical', 'Form SOAP')
                 )
               )
@@ -69,5 +77,11 @@ _.assign(comp, {
       ))
     ))),
     makeModal('modalTelemed')
-  )
+  ),
+  telemedHistory: () => m('.box', m('.table-container', m('table.table',
+    m('thead', m('tr', ['Jadwal', 'Dokter'].map(i => m('th', i)))),
+    m('tbody', (state.onePatient.telemed || []).map(i => m('tr', tds([
+      hari(i.jadwal, true), lookUser(i.soapDokter.dokter)
+    ]))))
+  )))
 })

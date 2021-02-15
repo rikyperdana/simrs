@@ -108,7 +108,8 @@ _.assign(comp, {
         _.map({
           outpatient: ['Riwayat Rawat Jalan', 'walking'],
           emergency: ['Riwayat IGD', 'ambulance'],
-          inpatient: ['Riwayat Rawat Inap', 'bed']
+          inpatient: ['Riwayat Rawat Inap', 'bed'],
+          telemed: ['Riwayat Telemedik', 'headset']
         }, (val, key) => m('li',
           {class: ors([
             key === state.onePatientTab,
@@ -127,7 +128,8 @@ _.assign(comp, {
       m('div', ({
         outpatient: comp.outPatientHistory(),
         emergency: comp.emergencyHistory(),
-        inpatient: comp.inpatientHistory()
+        inpatient: comp.inpatientHistory(),
+        telemed: comp.telemedHistory()
       })[state.onePatientTab || ors([
         _.get(state, 'login.poliklinik') && 'outpatient'
       ])])
@@ -179,10 +181,15 @@ _.assign(comp, {
       action: doc => withThis(
         ands([
           !_.get(state, 'oneInap'),
-          _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',
+          // _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',
+          ors([
+            _.get(state, 'oneRawat.link') && 'telemed',
+            _.get(state, 'oneRawat.klinik') && 'rawatJalan',
+            'emergency'
+          ])
         ]),
         facility => [
-          // jika berasal dari rawat jalan atau IGD
+          // jika berasal dari rawat jalan, telemedik, atau IGD
           facility && updateBoth('patients', state.onePatient._id, _.assign(
             state.onePatient, {[facility]: state.onePatient[facility].map(i =>
               i.idrawat === state.oneRawat.idrawat ?
