@@ -78,10 +78,32 @@ _.assign(comp, {
     ))),
     makeModal('modalTelemed')
   ),
-  telemedHistory: () => m('.box', m('.table-container', m('table.table',
-    m('thead', m('tr', ['Jadwal', 'Dokter'].map(i => m('th', i)))),
-    m('tbody', (state.onePatient.telemed || []).map(i => m('tr', tds([
-      hari(i.jadwal, true), lookUser(i.soapDokter.dokter)
-    ]))))
-  )))
+  telemedHistory: () => m('.box',
+    m('.table-container', m('table.table',
+      m('thead', m('tr', ['Jadwal', 'Dokter'].map(i => m('th', i)))),
+      m('tbody', (state.onePatient.telemed || []).map(i => m('tr',
+        {onclick: () => [
+          state.modalRincianTelemed = m('.box',
+            m('h4', 'Rincian Telemed'),
+            m('table.table',
+              m('tr', m('th', 'Tanggal Konsultasi'), m('td', hari(i.jadwal, true))),
+              m('tr', m('th', 'Klinik diminta'), m('td', look('klinik', i.klinik))),
+              m('tr', m('th', 'Dokter diminta'), m('td', lookUser(i.dokter))),
+              m('tr', m('th', 'Dokter Pemeriksa'), m('td', lookUser(i.soapDokter.dokter))),
+              makeRincianSoapDokter(i.soapDokter)
+            ),
+            m('.buttons',
+              m('.button.is-info',
+                {onclick: () => makePdf.soap(state.onePatient.identitas, i)},
+                makeIconLabel('print', 'Cetak SOAP')
+              )
+            )
+          ),
+          m.redraw()
+        ]},
+        tds([hari(i.jadwal, true), lookUser(i.soapDokter.dokter)])
+      )))
+    )),
+    makeModal('modalRincianTelemed')
+  )
 })
