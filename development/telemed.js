@@ -11,7 +11,9 @@ _.assign(comp, {
     // Kalau buat kredensial pasiennya di pendaftaran
     m('h3', 'Request Telemedic'),
     m('.box', m('.table-container', m('table.table',
-      m('thead', m('tr', ['Entry', 'Pasien', 'Klinik', 'Dokter', 'Darurat', 'Jadwal'].map(i => m('th', i)))),
+      m('thead', m('tr', [
+        'Entry', 'Pasien', 'Klinik', 'Dokter', 'Darurat', 'Tanggal'
+      ].map(i => m('th', i)))),
       state.telemedList && m('tbody', state.telemedList.map(
         i => i.telemed.map(j => m('tr',
           {onclick: () => [
@@ -42,12 +44,12 @@ _.assign(comp, {
               m('h4', 'Konfirmasi Telemedik'),
               m(autoForm({
                 id: 'konfirmasiTelemed',
-                layout: {top: [['konfirmasi', 'jadwal'], ['link'], ['keterangan']]},
+                layout: {top: [['konfirmasi', 'tanggal'], ['link'], ['keterangan']]},
                 schema: {
                   konfirmasi: {type: Number, autoform: {
                     type: 'select', options: selects('boolean')
                   }},
-                  jadwal: {type: Date, autoform: {type: 'datetime-local'}},
+                  tanggal: {type: Date, autoform: {type: 'datetime-local'}},
                   link: {type: String, autoform: {help: 'Masukkan link video channel'}},
                   keterangan: {type: String, autoform: {type: 'textarea'}}
                 },
@@ -71,7 +73,7 @@ _.assign(comp, {
             look('klinik', j.klinik),
             lookUser(j.dokter),
             look('boolean', j.darurat),
-            hari(j.jadwal, true)
+            hari(j.tanggal, true)
           ])
         ))
       ))
@@ -80,13 +82,13 @@ _.assign(comp, {
   ),
   telemedHistory: () => m('.box',
     m('.table-container', m('table.table',
-      m('thead', m('tr', ['Jadwal', 'Dokter'].map(i => m('th', i)))),
+      m('thead', m('tr', ['Tanggal', 'Dokter'].map(i => m('th', i)))),
       m('tbody', (state.onePatient.telemed || []).map(i => m('tr',
         {onclick: () => [
           state.modalRincianTelemed = m('.box',
             m('h4', 'Rincian Telemed'),
             m('table.table',
-              m('tr', m('th', 'Tanggal Konsultasi'), m('td', hari(i.jadwal, true))),
+              m('tr', m('th', 'Tanggal Konsultasi'), m('td', hari(i.tanggal, true))),
               m('tr', m('th', 'Klinik diminta'), m('td', look('klinik', i.klinik))),
               m('tr', m('th', 'Dokter diminta'), m('td', lookUser(i.dokter))),
               m('tr', m('th', 'Dokter Pemeriksa'), m('td', lookUser(i.soapDokter.dokter))),
@@ -101,7 +103,7 @@ _.assign(comp, {
           ),
           m.redraw()
         ]},
-        tds([hari(i.jadwal, true), lookUser(i.soapDokter.dokter)])
+        tds([hari(i.tanggal, true), lookUser(i.soapDokter.dokter)])
       )))
     )),
     makeModal('modalRincianTelemed')
