@@ -5,7 +5,9 @@ _.assign(comp, {
     {onupdate: () => db.patients.toArray(array => [
       state.telemedList = array
         .filter(i => (i.telemed || []).length)
-        .filter(i => i.telemed.filter(j => !j.soapDokter).length),
+        .filter(i => i.telemed.filter(j => ors([
+          !j.soapDokter, j.konfirmasi !== 2
+        ])).length),
       m.redraw()
     ])},
     // Kalau buat kredensial pasiennya di pendaftaran
@@ -55,7 +57,7 @@ _.assign(comp, {
                 },
                 action: doc => updateBoth(
                   'patients', i._id, _.assign(i, {telemed: i.telemed.map(
-                    k => k.idrawat === j.idrawat && _.assign(k, doc)
+                    k => k.idrawat === j.idrawat ? _.assign(k, doc) : k
                   )}),
                   res => res && [state.modalTelemed = null, m.redraw()]
                 )
@@ -91,7 +93,10 @@ _.assign(comp, {
               m('tr', m('th', 'Tanggal Konsultasi'), m('td', hari(i.tanggal, true))),
               m('tr', m('th', 'Klinik diminta'), m('td', look('klinik', i.klinik))),
               m('tr', m('th', 'Dokter diminta'), m('td', lookUser(i.dokter))),
-              m('tr', m('th', 'Dokter Pemeriksa'), m('td', lookUser(i.soapDokter.dokter))),
+              m('tr',
+                m('th', 'Dokter Pemeriksa'),
+                m('td', lookUser(_.get(i, 'soapDokter.dokter')))
+              ),
               makeRincianSoapDokter(i.soapDokter)
             ),
             m('.buttons',
@@ -103,7 +108,7 @@ _.assign(comp, {
           ),
           m.redraw()
         ]},
-        tds([hari(i.tanggal, true), lookUser(i.soapDokter.dokter)])
+        tds([hari(i.tanggal, true), lookUser(_.get(i, 'soapDokter.dokter'))])
       )))
     )),
     makeModal('modalRincianTelemed')
