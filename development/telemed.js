@@ -5,7 +5,7 @@ _.assign(comp, {
     {onupdate: () => db.patients.toArray(array => [
       state.telemedList = array
         .filter(i => (i.telemed || []).length)
-        .filter(i => i.telemed.filter(j => ors([
+        .filter(i => i.telemed.filter(j => ands([
           !j.soapDokter, j.konfirmasi !== 2
         ])).length),
       m.redraw()
@@ -17,56 +17,74 @@ _.assign(comp, {
         'Entry', 'Pasien', 'Klinik', 'Dokter', 'Darurat', 'Tanggal'
       ].map(i => m('th', i)))),
       state.telemedList && m('tbody', state.telemedList.map(
-        i => i.telemed.map(j => m('tr',
+        i => i.telemed
+        .filter(j => ands([!j.soapDokter, j.konfirmasi !== 2]))
+        .map(j => m('tr',
           {onclick: () => [
-            state.modalTelemed = j.konfirmasi === 1 ?
-            m('.box',
-              m('h4', 'Mulai proses Telemedic'),
-              m('.buttons',
-                m('.button.is-primary',
-                  {onclick: () => [
-                    _.assign(state, {route: 'onePatient', onePatient: i}),
-                    m.redraw()
-                  ]},
-                  makeIconLabel('book-medical', 'Rekam Medis')
-                ),
-                m('.button.is-warning',
-                  makeIconLabel('headset', 'Mulai Streaming')
-                ),
-                m('.button.is-info',
-                  {onclick: () => [
-                    _.assign(state, {route: 'formSoap', onePatient: i, oneRawat: j}),
-                    m.redraw()
-                  ]},
-                  makeIconLabel('file-medical', 'Form SOAP')
+            state.modalTelemed = ors([
+              // konfirmasi ditangani oleh pendaftaran
+              ands([
+                !j.konfirmasi !== 1,
+                state.login.bidang === 1,
+                m('.box',
+                  m('h4', 'Konfirmasi Telemedik'),
+                  m(autoForm({
+                    id: 'konfirmasiTelemed',
+                    layout: {top: [['konfirmasi', 'tanggal'], ['link'], ['keterangan']]},
+                    schema: {
+                      konfirmasi: {type: Number, autoform: {
+                        type: 'select', options: selects('boolean')
+                      }},
+                      tanggal: {type: Date, autoform: {type: 'datetime-local'}},
+                      link: {type: String, autoform: {help: 'Masukkan link video channel'}},
+                      keterangan: {type: String, optional: true, autoform: {type: 'textarea'}}
+                    },
+                    action: doc => updateBoth(
+                      'patients', i._id, _.assign(i, {telemed: i.telemed.map(
+                        k => k.idrawat === j.idrawat ? _.assign(k, doc) : k
+                      )}),
+                      res => res && [state.modalTelemed = null, m.redraw()]
+                    )
+                  })),
+                  m('p.help', m('a', {
+                    href: 'https://github.com/rikyperdana/simrs/wiki/Telemedic-Guide',
+                    target: '_blank'
+                  }, '* Dapatkan link video channel di sini'))
                 )
-              )
-            )
-            : m('.box',
-              m('h4', 'Konfirmasi Telemedik'),
-              m(autoForm({
-                id: 'konfirmasiTelemed',
-                layout: {top: [['konfirmasi', 'tanggal'], ['link'], ['keterangan']]},
-                schema: {
-                  konfirmasi: {type: Number, autoform: {
-                    type: 'select', options: selects('boolean')
-                  }},
-                  tanggal: {type: Date, autoform: {type: 'datetime-local'}},
-                  link: {type: String, autoform: {help: 'Masukkan link video channel'}},
-                  keterangan: {type: String, autoform: {type: 'textarea'}}
-                },
-                action: doc => updateBoth(
-                  'patients', i._id, _.assign(i, {telemed: i.telemed.map(
-                    k => k.idrawat === j.idrawat ? _.assign(k, doc) : k
-                  )}),
-                  res => res && [state.modalTelemed = null, m.redraw()]
+              ]),
+              // live stream ditangani oleh dokter
+              ands([
+                j.konfirmasi === 1,
+                state.login.poliklinik,
+                state.login.peranan === 3,
+                m('.box',
+                  m('h4', 'Mulai proses Telemedic'),
+                  m('.buttons',
+                    m('.button.is-primary',
+                      {onclick: () => [
+                        _.assign(state, {route: 'onePatient', onePatient: i}),
+                        m.redraw()
+                      ]},
+                      makeIconLabel('book-medical', 'Rekam Medis')
+                    ),
+                    m('.button.is-warning', m('a',
+                      {href: j.link, target: '_blank'},
+                      makeIconLabel('headset', 'Mulai Streaming')
+                    )),
+                    m('.button.is-info',
+                      {onclick: () => [
+                        _.assign(state, {
+                          route: 'formSoap', onePatient: i, oneRawat: j,
+                          modalTelemed: null
+                        }),
+                        m.redraw()
+                      ]},
+                      makeIconLabel('file-medical', 'Form SOAP')
+                    )
+                  )
                 )
-              })),
-              m('p.help', m('a', {
-                href: 'https://github.com/rikyperdana/simrs/wiki/Telemedic-Guide',
-                target: '_blank'
-              }, '* Dapatkan link video channel di sini'))
-            ),
+              ])
+            ]),
             m.redraw()
           ]},
           tds([
