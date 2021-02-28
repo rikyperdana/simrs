@@ -76,12 +76,13 @@ dbname="nama databasenya"
 ```
 
 ### Bagian Database (jika dari MongoDB lokal)
-Khusus untuk MongoDB lokal, tidak perlu create collection secara manual (sudah dihandle otomatis oleh sistem).
-Tapi tetap perlu dibuatkan file `.env` untuk menghubungkan antara aplikasi dan databasenya. Maka pada file `.env`
+Buat sebuah database baru dengan nama bebas, dan dengan 5 buah Collections dengan nama
+`patients`, `goods`, `references`, `users`, dan `queue`.
+Dan buatkan file `.env` untuk menghubungkan antara aplikasi dan databasenya. Maka pada file `.env`
 isikan variabel `MONGO=xxx` dan `dbname=xxx` sesuai dengan database yang di-create secara lokal. Contoh:
 ```
 MONGO=http://localhost:27017
-dbname=simrsKami
+dbname=simrskami
 ```
 
 ### Bagian Database (jika ingin menggunakan RedisDB)
