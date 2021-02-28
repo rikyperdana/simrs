@@ -33,16 +33,58 @@ _.assign(comp, {
       m('p.buttons',
         [
           {
+            label: 'Update pasien', icon: 'edit', color: 'warning',
+            click: () => state.route = 'updatePatient'
+          },
+          {
+            label: 'Telemedic', icon: 'headset', color: 'warning',
+            click: () => state.modalKredensial = m('.box',
+              m('h4', 'Akses Pasien Telemedic'),
+              m(autoForm({
+                id: 'kredensialForm',
+                layout: {top: [
+                  ['username', 'password'], ['keaktifan']
+                ]},
+                doc: _.get(state.onePatient, 'identitas.kredensial') || {},
+                schema: {
+                  username: {
+                    type: String,
+                    autoform: {type: 'readonly'},
+                    autoValue: (name, form, opts) =>
+                      opts.doc[name] || [
+                        _.snakeCase(state.onePatient.identitas.nama_lengkap),
+                        Math.round(Math.random()*100)
+                      ].join('_')
+                  },
+                  password: {type: String, autoform: {type: 'password'}},
+                  keaktifan: {type: Number, autoform: {
+                    type: 'select', options: selects('keaktifan')
+                  }}
+                },
+                action: doc => io().emit('bcrypt', doc.password,
+                  res => res && updateBoth(
+                    'patients', state.onePatient._id,
+                    _.assign(state.onePatient, {identitas: _.assign(
+                      state.onePatient.identitas, {kredensial: _.assign(
+                        doc, {password: res}
+                      )}
+                    )}),
+                    res => [
+                      state.modalKredensial = null,
+                      m.redraw()
+                    ]
+                  )
+                )
+              }))
+            )
+          },
+          {
             label: 'Cetak kartu', icon: 'id-card', color: 'info',
             click: () => makePdf.card(id)
           },
           {
             label: 'General consent', icon: 'file-contract', color: 'info',
             click: () => makePdf.consent(id)
-          },
-          {
-            label: 'Update pasien', icon: 'edit', color: 'warning',
-            click: () => state.route = 'updatePatient'
           },
           {
             label: 'Riwayat SOAP', icon: 'bars', color: 'info',
@@ -69,12 +111,14 @@ _.assign(comp, {
         ))
       ),
       makeModal('modalRekapSoap'),
+      makeModal('modalKredensial'),
       m('.tabs.is-boxed', m('ul',
         {style: 'margin-left: 0%'},
         _.map({
           outpatient: ['Riwayat Rawat Jalan', 'walking'],
           emergency: ['Riwayat IGD', 'ambulance'],
-          inpatient: ['Riwayat Rawat Inap', 'bed']
+          inpatient: ['Riwayat Rawat Inap', 'bed'],
+          telemed: ['Riwayat Telemedik', 'headset']
         }, (val, key) => m('li',
           {class: ors([
             key === state.onePatientTab,
@@ -93,7 +137,8 @@ _.assign(comp, {
       m('div', ({
         outpatient: comp.outPatientHistory(),
         emergency: comp.emergencyHistory(),
-        inpatient: comp.inpatientHistory()
+        inpatient: comp.inpatientHistory(),
+        telemed: comp.telemedHistory()
       })[state.onePatientTab || ors([
         _.get(state, 'login.poliklinik') && 'outpatient'
       ])])
@@ -145,10 +190,15 @@ _.assign(comp, {
       action: doc => withThis(
         ands([
           !_.get(state, 'oneInap'),
-          _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',
+          // _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',
+          ors([
+            _.get(state, 'oneRawat.link') && 'telemed',
+            _.get(state, 'oneRawat.klinik') && 'rawatJalan',
+            'emergency'
+          ])
         ]),
         facility => [
-          // jika berasal dari rawat jalan atau IGD
+          // jika berasal dari rawat jalan, telemedik, atau IGD
           facility && updateBoth('patients', state.onePatient._id, _.assign(
             state.onePatient, {[facility]: state.onePatient[facility].map(i =>
               i.idrawat === state.oneRawat.idrawat ?

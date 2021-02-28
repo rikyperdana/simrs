@@ -106,7 +106,7 @@ menus = {
     }
   },
   gizi: {full: 'Gizi', icon: 'utensils'},
-  cssd: {full: 'Laundry', icon: 'tshirt'}
+  telemed: {full: 'Telemedic', icon: 'headset'}
 },
 
 db = new Dexie('simrs'),
