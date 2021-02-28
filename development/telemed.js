@@ -28,6 +28,7 @@ _.assign(comp, {
                 state.login.bidang === 1,
                 m('.box',
                   m('h4', 'Konfirmasi Telemedik'),
+                  m('p', 'Catatan pasien: '+(j.pesan || '-')),
                   m(autoForm({
                     id: 'konfirmasiTelemed',
                     layout: {top: [['konfirmasi', 'tanggal'], ['link'], ['keterangan']]},
@@ -59,6 +60,7 @@ _.assign(comp, {
                 state.login.peranan === 3,
                 m('.box',
                   m('h4', 'Mulai proses Telemedic'),
+                  m('p', 'Catatan pasien: '+(j.pesan || '-')),
                   m('.buttons',
                     m('.button.is-primary',
                       {onclick: () => [
@@ -68,7 +70,7 @@ _.assign(comp, {
                       makeIconLabel('book-medical', 'Rekam Medis')
                     ),
                     m('.button.is-warning', m('a',
-                      {href: j.link, target: '_blank'},
+                      {href: j.link, target: '_blank', style: "color: inherit"},
                       makeIconLabel('headset', 'Mulai Streaming')
                     )),
                     m('.button.is-info',
