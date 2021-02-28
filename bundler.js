@@ -9,7 +9,7 @@ concat(
     'outpatient', 'inpatient', 'igd', 'storage',
     'transfer', 'pharmacy', 'cashier', 'management',
     'queue', 'surgery', 'profile', 'radiology',
-    'laboratory', 'laundry', 'gizi', 'reports', 'app'
+    'laboratory', 'telemed', 'gizi', 'reports', 'app'
   ].map(i => ['./development/', i, '.js'].join(''))
 ).then(result => fs.writeFile(
   // keluarkan hasil bundlenya
