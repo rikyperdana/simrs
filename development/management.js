@@ -264,9 +264,11 @@ _.assign(comp, {
                       bayar_kartu: true
                     },
                     _.fromPairs(
-                      ['agama', 'alias', 'darah', 'kelamin', 'ktp',
-                       'nikah', 'no_mr', 'pekerjaan', 'pendidikan']
-                      .map(j => +i[j] ? [j, +i[j]] : ['', ''])
+                      [
+                        'agama', 'alias', 'darah', 'kelamin', 'ktp',
+                        'nikah', 'no_mr', 'pekerjaan', 'pendidikan',
+                        'provinsi', 'kota', 'kecamatan', 'kelurahan'
+                      ].map(j => +i[j] ? [j, +i[j]] : ['', ''])
                     )
                   )}
                 ))
