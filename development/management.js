@@ -247,9 +247,9 @@ _.assign(comp, {
             ),
             updater => ors([
               result.data[0].harga && updater(
-                'references', result.data.map(i =>
-                  _.merge(i, {_id: randomId(), updated: _.now()})
-                )
+                'references', result.data.map(i => _.assign(i, {
+                  _id: randomId(), updated: _.now(), harga: +i.harga
+                }))
               ),
               result.data[0].nama_lengkap && updater(
                 'patients', result.data.map(i => _.merge(
