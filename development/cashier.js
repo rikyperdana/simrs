@@ -117,9 +117,11 @@ _.assign(comp, {
                     state.goodsList.find(l => l._id === k.idbarang),
                     barang => [
                       barang.nama, // carikan harga batch tertinggi di apotik
-                      barang.batch.filter(l => l.stok.apotik)
-                      .sort((a, b) => b.harga.jual - a.harga.jual)
-                      [0].harga.jual
+                      _.get(
+                        (barang.batch || []).filter(l => l.stok.apotik)
+                        .sort((a, b) => b.harga.jual - a.harga.jual)[0],
+                        'harga.jual'
+                      )
                     ]
                   ) : [])
                 ] : []
