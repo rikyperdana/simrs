@@ -39,7 +39,7 @@ var makePdf = {
       '\nPetunjuk :\nS: Setuju\nTS: Tidak Setuju',
       {alignment: 'justify', columns: [
         {text: '\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'},
-        {text: kotaRS+', '+hari(_.now())+'\n\n\n\n__________________\nPasien', alignment: 'center'}
+        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\nPasien', alignment: 'center'}
       ]}
     ]})).download('general_consent_'+identitas.no_mr),
 
@@ -82,7 +82,7 @@ var makePdf = {
         [...bills].map(i => [i.item, rupiah(i.harga)])
       )}},
       '\nTotal Biaya '+rupiah(_.sum(bills.map(i => i.harga))),
-      {text: '\n'+kotaRS+', '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
+      {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
     ]})).download('bayar_konsultasi_'+pasien.identitas.no_mr),
 
   soap: (identitas, rawat) =>
@@ -218,7 +218,7 @@ var makePdf = {
       }},
       {alignment: 'justify', columns: [
         {text: '', alignment: 'center'},
-        {text: '\n'+kotaRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'}
+        {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'}
       ]},
       {text: '\n\n-------------------------------------potong disini------------------------------------------', alignment: 'center'},
       {text: '\nInstruksi penyerahan obat'},
@@ -264,7 +264,7 @@ var makePdf = {
       radiologi.diagnosa, '\n\n\n',
       {alignment: 'justify', columns: [
         {text: '\n\n\n\n__________________\nPasien', alignment: 'center'},
-        {text: kotaRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+lookUser(radiologi.petugas), alignment: 'center'}
+        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+lookUser(radiologi.petugas), alignment: 'center'}
       ]}
     ]})).download('hasil_radiologi_'+identitas.no_mr+'_'+radiologi.kode_berkas),
 
@@ -284,7 +284,7 @@ var makePdf = {
       ]}}, '\n\n\n',
       {alignment: 'justify', columns: [
         {text: '\n\n\n\n__________________\nPasien', alignment: 'center'},
-        {text: kotaRS+', '+hari(_.now())+'\n\n\n\n__________________\nPetugas', alignment: 'center'}
+        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\nPetugas', alignment: 'center'}
       ]}
     ]})).download('hasil_labor_'+identitas.no_mr)
 }

@@ -10,8 +10,7 @@ var selects = (name, sort) => _.reduce(
     darah: ['a', 'b', 'ab', 'o'],
     pekerjaan: ['pns', 'swasta', 'wiraswasta', 'tni', 'polri', 'pensiunan', 'lainnya'],
     cara_bayar: ['umum', 'bpjs', 'asuransi'],
-    kodepoli:     ['int',            'ana',  'obg',   'bed',   'gig'], // referensi INACBGs
-    klinik, tarif_klinik,
+    kodepoli, klinik, tarif_klinik,
     rujukan: ['datang_sendiri', 'rs_lain', 'puskesmas', 'faskes_lainnya'],
     keluar: ['pulang', 'konsultasikan_ke_poli_lain', 'inap'],
     jenis_barang: ['Obat', 'BHP', 'Logistik'],
