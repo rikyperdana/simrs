@@ -4,8 +4,8 @@ fs = require('fs')
 
 concat(
   [ // dafatarkan seluruh file client yg akan dipublish
-    'autoForm', 'functions', 'doms', 'selects', 'schemas',
-    'pdf', 'registration', 'patient', 'icd',
+    'autoForm', 'custom', 'functions', 'doms', 'selects',
+    'schemas', 'pdf', 'registration', 'patient', 'icd',
     'outpatient', 'inpatient', 'igd', 'storage',
     'transfer', 'pharmacy', 'cashier', 'management',
     'queue', 'surgery', 'profile', 'radiology',
