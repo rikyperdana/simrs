@@ -1,6 +1,6 @@
 /*global _ state*/
 
-var selects = name => _.reduce(
+var selects = (name, sort) => _.reduce(
   {
     alias: ['tn', 'ny', 'nn', 'an', 'by'],
     kelamin: ['laki-laki', 'perempuan'],
@@ -25,15 +25,19 @@ var selects = name => _.reduce(
     keaktifan: ['aktif', 'non-aktif'],
     pengarsipan: ['Rumah Sakit', 'Pribadi']
   }, (res, inc, key) =>
-    _.merge(res, {[key]: () => _.map(inc, (val, key) =>
-      ({label: _.startCase(val), value: key+1})
-    )})
+    _.merge(res, {[key]: () =>
+      _.map(inc, (val, key) => ({
+        label: _.startCase(val), value: key+1
+      })).sort((a, b) => sort ? (
+        a.label > b.label ? 1 : -1
+      ) : 1)
+    })
   , {}
 )[name],
 
 look = (category, value) => _.get(
-  selects(category)().find((i, j) =>
-    j+1 === value
+  selects(category)().find(
+    (i, j) => j+1 === value
   ), 'label'
 ) || '-',
 
