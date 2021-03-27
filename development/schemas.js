@@ -276,7 +276,7 @@ var schemas = {
     }},
     kandungan: {type: String, optional: true},
     satuan: {type: Number, autoform: {
-      type: 'select', options: selects('satuan')
+      type: 'select', options: selects('satuan', true)
     }},
     stok_minimum: {type: Object},
     'stok_minimum.gudang': {type: Number},
