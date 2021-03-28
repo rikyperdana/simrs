@@ -6,7 +6,7 @@ _.assign(comp, {
     m('.navbar-brand',
       m('a.navbar-item',
         {onclick: () => state.route = 'dashboard'},
-        "SIMRS.dev"
+        'SIMRS.dev'
       ),
       m('.navbar-burger',
         {

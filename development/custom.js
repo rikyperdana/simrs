@@ -1,7 +1,7 @@
 var kop = {
   text: 'RUMAH SAKIT MEDICARE\nJL. Dt. Laksamana No. 1, Pangkalan Kuras, Pelalawan, Provinsi Riau.\n\n',
   alignment: 'center', bold: true
-}, letakRS = 'Pangkalan Kuras', // kota/kabupaten/desa lokasi RS
+}, namaRS = 'RS Medicare', letakRS = 'Pangkalan Kuras', // kota/kabupaten/desa lokasi RS
 tarifIGD = 45000, tarifKartu = 8000, // dalam rupiah
 kodepoli =     ['int',            'ana',  'obg',   'bed',   'gig'         ], // referensi INACBGs
 klinik =       ['penyakit_dalam', 'anak', 'obgyn', 'bedah', 'gigi', 'umum'], // poliklinik yg tersedia

@@ -30,10 +30,10 @@ var makePdf = {
       {text: '\nPersetujuan Umum General Consent\n', alignment: 'center'},
       {table: {body: [
         ['S', 'TS', {text: 'Keterangan', alignment: 'center'}],
-        ['', '', 'Saya akan mentaati peraturan yang berlaku di RS Medicare.'],
+        ['', '', 'Saya akan mentaati peraturan yang berlaku di '+namaRS+'.'],
         ['', '', 'Saya memberi kuasa kepada dokter dan semua tenaga kesehatan untuk melakukan pemeriksaan / pengobatan / tindakan yang diperlukan dalam upaya kesembuhan saya / pasien tersebut diatas.'],
         ['', '', 'Saya memberi kuasa kepada dokter dan semua tenaga kesehatan yang ikut merawat saya untuk memberikan keterangan medis saya kepada yang bertanggungjawab atas biaya perawatan saya.'],
-        ['', '', 'Saya memberi kuasa kepada RS Medicare untuk menginformasikan identitas sosial saya kepada keluarga / rekan / masyarakat.'],
+        ['', '', 'Saya memberi kuasa kepada '+namaRS+' untuk menginformasikan identitas sosial saya kepada keluarga / rekan / masyarakat.'],
         ['', '', 'Saya mengatakan bahwa informasi hasil pemeriksaan / rekam medis saya dapat digunakan untuk pendidikan / penelitian demi kemajuan ilmu kesehatan.']
       ]}},
       '\nPetunjuk :\nS: Setuju\nTS: Tidak Setuju',
