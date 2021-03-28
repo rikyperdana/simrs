@@ -248,7 +248,7 @@ io().on('connect', socket => [
         'journal', 'litera', 'lumen', 'lux',
         'materia', 'pulse', 'sandstone', 'simplex',
         'spacelab', 'united', 'yeti'
-      ], localStorage.bulmaTheme),
+      ], localStorage.bulmaTheme || defaultTheme),
       !Boolean(localStorage.bulmaTheme)
     ]) && 'has-background-light'},
     comp.navbar(), m('section.section', m('.container',
@@ -264,8 +264,9 @@ io().on('connect', socket => [
         style: 'text-align:center'
       }, 'Hak Cipta: SIMRS.dev (2019); Versi 4.0.9'))
     ),
-    localStorage.bulmaTheme &&
-    m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+localStorage.bulmaTheme+'/bulmaswatch.min.css'})
+    m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+
+      (localStorage.bulmaTheme || defaultTheme)
+    +'/bulmaswatch.min.css'})
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi
   io().on('datachange', (name, doc) => [
