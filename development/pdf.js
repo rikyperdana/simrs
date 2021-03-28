@@ -1,7 +1,6 @@
 /*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds tarifIGD tarifKartu localStorage defaultStyle*/
 
-var kop = {text: 'RUMAH SAKIT MEDICARE\nJL. Dt. Laksamana No. 1, Pangkalan Kuras, Pelalawan, Provinsi Riau.\n\n', alignment: 'center', bold: true},
-makePdf = {
+var makePdf = {
   card: identitas =>
     pdfMake.createPdf(defaultStyle({
       content: [
@@ -31,16 +30,16 @@ makePdf = {
       {text: '\nPersetujuan Umum General Consent\n', alignment: 'center'},
       {table: {body: [
         ['S', 'TS', {text: 'Keterangan', alignment: 'center'}],
-        ['', '', 'Saya akan mentaati peraturan yang berlaku di RS Medicare.'],
+        ['', '', 'Saya akan mentaati peraturan yang berlaku di '+namaRS+'.'],
         ['', '', 'Saya memberi kuasa kepada dokter dan semua tenaga kesehatan untuk melakukan pemeriksaan / pengobatan / tindakan yang diperlukan dalam upaya kesembuhan saya / pasien tersebut diatas.'],
         ['', '', 'Saya memberi kuasa kepada dokter dan semua tenaga kesehatan yang ikut merawat saya untuk memberikan keterangan medis saya kepada yang bertanggungjawab atas biaya perawatan saya.'],
-        ['', '', 'Saya memberi kuasa kepada RS Medicare untuk menginformasikan identitas sosial saya kepada keluarga / rekan / masyarakat.'],
+        ['', '', 'Saya memberi kuasa kepada '+namaRS+' untuk menginformasikan identitas sosial saya kepada keluarga / rekan / masyarakat.'],
         ['', '', 'Saya mengatakan bahwa informasi hasil pemeriksaan / rekam medis saya dapat digunakan untuk pendidikan / penelitian demi kemajuan ilmu kesehatan.']
       ]}},
       '\nPetunjuk :\nS: Setuju\nTS: Tidak Setuju',
       {alignment: 'justify', columns: [
         {text: '\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'},
-        {text: 'Pangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\nPasien', alignment: 'center'}
+        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\nPasien', alignment: 'center'}
       ]}
     ]})).download('general_consent_'+identitas.no_mr),
 
@@ -83,7 +82,7 @@ makePdf = {
         [...bills].map(i => [i.item, rupiah(i.harga)])
       )}},
       '\nTotal Biaya '+rupiah(_.sum(bills.map(i => i.harga))),
-      {text: '\nP. Kuras, '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
+      {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
     ]})).download('bayar_konsultasi_'+pasien.identitas.no_mr),
 
   soap: (identitas, rawat) =>
@@ -219,7 +218,7 @@ makePdf = {
       }},
       {alignment: 'justify', columns: [
         {text: '', alignment: 'center'},
-        {text: '\nPangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'}
+        {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'}
       ]},
       {text: '\n\n-------------------------------------potong disini------------------------------------------', alignment: 'center'},
       {text: '\nInstruksi penyerahan obat'},
@@ -265,7 +264,7 @@ makePdf = {
       radiologi.diagnosa, '\n\n\n',
       {alignment: 'justify', columns: [
         {text: '\n\n\n\n__________________\nPasien', alignment: 'center'},
-        {text: 'Pangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\n'+lookUser(radiologi.petugas), alignment: 'center'}
+        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+lookUser(radiologi.petugas), alignment: 'center'}
       ]}
     ]})).download('hasil_radiologi_'+identitas.no_mr+'_'+radiologi.kode_berkas),
 
@@ -285,7 +284,7 @@ makePdf = {
       ]}}, '\n\n\n',
       {alignment: 'justify', columns: [
         {text: '\n\n\n\n__________________\nPasien', alignment: 'center'},
-        {text: 'Pangkalan Kuras, '+hari(_.now())+'\n\n\n\n__________________\nPetugas', alignment: 'center'}
+        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\nPetugas', alignment: 'center'}
       ]}
     ]})).download('hasil_labor_'+identitas.no_mr)
 }

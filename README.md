@@ -92,6 +92,9 @@ dbname=simrskami
 Bila ingin menggunakan RedisDB sebagai alternatif MongoDB,
 silahkan ikuti panduan khusus pada halaman [SIMRS.dev dengan RedisDB](https://github.com/rikyperdana/simrs/wiki/RedisDB)
 
+### Kustomisasi RS
+Buka file `development/custom.js` dan ubah isi variabel nama RS, alamat RS, letak RS, daftar poliklinik yang tersedia, tarif-tarif layanan setiap poliklinik, tarif IGD, tarif kartu, susunan bed rawat inap, hingga tema tampilan standar RS.
+
 ### Bagian Manajemen
 1. Login dengan username 'admin' password 'admin'
 2. Segera buat akun admin baru dan non-aktifkan akun admin bawaan
