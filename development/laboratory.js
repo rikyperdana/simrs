@@ -5,9 +5,11 @@ _.assign(comp, {
   ? m('p', 'Hanya untuk petugas labor')
   : m('.content',
     state.login.peranan === 4 && reports.laboratory(),
-    m('h1', 'Laboratorium'),
+    m('h3', 'Laboratorium'),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => [
+        state.loading = true,
         db.references.toArray(array => state.references = array),
         db.patients.filter(i => // logicnya berbeda dengan radiologi
           [
@@ -21,23 +23,26 @@ _.assign(comp, {
               k => k.hasil || (k.konfirmasi === 2)
             ).length !== j.soapDokter.labor.length
           ).length
-        ).toArray(arr => state.laboratoryList = arr.flatMap(i =>
-          [
-            ...(i.rawatJalan || []), ...(i.emergency || []),
-            ...(i.rawatInap ? i.rawatInap.flatMap(j => j.observasi.flatMap(
-              k => ({inap: j, observasi: k})
-            )) : [])
-          ]
-          .filter(j => ors([
-            _.get(j, 'soapDokter.labor') &&
-            j.soapDokter.labor.filter(k => k.hasil).length < j.soapDokter.labor.length,
-            _.get(j, 'observasi.labor') &&
-            j.observasi.labor.filter(k => k.hasil).length < j.observasi.labor.length
-          ])).map(j => ors([
-            j.soapDokter && {pasien: i, rawat: j},
-            j.observasi && _.merge(j, {pasien: i})
-          ]))
-        ))
+        ).toArray(arr => [
+          state.laboratoryList = arr.flatMap(i =>
+            [
+              ...(i.rawatJalan || []), ...(i.emergency || []),
+              ...(i.rawatInap ? i.rawatInap.flatMap(j => j.observasi.flatMap(
+                k => ({inap: j, observasi: k})
+              )) : [])
+            ]
+            .filter(j => ors([
+              _.get(j, 'soapDokter.labor') &&
+              j.soapDokter.labor.filter(k => k.hasil).length < j.soapDokter.labor.length,
+              _.get(j, 'observasi.labor') &&
+              j.observasi.labor.filter(k => k.hasil).length < j.observasi.labor.length
+            ])).map(j => ors([
+              j.soapDokter && {pasien: i, rawat: j},
+              j.observasi && _.merge(j, {pasien: i})
+            ]))
+          ),
+          state.loading = false, m.redraw()
+        ])
       ]},
       m('thead', m('tr',
         ['Waktu Permintaan', 'No. MR', 'Nama Pasien', 'Instalasi', 'Dokter', 'Diproses']

@@ -7,6 +7,7 @@ _.assign(comp, {
   m('p', 'Hanya untuk user bidang kasir') : m('.content',
     state.login.peranan === 4 && reports.cashier(),
     m('h3', 'Loket Pembayaran'),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Lengkap', 'Tanggal', 'Layanan', 'Tambahan']
@@ -14,6 +15,7 @@ _.assign(comp, {
       )),
       m('tbody',
         {onupdate: () => [
+          state.loading = true,
           withThis(
             // cari pasien yang masih berhutang biaya
             j => j.cara_bayar === 1 && ors([
@@ -40,7 +42,7 @@ _.assign(comp, {
                 .filter(cashierFilter)
                 .map(j => ({pasien: i, rawat: j}))
               ),
-              m.redraw()
+              state.loading = false, m.redraw()
             ])
           ),
           db.references.toArray(array => state.references = array),

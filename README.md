@@ -63,6 +63,7 @@ Sistem ini dibangun dengan menggunakan spesifikasi sebagai berikut:
 1. `git clone https://github.com/rikyperdana/simrs`
 2. `npm install`
 3. `node server.js`
+4. Browse `localhost:3000`
 
 ### Bagian Database (jika dari Atlas Cloud)
 1. Login MongoDB Atlas, create Free cluster, klik create cluster
