@@ -13,13 +13,15 @@ _.assign(comp, {
         makeIconLabel('filter', state.todayPoliFilter ? 'Seluruh antrian' : 'Saring hari ini')
       )
     ),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
         .map(i => m('th', i))
       )),
       m('tbody',
-        {onupdate: () =>
+        {onupdate: () => [
+          state.loading = true,
           db.patients.toArray(array => [
             state.clinicQueue = array.filter(i => withThis(
               _.last(i.rawatJalan),
@@ -29,9 +31,9 @@ _.assign(comp, {
                 !lastOne.soapDokter
               ])
             )),
-            m.redraw()
+            state.loading = false, m.redraw()
           ])
-        },
+        ]},
         (state.clinicQueue || [])
         .filter(i => state.todayPoliFilter ? withThis(
           _.last(i.rawatJalan).tanggal,

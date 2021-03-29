@@ -8,6 +8,7 @@ _.assign(comp, {
       reports.sales()
     ],
     m('h3', 'Apotik'),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Tanggal berobat', 'Cara bayar', 'Layanan']
@@ -15,6 +16,7 @@ _.assign(comp, {
       )),
       m('tbody',
         {onupdate: () => [
+          state.loading = true,
           db.patients.toArray(array => [
             state.pharmacyList = _.compact(
               array.flatMap(a =>
@@ -43,7 +45,8 @@ _.assign(comp, {
                   )
                 ))
               )
-            ), m.redraw()
+            ),
+            state.loading = false, m.redraw()
           ]),
           db.goods.toArray(array => state.goodsList = array)
         ]},

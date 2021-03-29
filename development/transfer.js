@@ -9,8 +9,10 @@ _.assign(comp, {
   : m('.content',
     state.login.peranan === 4 && reports.transfer(),
     m('h3', 'Daftar antrian amprah'),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => [
+        state.loading = true,
         db.users.toArray(array =>
           state.userList = array
         ),
@@ -25,7 +27,8 @@ _.assign(comp, {
                 })])
               , [])) : c
             , [])) : a
-          , []), m.redraw()
+          , []),
+          state.loading = false, m.redraw()
         ])
       ]},
       m('thead', m('tr',

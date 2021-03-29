@@ -5,10 +5,12 @@ _.assign(comp, {
   ? m('p', 'Hanya untuk petugas radiologi')
   : m('.content',
     state.login.peranan === 4 && reports.radiology(),
-    m('h1', 'Radiologi'),
+    m('h3', 'Radiologi'),
+    state.loading && m('progress.progress.is-small.is-primary'),
     // tabel untuk melihat daftar request radiologi yang direquest dokter
     m('.box', m('.table-container', m('table.table.is-striped',
       {onupdate: () => [
+        state.loading = true,
         // siapkan daftar referensi untuk dilookup
         db.references.toArray(array => state.references = array),
         db.patients.filter(i => ors([ // logicnya berbeda dengan labor
@@ -45,7 +47,7 @@ _.assign(comp, {
               )
             ))
           ]).filter(Boolean),
-          m.redraw()
+          state.loading = false, m.redraw()
         ])
       ]},
       m('thead', m('tr',

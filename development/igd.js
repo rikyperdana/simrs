@@ -3,16 +3,19 @@
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
-    {onupdate: () =>
-      db.patients.toArray(array =>
+    {onupdate: () => [
+      state.loading = true,
+      db.patients.toArray(array => [
         state.emergencyList = array.filter(i =>
           i.emergency && i.emergency.filter(j =>
             !j.soapDokter
           ).length > 0
-        )
-      )
-    },
+        ),
+        state.loading = false, m.redraw()
+      ])
+    ]},
     m('h3', 'Unit Gawat Darurat'),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.box', m('table.table.is-striped',
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Jam Masuk']

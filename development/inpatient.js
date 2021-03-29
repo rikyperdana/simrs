@@ -4,9 +4,11 @@ _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
   m('p', 'Hanya untuk tenaga medis') : m('.content',
     m('h3', 'Daftar Admisi Rawat Inap'),
+    state.loading && m('progress.progress.is-small.is-primary'),
     m('.box', m('.table-container', m('table.table.is-striped',
-      {onupdate: () =>
-        db.patients.toArray(array =>
+      {onupdate: () => [
+        state.loading = true,
+        db.patients.toArray(array => [
           state.admissionList = _.compact(array.flatMap(i =>
             // permintaan rawat inap bisa dari rawat jalan maupun IGD
             [...(i.rawatJalan || []), ...(i.emergency || [])]
@@ -19,9 +21,10 @@ _.assign(comp, {
               ).length === 0,
               {pasien: i, inap: j}
             ]))
-          ))
-        )
-      },
+          )),
+          state.loading = false, m.redraw()
+        ])
+      ]},
       m('thead', m('tr',
         ['No. MR', 'Nama Pasien', 'Tanggal admisi', 'Sumber admisi', 'Dokter']
         .map(i => m('th', i))

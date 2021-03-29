@@ -12,4 +12,4 @@ beds = { // tarif dalam ribu rupiah
   kl2: {tarif: 150, kamar: {seroja: 3, mawar: 2, dahlia: 2, lili: 2, zahara: 2, matahari: 4}},
   kl3: {tarif: 100, kamar: {anggrek: 4, teratai: 7, kertas: 3, melati: 5}}
 },
-defaultTheme = 'default'
+defaultTheme = 'default' // lihat pilihan tema di https://github.com/rikyperdana/simrs/wiki/Theme-Gallery
