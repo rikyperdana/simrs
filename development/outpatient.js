@@ -117,7 +117,7 @@ _.assign(comp, {
             )
           ]},
           tds([
-            hari(i.tanggal),
+            hari(i.tanggal, true),
             look('klinik', i.klinik),
             look('cara_bayar', i.cara_bayar),
             lookUser(_.get(i, 'soapPerawat.perawat')),

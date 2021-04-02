@@ -161,7 +161,8 @@ _.assign(comp, {
                     ) && [
                       updateBoth('patients', updatedPatient._id, updatedPatient),
                       updatedGoods.map(j => updateBoth('goods', j._id, j)),
-                      state.modalSerahObat = null, m.redraw()
+                      _.assign(state, {modalSerahObat: null, pharmacyList: []}),
+                      m.redraw()
                     ]},
                     makeIconLabel('check', 'Selesai')
                   ),
