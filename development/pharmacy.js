@@ -57,7 +57,7 @@ _.assign(comp, {
                 // urai jenis obat yang tersedia di gudang
                 a => _.compact(state.goodsList.map(
                   // cari barang yang diminta oleh pasien
-                  b => b._id === a.idbarang && _.assign(b, {
+                  b => b._id === a.idbarang ? _.assign(b, {
                     batch: b.batch.filter(c => ands([
                       // stok masih ada dan belum kadaluarsa
                       c.stok.apotik, c.kadaluarsa > _.now()
@@ -83,7 +83,7 @@ _.assign(comp, {
                       // jika minim 0 maka lewatkan (bisa jadi habis, belum amprah, atau sudah karantina)
                       ]) : [...c, d]
                     ), [])
-                  })
+                  }) : b
                 ))
               ),
               updatedPatient: _.assign(i.pasien, {
