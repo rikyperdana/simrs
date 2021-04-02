@@ -217,6 +217,7 @@ _.assign(comp, {
       makeIconLabel('cart-arrow-down', 'Penjualan Bebas')
     )
   ),
+
   pharmacySale: () => m('.content',
     m('h3', 'Penjualan Bebas Obat & BHP'),
     m(autoForm({
