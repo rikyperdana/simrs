@@ -83,7 +83,7 @@ _.assign(comp, {
                       // jika minim 0 maka lewatkan (bisa jadi habis, belum amprah, atau sudah karantina)
                       ]) : [...c, d]
                     ), [])
-                  }) : b
+                  }) : null // hanya update obat yang stoknya berubah
                 ))
               ),
               updatedPatient: _.assign(i.pasien, {

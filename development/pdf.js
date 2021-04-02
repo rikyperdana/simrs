@@ -1,4 +1,4 @@
-/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds tarifIGD tarifKartu localStorage defaultStyle*/
+/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds tarifIGD tarifKartu localStorage defaultStyle kop namaRS letakRS*/
 
 var makePdf = {
   card: identitas =>
@@ -199,7 +199,6 @@ var makePdf = {
       ].filter(Boolean) : ''
     ]})).download('soap_'+identitas.no_mr),
 
-  // TODO: no_mr dan nama pasien pada salinan resep
   resep: (drugs, pasien) =>
     pdfMake.createPdf(defaultStyle({content: [
       kop,
@@ -224,11 +223,11 @@ var makePdf = {
         {text: '', alignment: 'center'},
         {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'}
       ]},
-      {text: '\n\n-------------------------------------potong disini------------------------------------------', alignment: 'center'},
+      {text: '\n\n\n-------------------------------------potong disini------------------------------------------', alignment: 'center'},
       {table: {widths: ['auto', '*'], body: [
         ['No. MR', ': '+pasien.no_mr],
         ['Nama Pasien', ': '+pasien.nama_lengkap]
-      ]}, layout: 'noBorders'}, '\n',
+      ]}, layout: 'noBorders'},
       {text: '\nInstruksi penyerahan obat'},
       {table: {body: [
         ['Nama Barang', 'Merek', 'No. Batch', 'Jumlah', 'Kode Rak'],
