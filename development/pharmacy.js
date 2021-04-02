@@ -151,7 +151,7 @@ _.assign(comp, {
                 m('p.buttons',
                   m('.button.is-info',
                     {onclick: () => makePdf.resep(
-                      serahList, updatedPatient.identitas.no_mr
+                      serahList, updatedPatient.identitas
                     )},
                     makeIconLabel('print', 'Cetak salinan resep')
                   ),
