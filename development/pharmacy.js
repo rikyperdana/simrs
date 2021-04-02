@@ -247,40 +247,39 @@ _.assign(comp, {
       action: doc => withThis(
         {serahList: [], updatedGoods: []},
         ({serahList, updatedGoods}) => [
-          updatedGoods.push([
-            ...(doc.obat || []), ...(doc.bhp || []),
-          ].flatMap(i => state.goodsList.flatMap(
-            j => j._id === i.idbarang &&
-            _.assign(j, {batch: j.batch
-              .filter(k => ands([
-                k.stok.apotik,
-                k.kadaluarsa > _.now()
-              ]))
-              .sort((a, b) => a.kadaluarsa - b.kadaluarsa)
-              .reduce((res, inc) => [
-                ...res, i.jumlah ? withThis(
-                  _.min([inc.stok.apotik, i.jumlah]),
-                  minim => minim ? ands([
-                    serahList.push({
-                      nama: j.nama, no_batch: inc.no_batch,
-                      jumlah: minim, harga: inc.harga.jual * minim
-                    }),
-                    _.assign(i, {jumlah: i.jumlah - minim}),
-                    _.assign(inc, {
-                      stok: _.assign(inc.stok, {
-                        apotik: inc.stok.apotik - minim
+          updatedGoods.push(
+            [...(doc.obat || []), ...(doc.bhp || [])]
+            .flatMap(i => state.goodsList.flatMap(
+              j => j._id === i.idbarang ? _.assign(j, {
+                batch: j.batch.filter(k => ands([
+                  k.stok.apotik, k.kadaluarsa > _.now()
+                ]))
+                .sort((a, b) => a.kadaluarsa - b.kadaluarsa)
+                .reduce((res, inc) => [
+                  ...res, i.jumlah ? withThis(
+                    _.min([inc.stok.apotik, i.jumlah]),
+                    minim => minim ? ands([
+                      serahList.push({
+                        nama: j.nama, no_batch: inc.no_batch,
+                        jumlah: minim, harga: inc.harga.jual * minim
                       }),
-                      penjualan: [...(inc.penjualan || []), {
-                        idpenjualan: doc.idpenjualan,
-                        jumlah: minim, tanggal: _.now(),
-                        user: state.login._id
-                      }]
-                    })
-                  ]) : inc
-                ) : inc
-              ], []
-            )})
-          ).filter(Boolean))),
+                      _.assign(i, {jumlah: i.jumlah - minim}),
+                      _.assign(inc, {
+                        stok: _.assign(inc.stok, {
+                          apotik: inc.stok.apotik - minim
+                        }),
+                        penjualan: [...(inc.penjualan || []), {
+                          idpenjualan: doc.idpenjualan,
+                          jumlah: minim, tanggal: _.now(),
+                          user: state.login._id
+                        }]
+                      })
+                    ]) : inc
+                  ) : inc
+                ], [])
+              }) : j
+            ).filter(Boolean))
+          ),
           state.modalPenjualanBebas = m('.box',
             m('h3', 'Konfirmasi Penjualan'),
             m('table.table',
