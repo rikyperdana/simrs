@@ -302,7 +302,7 @@ var schemas = {
         type: 'select', options: selects('boolean')
       }
     },
-    kode_rak: {type: String, optional: true, label: 'Kode Rak Apotik'},
+    kode_rak: {type: String, label: 'Kode Rak Apotik'},
     petugas: {
       type: String, autoform: {type: 'hidden'},
       autoValue: () => _.get(state.login, '_id')
@@ -321,8 +321,8 @@ var schemas = {
     stok: {type: Object},
     'stok.gudang': {type: Number, autoform: {help: 'Berdasarkan unit terkecil'}},
     harga: {type: Object},
-    'harga.beli': {type: Number},
-    'harga.jual': {type: Number},
+    'harga.beli': {type: Number, autoform: {help: 'Berdasarkan unit terkecil'}},
+    'harga.jual': {type: Number, autoform: {help: 'Berdasarkan unit terkecil'}},
     sumber: {type: Object},
     'sumber.supplier': {type: String},
     'sumber.anggaran': {type: String, optional: true},

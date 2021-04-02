@@ -199,21 +199,25 @@ var makePdf = {
       ].filter(Boolean) : ''
     ]})).download('soap_'+identitas.no_mr),
 
-  resep: (drugs, no_mr) =>
+  // TODO: no_mr dan nama pasien pada salinan resep
+  resep: (drugs, pasien) =>
     pdfMake.createPdf(defaultStyle({content: [
       kop,
+      {table: {widths: ['auto', '*'], body: [
+        ['No. MR', ': '+pasien.no_mr],
+        ['Nama Pasien', ': '+pasien.nama_lengkap]
+      ]}, layout: 'noBorders'}, '\n',
       {text: 'Salinan Resep\n\n', alignment: 'center', bold: true},
       {table: {
-        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: [
-          ['Nama Obat', 'Jumlah', 'Kali', 'Dosis', 'Puyer', 'Harga'],
+          ['Nama Obat', 'Merek', 'Jumlah', 'Kali', 'Dosis', 'Puyer', 'Harga'],
           ...[...drugs].map(i => [
-            i.nama_barang, i.serahkan+' unit',
-            _.get(i, 'aturan.kali') || '-',
-            _.get(i, 'aturan.dosis') || '-',
+            i.nama_barang, i.merek, i.serahkan+' unit',
+            _.get(i, 'aturan.kali') || '-', _.get(i, 'aturan.dosis') || '-',
             i.puyer || '-', rupiah(i.harga || i.jual)
           ]),
-          ['Total', '', '', '', '', rupiah(_.sum(drugs.map(i => i.harga || i.jual)))]
+          ['Total', '', '', '', '', '', rupiah(_.sum(drugs.map(i => i.harga || i.jual)))]
         ]
       }},
       {alignment: 'justify', columns: [
@@ -221,12 +225,16 @@ var makePdf = {
         {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+state.login.nama, alignment: 'center'}
       ]},
       {text: '\n\n-------------------------------------potong disini------------------------------------------', alignment: 'center'},
+      {table: {widths: ['auto', '*'], body: [
+        ['No. MR', ': '+pasien.no_mr],
+        ['Nama Pasien', ': '+pasien.nama_lengkap]
+      ]}, layout: 'noBorders'}, '\n',
       {text: '\nInstruksi penyerahan obat'},
       {table: {body: [
-        ['Nama Barang', 'No. Batch', 'Jumlah'],
-        ...drugs.map(i => [i.nama_barang, i.no_batch, i.serahkan])
+        ['Nama Barang', 'Merek', 'No. Batch', 'Jumlah', 'Kode Rak'],
+        ...drugs.map(i => [i.nama_barang, i.merek, i.no_batch, i.serahkan, i.kode_rak])
       ]}}
-    ]})).download('salinan_resep_'+no_mr),
+    ]})).download('salinan_resep_'+pasien.no_mr),
 
   report: (title, rows, info) =>
     pdfMake.createPdf(defaultStyle({
