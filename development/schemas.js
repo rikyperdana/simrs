@@ -302,7 +302,7 @@ var schemas = {
         type: 'select', options: selects('boolean')
       }
     },
-    kode_rak: {type: String, optional: true, label: 'Kode Rak Apotik'},
+    kode_rak: {type: String, label: 'Kode Rak Apotik'},
     petugas: {
       type: String, autoform: {type: 'hidden'},
       autoValue: () => _.get(state.login, '_id')

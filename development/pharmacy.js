@@ -73,8 +73,8 @@ _.assign(comp, {
                         _.assign(a, {sisa: a.sisa - minim}),
                         // simpan daftar batch berikut dengan jumlah pengurangannya
                         serahList.push(_.merge({}, a, {
-                          nama_barang: b.nama, no_batch: d.no_batch,
-                          serahkan: minim, jual: minim * d.harga.jual
+                          nama_barang: b.nama, no_batch: d.no_batch, merek: d.merek,
+                          serahkan: minim, jual: minim * d.harga.jual, kode_rak: b.kode_rak
                         })),
                         [...c, _.assign(d, {stok: _.assign(
                           // kurangi stok diapotik sebanyak minim
@@ -134,9 +134,9 @@ _.assign(comp, {
             ({updatedGoods, updatedPatient}) =>
               state.modalSerahObat = m('.box',
                 m('h4', 'Penyerahan obat'),
-                m('table.table',
+                m('.table-container', m('table.table',
                   m('thead', m('tr',
-                    ['Nama obat', 'No. Batch', 'Merek', 'Ambil', 'Kali', 'Dosis', 'Puyer']
+                    ['Nama obat', 'No. Batch', 'Merek', 'Ambil', 'Kali', 'Dosis', 'Puyer', 'Kode Rak']
                     .map(j => m('th', j))
                   )),
                   m('tbody', serahList.map(j => m('tr',
@@ -144,10 +144,10 @@ _.assign(comp, {
                       j.nama_barang, j.no_batch, j.merek, j.serahkan,
                       j.aturan && j.aturan.kali || '-',
                       j.aturan && j.aturan.dosis || '-',
-                      j.puyer || '-'
+                      j.puyer || '-', j.kode_rak
                     ].map(k => m('td', k))
                   )))
-                ),
+                )),
                 m('p.buttons',
                   m('.button.is-info',
                     {onclick: () => makePdf.resep(
