@@ -99,12 +99,12 @@ _.assign(comp, {
                 id: 'updateLicense',
                 schema: {key: {type: String, autoform: {
                   placeholder: 'Dapatkan dari developer'
-                }}},
+                }}}, // kombinasi angka, huruf, dan simbol
                 action: ({key}) => key.length === 15 && [
                   withThis(['license', key.split(' ').reverse().join(''), localStorage],
                   name => _.last(name).setItem(_.first(name), +(name[+true]+'e5'))),
-                  state.modalLicense = null,
-                  m.redraw()
+                  state.modalLicense = null, m.redraw(),
+                  alert('Berhasil aktifkan versi Enterprise.')
                 ]
               }))
             ),

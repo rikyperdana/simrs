@@ -123,7 +123,7 @@ getDifference = name => db[name].toArray(array => dbCall(
   ])
 ),
 
-getDifferences = () => collNames.map(name => getDifference(name))
+getDifferences = () => collNames.map(getDifference)
 
 db.version(1).stores(collNames.reduce((res, inc) =>
   _.merge(res, {[inc]: '_id'})

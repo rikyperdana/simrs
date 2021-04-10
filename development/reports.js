@@ -43,29 +43,8 @@ var reports = {
                 i.rawat.klinik && look('klinik', i.rawat.klinik),
                 i.rawat.bed && 'Rawat Inap', 'IGD'
               ]),
-              rupiah(ors([ // tarif layanan tersebut
-                i.rawat.klinik &&
-                +look('tarif_klinik', i.rawat.klinik)*1000,
-                i.rawat.bed && tarifInap(
-                  i.rawat.tanggal_masuk, i.rawat.keluar,
-                  beds[_.get(i.rawat.bed, 'kelas')].tarif
-                ),
-                tarifIGD
-              ])),
-              rupiah(_.get(i, 'rawat.soapDokter.obat') ? _.sum(
-                i.rawat.soapDokter.obat.map(j => j.harga)
-              ) : 0),
-              rupiah(_.get(i, 'rawat.soapDokter.tindakan') ? _.sum(
-                i.rawat.soapDokter.tindakan.map(
-                  j => +_.get(lookReferences(j.idtindakan), 'harga')
-                )
-              ) : 0),
-              rupiah(_.sum(
-                (i.rawat.charges || [])
-                .map(j => j.harga)
-              )),
-              rupiah(_.sum([
-                ors([
+              ...withThis([
+                ors([ // tarif layanan tersebut
                   i.rawat.klinik &&
                   +look('tarif_klinik', i.rawat.klinik)*1000,
                   i.rawat.bed && tarifInap(
@@ -82,10 +61,9 @@ var reports = {
                     j => +_.get(lookReferences(j.idtindakan), 'harga')
                   )
                 ) : 0,
-                _.get(i, 'rawat.charges') ? _.sum(
-                  i.rawat.charges.map(j => j.harga)
-                ) : 0
-              ])),
+                // TODO: Bhp belum masuk
+                _.sum((i.rawat.charges || []).map(j => j.harga)),
+              ], array => [...array, _.sum(array)].map(rupiah)),
               lookUser(i.rawat.kasir)
             ])
           ],
