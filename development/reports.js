@@ -36,7 +36,7 @@ var reports = {
             ).filter(l => l.length))
             .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
             .map(i => [
-              hari(i.rawat.tanggal || i.rawat.tanggal_masuk),
+              hari(i.rawat.tanggal || i.rawat.tanggal_masuk, true),
               String(i.pasien.identitas.no_mr),
               i.pasien.identitas.nama_lengkap,
               ors([ // pilihan layanan
@@ -161,13 +161,12 @@ var reports = {
           .flatMap(({pasien, rawat}) =>
             _.get(rawat, 'soapDokter.obat') &&
             rawat.soapDokter.obat.map(i => i.harga && [
-              hari(rawat.tanggal),
+              hari(rawat.tanggal, true),
               pasien.identitas.no_mr,
               pasien.identitas.nama_lengkap,
               ors([
                 rawat.klinik && look('klinik', rawat.klinik),
-                rawat.idinap && 'Rawat Inap',
-                'Gawat Darurat'
+                rawat.idinap && 'Rawat Inap', 'IGD'
               ]),
               lookUser(rawat.soapDokter.dokter),
               lookGoods(i.idbarang).nama,
@@ -200,7 +199,7 @@ var reports = {
                 rawat.soapDokter,
                 between(date.start, rawat.tanggal, date.end)
               ]) && [
-                hari(rawat.tanggal),
+                hari(rawat.tanggal, true),
                 pasien.identitas.no_mr.toString(),
                 pasien.identitas.nama_lengkap,
                 lookUser(_.get(rawat, 'soapPerawat.perawat')),
@@ -233,7 +232,7 @@ var reports = {
                 rawat.keluar,
                 between(date.start, rawat.tanggal_masuk, date.end)
               ]) && [
-                hari(rawat.tanggal_masuk),
+                hari(rawat.tanggal_masuk, true),
                 pasien.identitas.no_mr.toString(),
                 pasien.identitas.nama_lengkap,
                 rawat.observasi.map(i =>
@@ -274,7 +273,7 @@ var reports = {
           ]))
           .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
           .map(({pasien, rawat}) => [
-            hari(rawat.tanggal),
+            hari(rawat.tanggal, true),
             look('klinik', rawat.klinik),
             pasien.identitas.no_mr.toString(),
             pasien.identitas.nama_lengkap,

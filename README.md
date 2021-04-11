@@ -139,7 +139,7 @@ ___
 ___
 ### Rawat Inap
 <img align="left" src="https://user-images.githubusercontent.com/11875540/94101265-bfb3d680-fe59-11ea-8971-0117dd154e81.png" alt="drawing" width="200"/> Adalah menu yang dapat digunakan oleh seluruh tenaga medis (perawat/dokter) untuk melayani pasien yang butuh diadmisi ke rawat inap dan yang telah ditempatkan pada bed. Pada rincian rawat inap, tersedia baris observasi yang bisa ditambah dan diisi dengan SOAP perawat/dokter, berikut dengan tombol untuk memulangkan pasien.
-Pemetaan ketersediaan bed rawat inap dapat diubah pada file `public/inpatient.js` dalam variabel `beds`. Dengan struktur:
+Pemetaan ketersediaan bed rawat inap dapat diubah pada file `custom.js` dalam variabel `beds`. Dengan struktur:
 `{kelas: {tarif, kamar: {nama_kamar: jumlah_bed}}}`
 
 ___
