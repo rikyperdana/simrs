@@ -59,7 +59,7 @@ deleteBoth = (collName, _id, cb) => dbCall(
 ),
 
 tarifInap = (masuk, keluar, tarif) =>
-  (daysDifference(keluar - masuk) || 1) * 1000 * +tarif,
+  (daysDifference(masuk, keluar) || 1) * 1000 * +tarif,
 
 sanitize = string => string.replace(/\;/g, ''),
 
@@ -120,8 +120,8 @@ getDifference = name => db[name].toArray(array => dbCall(
     db[name].bulkPut(res),
     _.assign(state, {lastSync: _.now(), loading: false}),
     m.redraw()
-  ])
-),
+  ]
+)),
 
 getDifferences = () => collNames.map(getDifference)
 
