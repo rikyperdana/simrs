@@ -116,7 +116,7 @@ _.assign(comp, {
           {onclick: () => state.modalThemeSelect = m('.box',
             m('h3', 'Ganti Tema SIMRS'),
             m('a', {
-              href: 'https://jenil.github.io/bulmaswatch/',
+              href: 'https://github.com/rikyperdana/simrs/wiki/Theme-Gallery',
               target: '_blank'
             }, 'Lihat galeri pilihan tema'),
             m('p', 'Tema saat ini: ' + _.startCase(localStorage.bulmaTheme)),
@@ -144,9 +144,7 @@ _.assign(comp, {
         )
       ))
     ),
-    makeModal('modalProfile'),
-    makeModal('modalLicense'),
-    makeModal('modalThemeSelect'),
+    ['modalProfile', 'modalLicense', 'modalThemeSelect'].map(makeModal),
     state.login.peranan === 3 && [
       m('br'), m('br'),
       m('h4', 'Logbook Dokter'),

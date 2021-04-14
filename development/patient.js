@@ -110,8 +110,7 @@ _.assign(comp, {
           makeIconLabel(i.icon, i.label)
         ))
       ),
-      makeModal('modalRekapSoap'),
-      makeModal('modalKredensial'),
+      ['modalRekapSoap', 'modalKredensial'].map(makeModal),
       m('.tabs.is-boxed', m('ul',
         {style: 'margin-left: 0%'},
         _.map({

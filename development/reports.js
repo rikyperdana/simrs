@@ -55,14 +55,14 @@ var reports = {
                 ]),
                 _.get(i, 'rawat.soapDokter.obat') ? _.sum(
                   i.rawat.soapDokter.obat.map(j => j.harga)
-                ) : 0,
+                ) : 0, // tagihan obat, bila ada
                 _.get(i, 'rawat.soapDokter.tindakan') ? _.sum(
                   i.rawat.soapDokter.tindakan.map(
                     j => +_.get(lookReferences(j.idtindakan), 'harga')
-                  )
+                  ) // tagihan tindakan, bila ada
                 ) : 0,
                 // TODO: Bhp belum masuk
-                _.sum((i.rawat.charges || []).map(j => j.harga)),
+                _.sum((i.rawat.charges || []).map(j => j.harga)), // tagihan lainnya, bila ada
               ], array => [...array, _.sum(array)].map(rupiah)),
               lookUser(i.rawat.kasir)
             ])
