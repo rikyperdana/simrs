@@ -1,6 +1,8 @@
 # SIMRS.dev
 > SIMRS Open Source Terintegrasi Pertama yang menggunakan NodeJS + MongoDB/RedisDB
 
+> SIMRS ini bobotnya hanya 120 Kb alias 0.12 Mb (silahkan cek folder `/production`). Lengkap sekaligus sangat ringan
+
 Bismillahirrahmanirrahim,
 
 ## Update!
@@ -211,4 +213,5 @@ Lampiran [Hak Cipta](https://drive.google.com/file/d/1WvzHdWEZrsszxUD1txK-30fEta
 - Menggunakan software ini tidak sesuai dengan panduan merupakan tanggungjawab dari masing-masing pengguna.
 - Penyalahgunaan sistem ini baik secara sengaja maupun tidak sengaja merupakan tanggungjawab dari pengguna.
 - Seluruh data yang diinput oleh user ke database melalui software ini merupakan tanggungjawab masing-masing pengguna.
+- Aplikasi ini mungkin masih mengandung bugs baik yang disadari oleh developer ataupun tidak, gunakan dengan tanggungjawab masing-masing.
 - Ketentuan ini dapat diubah sewaktu-waktu baik dengan atau tanpa pemberitahuan terlebih dahulu kepada pengguna.

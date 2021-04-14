@@ -185,6 +185,30 @@ _.assign(comp, {
                   ]},
                   makeIconLabel('user-md', 'Tambah observasi')
                 ),
+                m('.button.is-warning',
+                  {onclick: () => [
+                    _.assign(state, {
+                      modalObservasi: null,
+                      modalBedChange: m('.box',
+                        m('h4', 'Pindahkan Bed Pasien'),
+                        m(autoForm({
+                          id: 'formBedChange', schema: schemas.beds,
+                          layout: {top: [['kelas', 'kamar', 'nomor']]},
+                          confirmMessage: 'Yakin untuk memindahkan bed pasien?',
+                          action: doc => updateBoth(
+                            'patients', state.onePatient._id,
+                            _.assign(state.onePatient, {
+                              rawatInap: state.onePatient.rawatInap.map(
+                                j => j.idinap !== i.idinap ? j : _.assign(j, doc)
+                              )
+                            })
+                          )
+                        }))
+                      )
+                    }), m.redraw()
+                  ]},
+                  makeIconLabel('exchange-alt', 'Pindah Bed')
+                ),
                 m('.button.is-danger',
                   {onclick: () => [
                     confirm('Yakin untuk pulangkan pasien?') &&
@@ -216,7 +240,7 @@ _.assign(comp, {
         ))
       )
     ))),
-    makeModal('modalObservasi')
+    ['modalObservasi', 'modalBedChange'].map(makeModal)
   ),
 
   beds: () => !ors([

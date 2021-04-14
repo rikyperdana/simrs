@@ -193,7 +193,6 @@ _.assign(comp, {
         ))
       )
     ))),
-    makeModal('modalICD10'),
-    makeModal('modalICD9')
+    ['modalICD10', 'modalICD9'].map(makeModal)
   )
 })
