@@ -557,5 +557,7 @@ layouts = {
   tarif: {top: [
     ['nama'], ['harga', 'keaktifan'],
     ['grupI', 'grupII', 'grupIII']
-  ]}
+  ]},
+
+  beds: {top: [['kelas', 'kamar', 'nomor']]},
 }
