@@ -49,8 +49,7 @@ _.assign(comp, {
               ].map(j => m('tr', m('th', j[0]), m('td', j[1]))),
             ),
             m(autoForm({
-              id: 'formBed', schema: schemas.beds,
-              layout: {top: [['kelas', 'kamar', 'nomor']]},
+              id: 'formBed', schema: schemas.beds, layout: layouts.beds,
               action: doc => [
                 // Pastikan dulu pilihan kamarnya valid, baru update
                 +_.get(beds, [doc.kelas, 'kamar', doc.kamar])+1 > doc.nomor &&
@@ -192,18 +191,21 @@ _.assign(comp, {
                       modalBedChange: m('.box',
                         m('h4', 'Pindahkan Bed Pasien'),
                         m(autoForm({
-                          id: 'formBedChange', schema: schemas.beds,
-                          layout: {top: [['kelas', 'kamar', 'nomor']]},
+                          id: 'formBedChange', schema: schemas.beds, layout: layouts.beds,
                           confirmMessage: 'Yakin untuk memindahkan bed pasien?',
-                          action: doc => updateBoth(
-                            'patients', state.onePatient._id,
-                            _.assign(state.onePatient, {
-                              rawatInap: state.onePatient.rawatInap.map(
-                                j => j.idinap !== i.idinap ? j : _.assign(j, doc)
-                              )
-                            })
-                          )
-                        }))
+                          action: doc =>
+                            +_.get(beds, [doc.kelas, 'kamar', doc.kamar])+1 > doc.nomor &&
+                            updateBoth(
+                              'patients', state.onePatient._id,
+                              _.assign(state.onePatient, {
+                                rawatInap: state.onePatient.rawatInap.map(
+                                  j => j.idinap !== i.idinap ? j : _.assign(j, doc)
+                                )
+                              })
+                            )
+                        })),
+                        m('p.help', '* Pastikan pilihan Kelas/Kamar/Bed valid.'),
+                        m('p.help', '* Penagihan biaya di kasir akan berdasarkan kamar terakhir.')
                       )
                     }), m.redraw()
                   ]},
@@ -230,7 +232,7 @@ _.assign(comp, {
           },
           makeModal('modalSoap'),
           tds([
-            hari(i.tanggal_masuk),
+            hari(i.tanggal_masuk, true),
             i.bed && [
               _.upperCase(i.bed.kelas),
               _.startCase(i.bed.kamar),
