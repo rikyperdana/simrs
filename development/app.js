@@ -1,4 +1,4 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor makeIconLabel*/
+/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor makeIconLabel defaultTheme*/
 
 var topMenus = _.omit(menus, ['gizi', 'telemed'])
 _.assign(comp, {
@@ -262,7 +262,7 @@ io().on('connect', socket => [
         href: 'https://github.com/rikyperdana/simrs',
         target: '_blank',
         style: 'text-align:center'
-      }, 'Hak Cipta: SIMRS.dev (2019); Versi 4.6.2'))
+      }, 'Hak Cipta: SIMRS.dev (2019); Versi 4.7.8'))
     ),
     m('link', {rel: 'stylesheet', href:'https://unpkg.com/bulmaswatch/'+
       (localStorage.bulmaTheme || defaultTheme)
