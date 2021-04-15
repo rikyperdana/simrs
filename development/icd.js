@@ -35,27 +35,24 @@ _.assign(comp, {
         ]},
         (state.codifications || [])
         .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
-        .map(({pasien, rawat}) => m('tr',
-          m('td', pasien.identitas.nama_lengkap),
-          m('td', hari(rawat.tanggal)),
-          m('td', ors([
+        .map(({pasien, rawat}) => m('tr', tds([
+          pasien.identitas.nama_lengkap, hari(rawat.tanggal, true),
+          ors([
             rawat.klinik && look('klinik', rawat.klinik),
             rawat.idrawat && 'IGD', 'Rawat Inap'
-          ])),
-          m('td',
-            lookUser(_.get(rawat, 'soapPerawat.perawat'))),
-            m('td', lookUser(rawat.soapDokter.dokter)
-          ),
-          m('td', m('.button',
+          ]),
+          lookUser(_.get(rawat, 'soapPerawat.perawat')),
+          lookUser(rawat.soapDokter.dokter),
+          m('.button',
             {onclick: () =>
               state.modalICD10 = m('.box',
                 m('h4', 'Form kodifikasi diagnosa ICD10'),
                 m('form',
-                  {onsubmit: e => confirm('Yakin dengan ICD ini?') && withThis(
+                  {onsubmit: e => confirm('Yakin dengan isian ICD ini?') && withThis(
                     rawat.idrawat && rawat.klinik ? 'rawatJalan' : 'emergency',
                     facility => [
                       e.preventDefault(),
-                      rawat.idrawat ? updateBoth(
+                      !rawat.idinap ? updateBoth(
                         'patients', pasien._id,
                         _.assign({
                           _id: pasien._id, identitas: pasien.identitas,
@@ -103,11 +100,9 @@ _.assign(comp, {
                   )},
                   m('table.table',
                     m('thead', m('tr', m('th', 'Teks'), m('th', 'Kode'))),
-                    m('tbody', rawat.soapDokter.diagnosa.map((b, c) => m('tr',
-                      m('td', b.text), m('td', m('input.input', {
-                        type: 'text', name: c, value: b.code
-                      }))
-                    )))
+                    m('tbody', rawat.soapDokter.diagnosa.map((b, c) => m('tr', tds([
+                      b.text, m('input.input', {type: 'text', name: c, value: b.code})
+                    ]))))
                   ),
                   m('input.button.is-primary', {type: 'submit', value: 'Submit'})
                 )
@@ -116,8 +111,8 @@ _.assign(comp, {
             _.every((
               _.get(rawat, 'soapDokter.diagnosa') || []
             ).map(b => b.code)) ? 'Selesai' : 'Belum'
-          )),
-          m('td', rawat.soapDokter.tindakan && m('.button',
+          ),
+          rawat.soapDokter.tindakan && m('.button',
             {onclick: () =>
               state.modalICD9 = m('.box',
                 m('h4', 'Form kodifikasi tindakan ICD9'),
@@ -175,12 +170,10 @@ _.assign(comp, {
                   m('table.table',
                     m('thead', m('tr', m('th', 'Teks'), m('th', 'Kode'))),
                     m('tbody', (_.get(rawat, 'soapDokter.tindakan') || [])
-                    .map((b, c) => m('tr',
-                      m('td', lookReferences(b.idtindakan).nama),
-                      m('td', m('input.input', {
-                        type: 'text', name: c, value: b.code
-                      }))
-                    )))
+                    .map((b, c) => m('tr', tds([
+                      lookReferences(b.idtindakan).nama,
+                      m('input.input', {type: 'text', name: c, value: b.code})
+                    ]))))
                   ),
                   m('input.button.is-primary', {type: 'submit', value: 'Submit'})
                 )
@@ -189,8 +182,8 @@ _.assign(comp, {
             _.every((
               _.get(rawat, 'soapDokter.tindakan') || []
             ).map(b => b.code)) ? 'Selesai' : 'Belum'
-          ))
-        ))
+          )
+        ])))
       )
     ))),
     ['modalICD10', 'modalICD9'].map(makeModal)
