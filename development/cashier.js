@@ -213,8 +213,7 @@ _.assign(comp, {
               hari(rawat.tanggal || rawat.tanggal_masuk),
               ors([
                 rawat.klinik && look('klinik', rawat.klinik),
-                rawat.bed && 'Rawat Inap',
-                'IGD'
+                rawat.bed && 'Rawat Inap', 'IGD'
               ]),
               rawat.charges ? (rawat.charges.length + ' item') : ''
             ])

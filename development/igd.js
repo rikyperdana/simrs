@@ -34,13 +34,16 @@ _.assign(comp, {
             }),
             m.redraw()
           ]},
-          m('td', i.identitas.no_mr),
-          m('td', i.identitas.nama_lengkap),
-          m('td', hari(_.get(_.last(i.emergency), 'tanggal'), true))
+          tds([
+            i.identitas.no_mr,
+            i.identitas.nama_lengkap,
+            hari(_.get(_.last(i.emergency), 'tanggal'), true)
+          ])
         ))
       )
     ))
   ),
+
   emergencyHistory: () => m('.content',
     m('.box', m('.table-container', m('table.table',
       m('thead', m('tr',
@@ -88,7 +91,7 @@ _.assign(comp, {
             )
           },
           tds([
-            hari(i.tanggal),
+            hari(i.tanggal, true),
             look('cara_bayar', i.cara_bayar),
             lookUser(_.get(i, 'soapPerawat.perawat')),
             lookUser(_.get(i, 'soapDokter.dokter'))
@@ -128,9 +131,9 @@ _.assign(comp, {
       confirmMessage: 'Yakin untuk mendaftarkan pasien ke IGD?',
       action: doc => [
         updateBoth('patients', state.onePatient._id, _.assign(
-          state.onePatient, {emergency:
-            [...(_.get(state, 'onePatient.emergency') || []), doc]
-          }
+          state.onePatient, {emergency: [
+            ...(_.get(state, 'onePatient.emergency') || []), doc
+          ]}
         )),
         state.route = 'onePatient',
         m.redraw()

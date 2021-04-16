@@ -1,4 +1,4 @@
-/*global _ m comp db state ors hari look lookUser lookReferences updateBoth makeModal withThis*/
+/*global _ m comp db state ors hari look lookUser lookReferences updateBoth makeModal withThis tds*/
 
 _.assign(comp, {
   icd: () => state.login.bidang !== 1 ?
