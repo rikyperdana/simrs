@@ -42,25 +42,8 @@ _.assign(comp, {
               m('h4', 'Akses Pasien Telemedic'),
               m(autoForm({
                 id: 'kredensialForm',
-                layout: {top: [
-                  ['username', 'password'], ['keaktifan']
-                ]},
                 doc: _.get(state.onePatient, 'identitas.kredensial') || {},
-                schema: {
-                  username: {
-                    type: String,
-                    autoform: {type: 'readonly'},
-                    autoValue: (name, form, opts) =>
-                      opts.doc[name] || [
-                        _.snakeCase(state.onePatient.identitas.nama_lengkap),
-                        Math.round(Math.random()*100)
-                      ].join('_')
-                  },
-                  password: {type: String, autoform: {type: 'password'}},
-                  keaktifan: {type: Number, autoform: {
-                    type: 'select', options: selects('keaktifan')
-                  }}
-                },
+                schema: schemas.telemedCred, layout: layouts.telemedCred,
                 action: doc => io().emit('bcrypt', doc.password,
                   res => res && updateBoth(
                     'patients', state.onePatient._id,

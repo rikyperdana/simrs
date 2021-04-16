@@ -460,7 +460,25 @@ var schemas = {
     keaktifan: {type: Number, autoform: {
       type: 'select', options: selects('keaktifan')
     }}
-  }
+  },
+
+  telemedCred: {
+    username: {
+      type: String,
+      autoform: {type: 'readonly'},
+      autoValue: (name, form, opts) =>
+        opts.doc[name] || [
+          _.snakeCase(state.onePatient.identitas.nama_lengkap),
+          Math.round(Math.random()*100)
+        ].join('_')
+    },
+    password: {type: String, autoform: {type: 'password'}},
+    email: {type: String, optional: true},
+    keaktifan: {type: Number, autoform: {
+      type: 'select', options: selects('keaktifan')
+    }}
+  },
+
 },
 
 layouts = {
@@ -474,16 +492,19 @@ layouts = {
     ],
     keluarga: [['ayah', 'ibu', 'pasangan']]
   },
+
   poliVisit: {top: [
     ['no_antrian', 'cara_bayar', 'no_sep'],
     ['klinik', 'rujukan', 'sumber_rujukan', 'penanggungjawab'],
     ['idrawat', 'tanggal']
   ]},
+
   igdVisit: {top: [
     ['no_antrian', 'cara_bayar', 'no_sep'],
     ['rujukan', 'sumber_rujukan', 'penanggungjawab'],
     ['idrawat', 'tanggal']
   ]},
+
   soap: () => ({
     top: ors([
       state.login.peranan === 2 && [['anamnesa', 'tracer'], ['fisik'], ['perawat']],
@@ -560,4 +581,6 @@ layouts = {
   ]},
 
   beds: {top: [['kelas', 'kamar', 'nomor']]},
+
+  telemedCred: {top: [['username', 'password'], ['email', 'keaktifan']]},
 }
