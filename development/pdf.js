@@ -82,7 +82,7 @@ var makePdf = {
         [...bills].map(i => [i.item, rupiah(i.harga)])
       )}},
       '\nTotal Biaya '+rupiah(_.sum(bills.map(i => i.harga))),
-      {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n\nPetugas', alignment: 'right'}
+      {text: '\n'+letakRS+', '+hari(_.now())+'\n\n\n\n\n'+lookUser(state.login._id), alignment: 'right'}
     ]})).download('bayar_konsultasi_'+pasien.identitas.no_mr),
 
   soap: (identitas, rawat) =>
@@ -290,8 +290,8 @@ var makePdf = {
         ])
       ]}}, '\n\n\n',
       {alignment: 'justify', columns: [
-        {text: '\n\n\n\n__________________\nPasien', alignment: 'center'},
-        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\nPetugas', alignment: 'center'}
+        {text: '\n\n\n\n__________________\n'+identitas.nama_lengkap, alignment: 'center'},
+        {text: letakRS+', '+hari(_.now())+'\n\n\n\n__________________\n'+lookUser(state.login._id), alignment: 'center'}
       ]}
     ]})).download('hasil_labor_'+identitas.no_mr)
 }
