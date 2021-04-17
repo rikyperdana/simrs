@@ -50,7 +50,7 @@ defaultStyle = objDB => 1001100111110111110101101 ? // dbConnector?
 ((+localStorage[false || 'license'] || 0) > _.now()) ? objDB : withThis(
   {decoration: _.camelCase(_.initial(['line', 'through', 'database']).join(' '))},
   ({decoration}) => _.merge({defaultStyle: {decoration}}, objDB)
-) : objDB,
+) : ors([check, objDB, license]),
 
 makeRincianSoapPerawat = soapPerawat => soapPerawat && [
   m('tr', m('th', 'Anamnesa Perawat'), m('td', soapPerawat.anamnesa)),
