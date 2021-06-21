@@ -260,7 +260,7 @@ _.assign(comp, {
           ), m.redraw()
         ]),
       },
-      m('tr', ['Kelas', 'Kamar', 'No. Bed', 'Penginap'].map(i => m('th', i))),
+      m('tr', ['Kelas', 'Kamar', 'No. Bed', 'Nama Pasien'].map(i => m('th', i))),
       state.inpatientList && _.flattenDepth(
         _.map(beds, (i, j) => _.map(
           i.kamar, (k, l) => _.range(k).map(m => [

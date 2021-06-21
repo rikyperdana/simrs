@@ -47,7 +47,7 @@ updateBoth = (collName, _id, doc, cb) => withThis(
   obj => dbCall(
     {method: 'updateOne', collection: collName, document: obj, _id},
     res => res && [
-      cb && cb(res), db[collName].put(obj),
+      cb && cb(!!res), db[collName].put(obj),
       io().emit('datachange', collName, doc)
     ]
   )

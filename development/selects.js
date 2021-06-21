@@ -9,7 +9,7 @@ var selects = (name, sort) => _.reduce(
     pendidikan: ['sd', 'smp', 'sma', 'diploma', 's1', 's2', 's3', 'tidak_sekolah'],
     darah: ['a', 'b', 'ab', 'o'],
     pekerjaan: ['pns', 'swasta', 'wiraswasta', 'tni', 'polri', 'pensiunan', 'lainnya'],
-    cara_bayar: ['umum', 'bpjs', 'asuransi'],
+    cara_bayar: ['umum', 'bpjs', 'asuransi', 'kredit'],
     kodepoli, klinik, tarif_klinik,
     rujukan: ['datang_sendiri', 'rs_lain', 'puskesmas', 'faskes_lainnya'],
     keluar: ['pulang', 'konsultasikan_ke_poli_lain', 'inap'],
