@@ -160,9 +160,7 @@ var schemas = {
       type: Number, optional: true,
       autoform: {help: 'Kode unik puyer'}
     },
-    'obat.$.aturan': {type: Object, optional: true},
-    'obat.$.aturan.kali': {type: Number},
-    'obat.$.aturan.dosis': {type: String},
+    'obat.$.aturan': {type: String, optional: true},
     radio: {type: Array, optional: true, label: 'Radiologi'},
     'radio.$': {type: Object},
     'radio.$.grup': {
@@ -536,7 +534,6 @@ layouts = {
     'bhp.$': [['idbarang', 'jumlah']],
     'radio.$': [['grup', 'idradio'], ['catatan']],
     'labor.$': [['grup', 'idlabor']],
-    'obat.$.aturan': [['kali', 'dosis']]
   }),
 
   barang: {
@@ -567,7 +564,6 @@ layouts = {
     top: [['obat'], ['bhp'], ['idpenjualan']],
     'bhp.$': [['idbarang', 'jumlah']],
     'obat.$': [['search', 'idbarang'], ['jumlah', 'puyer'], ['aturan']],
-    'obat.$.aturan': [['kali', 'dosis']]
   },
 
   account: {top: [

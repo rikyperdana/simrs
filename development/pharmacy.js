@@ -136,15 +136,13 @@ _.assign(comp, {
                 m('h4', 'Penyerahan obat'),
                 m('.table-container', m('table.table',
                   m('thead', m('tr',
-                    ['Nama obat', 'No. Batch', 'Merek', 'Ambil', 'Kali', 'Dosis', 'Puyer', 'Kode Rak']
+                    ['Nama obat', 'No. Batch', 'Merek', 'Ambil', 'Aturan Pakai', 'Puyer', 'Kode Rak']
                     .map(j => m('th', j))
                   )),
                   m('tbody', serahList.map(j => m('tr',
                     [
                       j.nama_barang, j.no_batch, j.merek, j.serahkan,
-                      j.aturan && j.aturan.kali || '-',
-                      j.aturan && j.aturan.dosis || '-',
-                      j.puyer || '-', j.kode_rak
+                      j.aturan || '', j.puyer || '-', j.kode_rak
                     ].map(k => m('td', k))
                   )))
                 )),
@@ -189,7 +187,9 @@ _.assign(comp, {
                             _.merge(k, {batal: ['obat']}) : k
                           )}) : j
                         )
-                      }, res => res && [state.modalSerahObat = null, m.redraw()])
+                      }), res => res && [
+                        state.modalSerahObat = null, m.redraw()
+                      ]
                     )},
                     makeIconLabel('times', 'Batal serah')
                   )

@@ -1,0 +1,14 @@
+## Update Todos
+- Tambahkan kolom alamat pada daftar pencarian pasien
+- Tambahkan kolom "Total Sedia" yg penjumlahan total apotik dan gudang
+  : Tidak bisa karena total gudang tidak bisa digabung dengan total apotik
+- Komplain: ketika refresh harus ulang pengetikan
+- Tambahkan opsi kredit lainnya
+  : Sudah, logikanya sama saja dengan asuransi
+- Aturan pakai obat dibuat ketikan saja
+  : Sudah, belum tes
+- Format lembaran resep sesuaikan dengan lembar kop RS
+- Cetak kwitansi gunakan format dan ukuran kertas dot matrix
+- Cetak kartu pasien disamakan dengan stiker identitas
+- Dokter boleh mengakses gudang, tapi tidak melihat harga
+- Pendaftaran boleh mengakses antrian seluruh poliklinik dan IGD

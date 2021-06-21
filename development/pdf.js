@@ -208,15 +208,14 @@ var makePdf = {
       ]}, layout: 'noBorders'}, '\n',
       {text: 'Salinan Resep\n\n', alignment: 'center', bold: true},
       {table: {
-        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: [
-          ['Nama Obat', 'Merek', 'Jumlah', 'Kali', 'Dosis', 'Puyer', 'Harga'],
+          ['Nama Obat', 'Merek', 'Jumlah', 'Aturan', 'Puyer', 'Harga'],
           ...[...drugs].map(i => [
             i.nama_barang, i.merek, i.serahkan+' unit',
-            _.get(i, 'aturan.kali') || '-', _.get(i, 'aturan.dosis') || '-',
-            i.puyer || '-', rupiah(i.harga || i.jual)
+            i.aturan || '', i.puyer || '-', rupiah(i.harga || i.jual)
           ]),
-          ['Total', '', '', '', '', '', rupiah(_.sum(drugs.map(i => i.harga || i.jual)))]
+          ['Total', '', '', '', '', rupiah(_.sum(drugs.map(i => i.harga || i.jual)))]
         ]
       }},
       {alignment: 'justify', columns: [
@@ -231,7 +230,7 @@ var makePdf = {
       {text: '\nInstruksi penyerahan obat'},
       {table: {body: [
         ['Nama Barang', 'Merek', 'No. Batch', 'Jumlah', 'Kode Rak'],
-        ...drugs.map(i => [i.nama_barang, i.merek, i.no_batch, i.serahkan, i.kode_rak])
+        ...drugs.map(i => [i.nama_barang, i.merek, i.no_batch, i.serahkan, i.kode_rak || ''])
       ]}}
     ]})).download('salinan_resep_'+pasien.no_mr),
 

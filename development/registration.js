@@ -33,7 +33,7 @@ _.assign(comp, {
     state.searchPatients && m('p.help', '* Berurut berdasarkan tanggal lahir'),
     m('.box', m('.table-container', m('table.table.is-striped',
       m('thead', m('tr',
-        ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir']
+        ['Kunjungan Terakhir', 'No. MR', 'Nama lengkap', 'Tanggal lahir', 'Tempat lahir', 'Alamat']
         .map(i => m('th', i))
       )),
       m('tbody',
@@ -46,7 +46,7 @@ _.assign(comp, {
           tds([
             hari(_.get(_.last([...(i.rawatJalan || []), ...(i.emergency || [])]), 'tanggal')),
             i.identitas.no_mr, i.identitas.nama_lengkap,
-            hari(i.identitas.tanggal_lahir), i.identitas.tempat_lahir
+            hari(i.identitas.tanggal_lahir), i.identitas.tempat_lahir, i.identitas.tempat_tinggal
           ])
         ))
       )
