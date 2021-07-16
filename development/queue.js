@@ -53,5 +53,30 @@ _.assign(comp, {
         ].map(i => m('td', m('h1', i)))
       ))
     )
+  ),
+  queueClinic: () => m('.content',
+    {onupdate: () => db.patients.toArray(array => [
+      state.queueClinicList = array.filter(i =>
+        (i.rawatJalan || []).filter(j => ands([
+          ors([j.bayar_pendaftaran, j.cara_bayar !== 1]),
+          !j.soapPerawat, j.tanggal > startOfTheDay(_.now())
+        ])).length
+      ), m.redraw()
+    ])},
+    m('h1', 'Antrian Seluruh Poliklinik'),
+    selects('klinik')().map(i => [
+      m('h2', i.label),
+      m('.box', m('.table-container', m('table.table.is-striped',
+        m('thead', m('th', 'Nama Pasien')),
+        m('tbody', (state.queueClinicList || []).map(j =>
+          !(j.rawatJalan || []).filter(k => ands([
+            ors([k.bayar_pendaftaran, k.cara_bayar !== 1]),
+            k.klinik === i.value, !k.soapPerawat,
+            k.tanggal > startOfTheDay(_.now())
+          ])).length ? null :
+          m('tr', m('td', j.identitas.nama_lengkap))
+        ))
+      )))
+    ])
   )
 })

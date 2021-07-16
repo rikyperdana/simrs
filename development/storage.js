@@ -224,7 +224,8 @@ _.assign(comp, {
             _.now() > i.kadaluarsa && 'has-text-danger-dark',
             _.now() > (i.kadaluarsa - (864e5 * 90)) && 'has-text-warning-dark'
           ]),
-          onclick: () => _.assign(state, {
+          onclick: () => !_.includes([2, 3], state.login.peranan)
+          && _.assign(state, {
             oneBatch: i, modalBatch: m('.box',
               m('h4', 'Rincian batch'),
               m('.table-container', m('table.table', _.chunk([

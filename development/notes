@@ -1,5 +1,6 @@
-## Update Todos
+## Update Jun 2021
 - Tambahkan kolom alamat pada daftar pencarian pasien
+  : Sudah
 - Tambahkan kolom "Total Sedia" yg penjumlahan total apotik dan gudang
   : Tidak bisa karena total gudang tidak bisa digabung dengan total apotik
 - Komplain: ketika refresh harus ulang pengetikan
@@ -11,4 +12,5 @@
 - Cetak kwitansi gunakan format dan ukuran kertas dot matrix
 - Cetak kartu pasien disamakan dengan stiker identitas
 - Dokter boleh mengakses gudang, tapi tidak melihat harga
+  : Sudah
 - Pendaftaran boleh mengakses antrian seluruh poliklinik dan IGD
