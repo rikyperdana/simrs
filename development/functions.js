@@ -72,7 +72,8 @@ menus = {
     full: 'Pendaftaran', icon: 'address-book',
     children: {
       icd: {full: 'Kodifikasi', icon: 'code'},
-      queue: {full: 'Antrian', icon: 'stream'}
+      queue: {full: 'Antrian', icon: 'stream'},
+      queueClinic: {full: 'Antrian Klinik', icon: 'stream'}
     }
   },
   emergency: {full: 'IGD', icon: 'heartbeat'},

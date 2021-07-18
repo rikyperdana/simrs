@@ -270,7 +270,7 @@ io().on('connect', socket => [
   )}),
   // setiap kali data berubah, beritahu server untuk update seluruh klien yg sedang terkoneksi
   io().on('datachange', (name, doc) => [
-    db[name].put(doc), state.lastSync = _.now()
+    db[name].put(doc), state.lastSync = _.now(), m.redraw()
   ]),
   // jika koneksi sempat terputus, langsung reload halaman
   io().on('disconnect', () => location.reload())
