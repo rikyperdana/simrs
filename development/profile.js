@@ -24,26 +24,13 @@ _.assign(comp, {
     m('h1', 'Profil Pengguna'),
     m('.columns',
       m('.column', m('.box', m('table.table.is-striped', m('tbody',
-        m('tr',
-          m('th', 'Username'),
-          m('td', state.login.username)
-        ),
-        m('tr',
-          m('th', 'Password'),
-          m('td', '*************'),
-        ),
-        m('tr',
-          m('th', 'Nama Lengkap'),
-          m('td', state.login.nama)
-        ),
-        m('tr',
-          m('th', 'Bidang'),
-          m('td', look('bidang', state.login.bidang))
-        ),
-        m('tr',
-          m('th', 'Peranan'),
-          m('td', look('peranan', state.login.peranan))
-        )
+        [
+          ['Username', state.login.username],
+          ['Password', '**********'],
+          ['Nama Lengkap', state.login.nama],
+          ['Bidang', look('bidang', state.login.bidang)],
+          ['Peranan', look('peranan', state.login.peranan)]
+        ].map(i => m('tr', m('th', i[0]), m('td', i[1])))
       )))),
       m('.column', m('.buttons',
         m('.button.is-warning',
