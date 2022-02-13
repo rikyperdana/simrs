@@ -100,7 +100,7 @@ redis.lrange( // buat user admin pertama jika masih kosong
       username: 'admin', nama: 'admin',
       bidang: 5, peranan: 4, keaktifan: 1,
       password: '$2b$10$xZ22.NIdyoSP65nPTRUf2uN9.Dd4gkCbChwD5fOCjTm4kSPHylS4a',
-      updated: 1590416308426 // password: 123456
+      updated: 1590416308426 // password: admin
     })
   )
 )

@@ -77,12 +77,12 @@ _.assign(comp, {
               [
                 ...(state.onePatient.rawatJalan || []),
                 ...(state.onePatient.emergency || []),
-              ].map(i => m('table.table',
-                i.soapPerawat && i.soapDokter && [
+              ].filter(i => i.soapPerawat && i.soapDokter)
+              .map(i => m('table.table', [
                   ['Tanggal Kunjungan', hari(i.tanggal, true)],
                   ['Layanan', i.klinik ? look('klinik', i.klinik) : 'Emergency'],
                   ['Anamnesa Perawat', i.soapPerawat.anamnesa],
-                  ['Diagnosa Dokter', i.soapDokter.diagnosa.map(i => i.text).join(', ')]
+                  ['Diagnosa Dokter', (i.soapDokter.diagnosa || []).map(i => i.text).join(', ')]
                 ].map(j => m('tr', m('th', j[0]), m('td', j[1])))
               ))
             )
