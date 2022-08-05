@@ -1,4 +1,4 @@
-/*global m _ comp state tds db hari ors look lookUser makeModal lookReferences withThis updateBoth autoForm schemas selects reports makePdf*/
+/*global m _ comp state tds db hari ors look lookUser makeModal lookReferences withAs updateBoth autoForm schemas selects reports makePdf*/
 
 _.assign(comp, {
   laboratory: () => state.login.bidang !== 8

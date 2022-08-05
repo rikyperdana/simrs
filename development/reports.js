@@ -1,10 +1,10 @@
-/*global _ m makeReport withThis moment db makePdf hari look rupiah tarifIGD lookReferences ors lookUser lookGoods selects ands beds tarifInap tomorrow*/
+/*global _ m makeReport withAs moment db makePdf hari look rupiah tarifIGD lookReferences ors lookUser lookGoods selects ands beds tarifInap tomorrow*/
 
 var reports = {
 
   cashier: () => makeReport(
     'Penerimaan Kasir',
-    e => withThis(
+    e => withAs(
       {
         start: +moment(e.target[0].value),
         end: tomorrow(+moment(e.target[1].value)),
@@ -43,7 +43,7 @@ var reports = {
                 i.rawat.klinik && look('klinik', i.rawat.klinik),
                 i.rawat.bed && 'Rawat Inap', 'IGD'
               ]),
-              ...withThis([
+              ...withAs([
                 ors([ // tarif layanan tersebut
                   i.rawat.klinik &&
                   +look('tarif_klinik', i.rawat.klinik)*1000,
@@ -74,7 +74,7 @@ var reports = {
     selects('cara_bayar')()
   ),
 
-  sales: () => makeReport('Penjualan Bebas', e => withThis(
+  sales: () => makeReport('Penjualan Bebas', e => withAs(
     {
       start: +moment(e.target[0].value),
       end: tomorrow(+moment(e.target[1].value))
@@ -105,7 +105,7 @@ var reports = {
 
   transfer: () => makeReport(
     'Riwayat Mutasi Barang',
-    e => withThis(
+    e => withAs(
       {
         start: +moment(e.target[0].value),
         end: tomorrow(+moment(e.target[1].value))
@@ -137,7 +137,7 @@ var reports = {
     )
   ),
 
-  pharmacy: () => makeReport('Pengeluaran Apotik', e => withThis(
+  pharmacy: () => makeReport('Pengeluaran Apotik', e => withAs(
     {
       start: +moment(e.target[0].value),
       end: tomorrow(+moment(e.target[1].value))
@@ -181,7 +181,7 @@ var reports = {
     ]
   )),
 
-  igd: () => makeReport('Kunjungan IGD', e => withThis(
+  igd: () => makeReport('Kunjungan IGD', e => withAs(
     {
       start: +moment(e.target[0].value),
       end: tomorrow(+moment(e.target[1].value))
@@ -214,7 +214,7 @@ var reports = {
     ]
   )),
 
-  inpatient: () => makeReport('Kunjungan Rawat Inap', e => withThis(
+  inpatient: () => makeReport('Kunjungan Rawat Inap', e => withAs(
     {
       start: +moment(e.target[0].value),
       end: tomorrow(+moment(e.target[1].value))
@@ -251,7 +251,7 @@ var reports = {
     ]
   )),
 
-  outpatient: () => makeReport('Kunjungan Poliklinik', e => withThis(
+  outpatient: () => makeReport('Kunjungan Poliklinik', e => withAs(
     {
       start: +moment(e.target[0].value),
       end: tomorrow(+moment(e.target[1].value)),
@@ -287,7 +287,7 @@ var reports = {
 
   radiology: () => makeReport(
     'Instalasi Radiologi',
-    e => withThis(
+    e => withAs(
       {
         start: +moment(e.target[0].value),
         end: tomorrow(+moment(e.target[1].value))
@@ -323,7 +323,7 @@ var reports = {
 
   laboratory: () => makeReport(
     'Instalasi Laboratorium',
-    e => withThis(
+    e => withAs(
       {
         start: +moment(e.target[0].value),
         end: tomorrow(+moment(e.target[1].value))

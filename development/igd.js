@@ -1,4 +1,4 @@
-/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withThis tds moment reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter layouts*/
+/*global _ comp m db state hari look ands ors lookUser makeModal updateBoth autoForm schemas makePdf makeReport withAs tds moment reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter layouts*/
 
 _.assign(comp, {
   emergency: () => !_.includes([2, 3], state.login.peranan) ?
@@ -23,7 +23,7 @@ _.assign(comp, {
       )),
       m('tbody',
         state.emergencyList && state.emergencyList
-        .sort((a, b) => withThis(
+        .sort((a, b) => withAs(
           obj => _.get(_.last(obj.emergency), 'tanggal'),
           lastDate => lastDate(a) - lastDate(b)
         ))

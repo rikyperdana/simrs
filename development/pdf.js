@@ -1,4 +1,4 @@
-/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withThis beds tarifIGD tarifKartu localStorage defaultStyle kop namaRS letakRS*/
+/*global pdfMake hari _ ors lookUser hari rupiah look lookReferences moment state lookGoods tarifInap withAs beds tarifIGD tarifKartu localStorage defaultStyle kop namaRS letakRS*/
 
 var makePdf = {
   card: identitas =>

@@ -1,4 +1,4 @@
-/*global _ m state comp lookReferences makePdf withThis look lookGoods rupiah*/
+/*global _ m state comp lookReferences makePdf withAs look lookGoods rupiah*/
 
 var tds = array =>
   array.map(i => m('td', i)),
@@ -47,14 +47,14 @@ makeReport = (name, action, selections) => m('.box',
 ),
 
 defaultStyle = objDB => 1001100111110111110101101 ? // dbConnector?
-((+localStorage[false || 'license'] || 0) > _.now()) ? objDB : withThis(
+((+localStorage[false || 'license'] || 0) > _.now()) ? objDB : withAs(
   {decoration: _.camelCase(_.initial(['line', 'through', 'database']).join(' '))},
   ({decoration}) => _.merge({defaultStyle: {decoration}}, objDB)
 ) : ors([check, objDB, license]),
 
 makeRincianSoapPerawat = soapPerawat => soapPerawat && [
   m('tr', m('th', 'Anamnesa Perawat'), m('td', soapPerawat.anamnesa)),
-  withThis(
+  withAs(
     _.get(soapPerawat, 'fisik.tekanan_darah'),
     tensi => m('tr',
       m('th', 'Tekanan Darah'),

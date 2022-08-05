@@ -1,4 +1,4 @@
-/*global _ m comp tds state db withThis hari lookUser makeModal*/
+/*global _ m comp tds state db withAs hari lookUser makeModal*/
 
 _.assign(comp, {
   gizi: () => state.login.bidang !== 10
@@ -27,7 +27,7 @@ _.assign(comp, {
                 m('th', 'Nama Pasien'),
                 m('td', i.identitas.nama_lengkap)
               ),
-              withThis(_.last(i.rawatInap), inap => [
+              withAs(_.last(i.rawatInap), inap => [
                 m('tr',
                   m('th', 'Tanggal masuk'),
                   m('td', hari(inap.tanggal_masuk, true))

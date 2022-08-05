@@ -1,4 +1,4 @@
-/*global m _ comp state look makeModal autoForm updateBoth io makeIconLabel withThis*/
+/*global m _ comp state look makeModal autoForm updateBoth io makeIconLabel withAs*/
 
 var logbook = (histories, idDokter) =>
   _.compact(_.flattenDeep(histories.map(
@@ -88,7 +88,7 @@ _.assign(comp, {
                   placeholder: 'Dapatkan dari developer'
                 }}}, // kombinasi angka, huruf, dan simbol
                 action: ({key}) => key.length === 15 && [
-                  withThis(['license', key.split(' ').reverse().join(''), localStorage],
+                  withAs(['license', key.split(' ').reverse().join(''), localStorage],
                   name => _.last(name).setItem(_.first(name), +(name[+true]+'e5'))),
                   state.modalLicense = null, m.redraw(),
                   alert('Berhasil aktifkan versi Enterprise.')
@@ -140,7 +140,7 @@ _.assign(comp, {
           ['No. MR', 'Nama Pasien', 'Tanggal', 'Anamnesa', 'Diagnosa', 'Tindakan', 'SOAP']
           .map(i => m('th', i))
         )),
-        withThis(
+        withAs(
           _.get(state, 'logbook'),
           logbook => logbook && m('tbody',
             logbook.map(i => m('tr', tds([

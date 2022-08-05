@@ -1,4 +1,4 @@
-/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withThis ands startOfTheDay moment makeIconLabel reports layouts*/
+/*global _ comp m state db hari autoForm schemas insertBoth updateBoth randomId tds withAs ands startOfTheDay moment makeIconLabel reports layouts*/
 
 _.assign(comp, {
   registration: () => state.login.bidang !== 1 ?
@@ -68,7 +68,7 @@ _.assign(comp, {
           'data-tooltip': 'Ambil No. MR terakhir + 1',
           onclick: () => db.patients.toArray(array => [
             state.new_no_mr = array.reduce(
-              (acc, inc) => withThis(
+              (acc, inc) => withAs(
                 _.get(inc, 'identitas.no_mr'),
                 no_mr => no_mr > acc ? no_mr : acc
               ), 0
@@ -83,10 +83,10 @@ _.assign(comp, {
       id: 'newPatient', schema: schemas.identitas,
       layout: layouts.patientForm,
       confirmMessage: 'Yakin ingin menambahkan pasien BARU?',
-      action: doc => withThis(
+      action: doc => withAs(
         {identitas: doc, _id: randomId()}, obj => [
           insertBoth('patients', obj),
-          doc.no_antrian && db.queue.toArray(arr => withThis(
+          doc.no_antrian && db.queue.toArray(arr => withAs(
             arr.find(i => i.no_antrian === doc.no_antrian),
             obj => updateBoth('queue', obj._id, _.merge(obj, {done: true}))
           )),
@@ -130,7 +130,7 @@ _.assign(comp, {
             _.merge(doc, {antrian: array.length+1})
           ]}
         )),
-        doc.no_antrian && db.queue.toArray(arr => withThis(
+        doc.no_antrian && db.queue.toArray(arr => withAs(
           arr.find(i => i.no_antrian === doc.no_antrian),
           obj => updateBoth('queue', obj._id, _.merge(obj, {done: true}))
         )),

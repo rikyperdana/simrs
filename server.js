@@ -3,7 +3,7 @@ express = require('express'),
 mongoDB = require('mongodb'),
 io = require('socket.io'),
 bcrypt = require('bcrypt'),
-withThis = (obj, cb) => cb(obj),
+withAs = (obj, cb) => cb(obj),
 
 app = express()
 .use(express.static(
@@ -22,7 +22,7 @@ mongoDB.MongoClient.connect(
     socket.on('bcrypt', (text, cb) =>
       bcrypt.hash(text, 10, (err, res) => res && cb(res))
     ),
-    socket.on('login', (creds, cb) => withThis(
+    socket.on('login', (creds, cb) => withAs(
       client.db(process.env.dbname),
       db => db.collection('users').findOne(
         { // hanya user aktif yang boleh login
@@ -37,7 +37,7 @@ mongoDB.MongoClient.connect(
         )
       )
     )),
-    socket.on('dbCall', (obj, cb) => withThis(
+    socket.on('dbCall', (obj, cb) => withAs(
       client.db(process.env.dbname).collection(obj.collection),
       coll => ({
         find: () =>
@@ -66,7 +66,7 @@ mongoDB.MongoClient.connect(
         deleteOne: () => coll.deleteOne(
           {_id: obj._id}, (err, res) => res && cb(res)
         ),
-        getDifference: () => withThis(
+        getDifference: () => withAs(
           {
             ids: obj.clientColl.map(i => i._id),
             latest: obj.clientColl.reduce(
@@ -83,7 +83,7 @@ mongoDB.MongoClient.connect(
         )
       }[obj.method]())
     )),
-    withThis( // buat user admin pertama jika masih kosong
+    withAs( // buat user admin pertama jika masih kosong
       client.db(process.env.dbname).collection('users'),
       users => users.findOne({}, (err, res) =>
         !res && users.insertOne({

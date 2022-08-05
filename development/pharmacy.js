@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser withThis reports autoForm schemas randomId tds rupiah makeIconLabel layouts*/
+/*global _ m comp db state ors ands updateBoth hari look makeModal makeReport makePdf lookUser withAs reports autoForm schemas randomId tds rupiah makeIconLabel layouts*/
 
 _.assign(comp, {
   pharmacy: () => state.login.bidang !== 4 ?
@@ -29,13 +29,13 @@ _.assign(comp, {
                       _.assign({}, j, i, {soapDokter: {obat: j.obat}})
                     )
                   )) : [])
-                ].flatMap(b => withThis(
+                ].flatMap(b => withAs(
                   ands([
                     !_.get(b, 'soapDokter.batal') ? true
                     : !_.includes(b.soapDokter.batal, 'obat'),
                     _.get(b, 'soapDokter.obat')
                   ]),
-                  obats => withThis(
+                  obats => withAs(
                     obats && obats.filter(c => !c.diserah),
                     ungiven => ungiven && ungiven.length !== 0 &&
                     {pasien: a, rawat: b, obats: ungiven.map(
@@ -51,7 +51,7 @@ _.assign(comp, {
           db.goods.toArray(array => state.goodsList = array)
         ]},
         (state.pharmacyList || []).map(i => m('tr',
-          {onclick: () => withThis([], serahList => withThis(
+          {onclick: () => withAs([], serahList => withAs(
             { // urai jenis obat yang diminta oleh pasien
               updatedGoods: i.obats.flatMap(
                 // urai jenis obat yang tersedia di gudang
@@ -64,7 +64,7 @@ _.assign(comp, {
                     ])).sort( // urut batch berdasarkan kadaluarsa tercepat
                       (p, q) => p.kadaluarsa - q.kadaluarsa
                     // lakukan pengurangan barang secara berurutan
-                    ).reduce((c, d) => withThis(
+                    ).reduce((c, d) => withAs(
                       // ambil angka terkecil diantara sisa jumlah permintaan dengan stok apotik batch tersebut
                       _.min([d.stok.apotik, a.sisa]),
                       // selagi minim tidak 0, kurangi stok apotik batch ini
@@ -246,7 +246,7 @@ _.assign(comp, {
         .reduce((res, inc) => _.merge(res, inc), {})
       ),
       layout: layouts.sales,
-      action: doc => withThis(
+      action: doc => withAs(
         {serahList: [], updatedGoods: []},
         ({serahList, updatedGoods}) => [
           updatedGoods.push(
@@ -258,7 +258,7 @@ _.assign(comp, {
                 ]))
                 .sort((a, b) => a.kadaluarsa - b.kadaluarsa)
                 .reduce((res, inc) => [
-                  ...res, i.jumlah ? withThis(
+                  ...res, i.jumlah ? withAs(
                     _.min([inc.stok.apotik, i.jumlah]),
                     minim => minim ? ands([
                       serahList.push({

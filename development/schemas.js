@@ -1,4 +1,4 @@
-/*global ors _ state selects randomId beds ands withThis lookReferences*/
+/*global ors _ state selects randomId beds ands withAs lookReferences*/
 
 var schemas = {
   identitas: {
@@ -147,7 +147,7 @@ var schemas = {
     'obat.$.idbarang': {
       type: String, label: 'Nama Obat', autoform: {
         type: 'select', options: (name, doc) =>
-          state.drugList.filter(i => withThis(
+          state.drugList.filter(i => withAs(
             _.get(doc, _.initial(name.split('.')).join('.')+'.search'),
             search => search ? _.includes(_.lowerCase(i.nama), search) : true
           ))
@@ -179,7 +179,7 @@ var schemas = {
         _.sortBy(
           state.references.filter(i => ands([
             i[0] === 'radiologi',
-            withThis(
+            withAs(
               _.initial(name.split('.')).join('.') + '.grup',
               siblingGrup => _.get(doc, siblingGrup) ?
                 doc[siblingGrup] === i[1] : true
@@ -208,7 +208,7 @@ var schemas = {
         _.sortBy(
           state.references.filter(i => ands([
             i[0] === 'laboratorium',
-            withThis(
+            withAs(
               _.initial(name.split('.')).join('.') + '.grup',
               siblingGrup => _.get(doc, siblingGrup) ?
                 doc[siblingGrup] === i[1] : true
