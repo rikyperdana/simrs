@@ -1,4 +1,4 @@
-/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withThis tds dbCall moment localStorage reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter*/
+/*global _ m comp look state db ands hari state ors makePdf lookUser updateBoth makeReport makeModal withAs tds dbCall moment localStorage reports makeIconLabel makeRincianSoapPerawat makeRincianSoapDokter*/
 
 _.assign(comp, {
   outpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -23,7 +23,7 @@ _.assign(comp, {
         {onupdate: () => [
           state.loading = true,
           db.patients.toArray(array => [
-            state.clinicQueue = array.filter(i => withThis(
+            state.clinicQueue = array.filter(i => withAs(
               _.last(i.rawatJalan),
               lastOne => lastOne && ands([
                 // cari pasien yang belum dilayani dokter klinik ini
@@ -35,14 +35,14 @@ _.assign(comp, {
           ])
         ]},
         (state.clinicQueue || [])
-        .filter(i => state.todayPoliFilter ? withThis(
+        .filter(i => state.todayPoliFilter ? withAs(
           _.last(i.rawatJalan).tanggal,
           tanggal => between(
             startOfTheDay(_.now()), tanggal,
             tomorrow(startOfTheDay(_.now()))
           )
         ) : true)
-        .sort((a, b) => withThis(
+        .sort((a, b) => withAs(
           obj => _.get(_.last(obj.rawatJalan), 'tanggal'),
           lastDate => lastDate(a) - lastDate(b)
         ))

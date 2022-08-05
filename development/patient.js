@@ -1,7 +1,7 @@
-/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withThis makeModal makeIconLabel layouts*/
+/*global _ m comp state db hari look moment makePdf ors ands state autoForm schemas updateBoth state randomId withAs makeModal makeIconLabel layouts*/
 
 _.assign(comp, {
-  onePatient: () => withThis(
+  onePatient: () => withAs(
     state.onePatient.identitas,
     id => m('.content',
       {onupdate: () => [
@@ -87,8 +87,7 @@ _.assign(comp, {
               ))
             )
           }
-        ]
-        .map(i => m('.button.is-'+i.color,
+        ].map(i => m('.button.is-'+i.color,
           {onclick: i.click},
           makeIconLabel(i.icon, i.label)
         ))
@@ -169,7 +168,7 @@ _.assign(comp, {
         ])
       ]),
       layout: layouts.soap(),
-      action: doc => withThis(
+      action: doc => withAs(
         ands([
           !_.get(state, 'oneInap'),
           // _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',

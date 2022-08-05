@@ -5,7 +5,7 @@ sift = require('sift'),
 {parse, stringify} = JSON,
 io = require('socket.io'),
 bcrypt = require('bcrypt'),
-withThis = (obj, cb) => cb(obj),
+withAs = (obj, cb) => cb(obj),
 ors = array => array.find(Boolean),
 ands = array => array.reduce((res, inc) => res && inc, true)
 
@@ -23,9 +23,9 @@ io(app).on('connection', socket => [
     bcrypt.hash(text, 10, (err, res) => res && cb(res))
   ),
   socket.on('login', (creds, cb) => redis.lrange(
-    'users', 0, -1, (err, data) => withThis(
+    'users', 0, -1, (err, data) => withAs(
       parse(data.find(
-        i => withThis(parse(i), doc => ands([
+        i => withAs(parse(i), doc => ands([
           doc.username === creds.username,
           doc.keaktifan === 1
         ]))
@@ -74,7 +74,7 @@ io(app).on('connection', socket => [
         i => parse(i)._id === obj._id
       )
     ),
-    getDifference: () => withThis(
+    getDifference: () => withAs(
       {
         ids: obj.clientColl.map(i => i._id),
         latest: obj.clientColl.reduce(

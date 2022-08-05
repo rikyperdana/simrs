@@ -1,6 +1,6 @@
 /*global moment numeral _ m Dexie selects io*/
 
-var withThis = (obj, cb) => cb(obj),
+var withAs = (obj, cb) => cb(obj),
 ors = array => array.find(Boolean),
 ands = array => array.reduce((a, b) => a && b, true),
 
@@ -30,7 +30,7 @@ rupiah = num => 'Rp '+numeral(num || 0).format('0,0'),
 
 dbCall = (body, action) => io().emit('dbCall', body, action),
 
-insertBoth = (collName, doc, cb) => withThis(
+insertBoth = (collName, doc, cb) => withAs(
   _.merge(doc, {_id: randomId(), updated: _.now()}),
   obj => dbCall(
     {method: 'insertOne', collection: collName, document: obj},
@@ -41,7 +41,7 @@ insertBoth = (collName, doc, cb) => withThis(
   )
 ),
 
-updateBoth = (collName, _id, doc, cb) => withThis(
+updateBoth = (collName, _id, doc, cb) => withAs(
   _.merge(doc, {_id, updated: _.now()}),
   // pastikan di server terupdate dulu, baru client
   obj => dbCall(

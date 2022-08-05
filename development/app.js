@@ -1,4 +1,4 @@
-/*global _ comp m state menus look collNames db gapi dbCall withThis io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor makeIconLabel defaultTheme*/
+/*global _ comp m state menus look collNames db gapi dbCall withAs io autoForm schemas moment getDifferences betaMenus ors ands selects randomColor makeIconLabel defaultTheme*/
 
 var topMenus = _.omit(menus, ['gizi', 'telemed'])
 _.assign(comp, {

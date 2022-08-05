@@ -1,4 +1,4 @@
-/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withThis tds rupiah autoForm moment schemas reports makeIconLabel ors makeRincianSoapPerawat makeRincianSoapDokter*/
+/*global _ m comp db state ands updateBoth randomId look hari makeModal lookUser lookReferences lookGoods selects makePdf makeReport withAs tds rupiah autoForm moment schemas reports makeIconLabel ors makeRincianSoapPerawat makeRincianSoapDokter*/
 
 _.assign(comp, {
   inpatient: () => !_.includes([2, 3], state.login.peranan) ?
@@ -31,7 +31,7 @@ _.assign(comp, {
       )),
       m('tbody',
         (state.admissionList || [])
-        .sort((a, b) => withThis(
+        .sort((a, b) => withAs(
           obj => _.get(obj.inap, 'tanggal'),
           tanggal => tanggal(a) - tanggal(b)
         )
@@ -103,11 +103,11 @@ _.assign(comp, {
       )),
       m('tbody',
         (state.inpatientList || [])
-        .sort((a, b) => withThis(
+        .sort((a, b) => withAs(
           obj => _.get(_.last(obj.rawatInap), 'tanggal_masuk'),
           lastDate => lastDate(b) - lastDate(a)
         ))
-        .map(i => withThis(
+        .map(i => withAs(
           _.get(_.last(i.rawatInap), 'bed'),
           bed => bed && m('tr',
             {onclick: () => _.assign(state, {

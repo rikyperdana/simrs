@@ -1,4 +1,4 @@
-/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withThis moment afState ands deleteBoth makeIconLabel selects paginate layouts*/
+/*global _ m comp db state look autoForm insertBoth schemas randomId hari rupiah lookUser ors makeModal updateBoth dbCall tds makeReport withAs moment afState ands deleteBoth makeIconLabel selects paginate layouts*/
 
 _.assign(comp, {
   storage: () => !ors([
@@ -87,7 +87,7 @@ _.assign(comp, {
               i.nama, look('satuan', i.satuan)
             ]),
             ['gudang', 'apotik', 'karantina']
-            .map(j => withThis(
+            .map(j => withAs(
               _.sum((i.batch || []).map(k =>
                 _.get(k.stok, j) || 0
               )),
@@ -132,7 +132,7 @@ _.assign(comp, {
       confirmMessage: 'Yakin untuk menyimpan JENIS barang baru?',
       doc: state.oneGood,
       layout: layouts.barang,
-      action: doc => withThis(
+      action: doc => withAs(
         _.assign(state.oneGood || {}, doc, {
           _id: _.get(state, 'oneGood._id') || randomId()
         }),

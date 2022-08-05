@@ -2,7 +2,7 @@ var m, _, afState = {arrLen: {}, form: {}},
 
 autoForm = opts => ({view: () => {
   var normal = name => name.replace(/\d/g, '$'),
-  withThis = (obj, cb) => cb(obj),
+  withAs = (obj, cb) => cb(obj),
   ors = array => array.find(Boolean),
   dateValue = (timestamp, hour) => {
     var date = new Date(timestamp),
@@ -13,7 +13,7 @@ autoForm = opts => ({view: () => {
   },
 
   linearize = obj => {
-    var recurse = doc => withThis(
+    var recurse = doc => withAs(
       doc[_.keys(doc)[0]],
       value => typeof(value) === 'object' ?
       _.map(value, (val, key) => recurse(
@@ -43,7 +43,7 @@ autoForm = opts => ({view: () => {
         afState.form[opts.id] = opts.autoReset && null
         var submit = () => opts.action(
           _.filter(e.target, i => i.name && i.value)
-          .map(obj => withThis(
+          .map(obj => withAs(
             opts.schema[normal(obj.name)].type,
             type => _.reduceRight(
               obj.name.split('.'),
@@ -56,7 +56,7 @@ autoForm = opts => ({view: () => {
             )
           )).reduce((res, inc) => {
             var recursive = data => ors([
-              typeof(data) === 'object' && withThis(
+              typeof(data) === 'object' && withAs(
                 {key: _.keys(data)[0], val: _.values(data)[0]},
                 ({key, val}) => ors([
                   +key+1 && _.range(+key+1).map(
@@ -160,16 +160,16 @@ autoForm = opts => ({view: () => {
     standard: () => ors([
       schema.type === Object && m('.box',
         attr.label(name, schema),
-        withThis(
+        withAs(
           _.map(opts.schema, (val, key) =>
             _.merge(val, {name: key})
-          ).filter(i => withThis(
+          ).filter(i => withAs(
             str => _.size(_.split(str, '.')),
             getLen => _.every([
               _.includes(i.name, normal(name)+'.'),
               getLen(name)+1 === getLen(i.name)
             ])
-          )).map(i => withThis(
+          )).map(i => withAs(
             {
               childSchema: opts.schema[normal(i.name)],
               fieldName: name+'.'+_.last(i.name.split('.'))
@@ -200,7 +200,7 @@ autoForm = opts => ({view: () => {
         _.range(
           _.get(opts.doc, name) && opts.doc[name].length,
           afState.arrLen[name]
-        ).map(i => withThis(
+        ).map(i => withAs(
           opts.schema[normal(name)+'.$'],
           childSchema => inputTypes(name+'.'+i, childSchema)[
             _.get(childSchema, 'autoform.type') || 'standard'

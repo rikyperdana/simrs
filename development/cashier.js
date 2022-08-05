@@ -1,4 +1,4 @@
-/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withThis makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
+/*global _ m comp db state ors ands rupiah look lookReferences updateBoth rupiah makePdf makeModal hari tarifInap tds withAs makeReport lookUser beds moment tarifIGD tarifKartu reports autoForm schemas makeIconLabel*/
 
 // TODO: pikirkan ulang tentang obj kasir dalam rawat
 
@@ -16,7 +16,7 @@ _.assign(comp, {
       m('tbody',
         {onupdate: () => [
           state.loading = true,
-          withThis(
+          withAs(
             // cari pasien yang masih berhutang biaya
             j => j.cara_bayar === 1 && ors([
               // yang belum bayar pendaftaran klinik
@@ -52,7 +52,7 @@ _.assign(comp, {
         .sort((a, b) => a.rawat.tanggal - b.rawat.tanggal)
         .map(
           ({pasien, rawat}) => m('tr',
-            {onclick: () => withThis(
+            {onclick: () => withAs(
               [
                 !rawat.bed ? ands([
                   [ // cek apakah ini pasien baru
@@ -115,7 +115,7 @@ _.assign(comp, {
                   ...[ //daftar bhp terpakai saat rawatan
                     ...(_.get(rawat, 'soapDokter.bhp') || []),
                     ...((rawat.observasi || []).flatMap(k => k.bhp || []))
-                  ].map(k => k.idbarang ? withThis(
+                  ].map(k => k.idbarang ? withAs(
                     state.goodsList.find(l => l._id === k.idbarang),
                     barang => [
                       barang.nama, // carikan harga batch tertinggi di apotik
@@ -131,7 +131,7 @@ _.assign(comp, {
               bills => state.modalCashier = m('.box',
                 m('h3', 'Konfirmasi Pembayaran'),
                 m('p', m('b', [pasien.identitas.nama_lengkap, pasien.identitas.no_mr].join(' / '))),
-                m('table.table', withThis(
+                m('table.table', withAs(
                   [...bills, ...(rawat.charges || [])],
                   combined => [
                     combined.map(k => m('tr',

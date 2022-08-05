@@ -1,4 +1,4 @@
-/*global _ m comp db state ors hari look lookUser lookReferences updateBoth makeModal withThis tds*/
+/*global _ m comp db state ors hari look lookUser lookReferences updateBoth makeModal withAs tds*/
 
 _.assign(comp, {
   icd: () => state.login.bidang !== 1 ?
@@ -48,7 +48,7 @@ _.assign(comp, {
               state.modalICD10 = m('.box',
                 m('h4', 'Form kodifikasi diagnosa ICD10'),
                 m('form',
-                  {onsubmit: e => confirm('Yakin dengan isian ICD ini?') && withThis(
+                  {onsubmit: e => confirm('Yakin dengan isian ICD ini?') && withAs(
                     rawat.idrawat && rawat.klinik ? 'rawatJalan' : 'emergency',
                     facility => [
                       e.preventDefault(),
@@ -117,7 +117,7 @@ _.assign(comp, {
               state.modalICD9 = m('.box',
                 m('h4', 'Form kodifikasi tindakan ICD9'),
                 m('form',
-                  {onsubmit: e => confirm('Yakin dengan ICD ini?') && withThis(
+                  {onsubmit: e => confirm('Yakin dengan ICD ini?') && withAs(
                     rawat.idrawat && rawat.klinik ? 'rawatJalan' : 'emergency',
                     facility => [
                       e.preventDefault(),

@@ -1,4 +1,4 @@
-/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withThis moment io menus betaMenus makeIconLabel ands collNames saveAs sanitize hari selects layouts*/
+/*global _ m comp state autoForm schemas insertBoth makeModal db updateBoth look paginate rupiah Papa ors randomId tds dbCall withAs moment io menus betaMenus makeIconLabel ands collNames saveAs sanitize hari selects layouts*/
 
 _.assign(comp, {
   management: () =>
@@ -204,10 +204,10 @@ _.assign(comp, {
             type: 'file', name: 'import',
             onchange: e => Papa.parse(e.target.files[0], {
               delimiter: ';', newline: ';',
-              complete: result => withThis(
+              complete: result => withAs(
                 {
                   docs: (result.data || []).map(i => JSON.parse(i[0])),
-                  collName: withThis(
+                  collName: withAs(
                     JSON.parse(result.data[0][0]),
                     doc => ors([
                       doc.identitas && 'patients',
@@ -236,7 +236,7 @@ _.assign(comp, {
       _.range(2).map(() => m('br')),
       m('.file.is-warning',
         {onchange: e => Papa.parse(e.target.files[0], {
-          header: true, complete: result => withThis(
+          header: true, complete: result => withAs(
             (collName, docs) => dbCall(
               {method: 'insertMany', collection: collName, documents: docs},
               res => res && db[collName].bulkPut(docs).then(last =>
@@ -295,7 +295,7 @@ _.assign(comp, {
                       }
                     }]
                   }
-                )).reduce((acc, inc) => withThis(
+                )).reduce((acc, inc) => withAs(
                   acc.find(j => j.nama === inc.nama),
                   found => found ? acc.map(j =>
                     j.nama === inc.nama ? _.assign(j, {
