@@ -171,7 +171,6 @@ _.assign(comp, {
       action: doc => withAs(
         ands([
           !_.get(state, 'oneInap'),
-          // _.get(state, 'oneRawat.klinik') ? 'rawatJalan' : 'emergency',
           ors([
             _.get(state, 'oneRawat.link') && 'telemed',
             _.get(state, 'oneRawat.klinik') && 'rawatJalan',

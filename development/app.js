@@ -221,13 +221,13 @@ _.assign(comp, {
           state.loading = true, m.redraw(),
           io().emit('login', doc, ({res}) => res ? [
             _.assign(state, {
-              username: doc.username, route: 'dashboard', login: res
+              username: doc.username, route: 'dashboard',
+              login: res, error: null
             }),
             localStorage.setItem('login', JSON.stringify(res)),
-            state.error = null, m.redraw()
+            m.redraw()
           ] : [
-            state.loading = false,
-            state.error = 'Password salah',
+            _.assign(state, {login: false, error: 'Password salah'}),
             m.redraw()
           ])
         ]
